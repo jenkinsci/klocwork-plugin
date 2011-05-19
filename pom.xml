@@ -8,7 +8,7 @@
         <version>1.410</version>
     </parent>
 
-    <groupId>org.jvnet.hudson.plugins</groupId>
+    <groupId>com.thalesgroup.jenkins-ci.plugins</groupId>
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Hudson Klocwork Plug-in</name>
