@@ -1,0 +1,82 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Thales Corporate Services SAS                             *
+ * Author : Aravindan Mahendran                                                 *
+ *                                                                              *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+ * copies of the Software, and to permit persons to whom the Software is        *
+ * furnished to do so, subject to the following conditions:                     *
+ *                                                                              *
+ * The above copyright notice and this permission notice shall be included in   *
+ * all copies or substantial portions of the Software.                          *
+ *                                                                              *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+ * THE SOFTWARE.                                                                *
+ *******************************************************************************/
+
+package com.thalesgroup.hudson.plugins.klocwork;
+
+import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
+import hudson.CopyOnWrite;
+import hudson.Util;
+import hudson.model.AbstractProject;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.Builder;
+import hudson.util.FormValidation;
+import net.sf.json.JSONObject;
+import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
+
+public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
+
+
+    public KloBuilderDescriptor() {
+        super(KloBuilder.class);
+        load();
+    }
+
+    @Override
+    public boolean isApplicable(Class<? extends AbstractProject> jobType) {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @CopyOnWrite
+    private volatile KloInstallation[] installations = new KloInstallation[0];
+
+
+    public String getHelpFile() {
+        return "/plugin/klocwork/help.html";
+    }
+
+    public String getDisplayName() {
+        return "Invoke klocwork command";
+    }
+
+    public KloInstallation[] getInstallations() {
+        return installations;
+    }
+
+    public boolean configure(StaplerRequest req, JSONObject json) {
+        installations = req.bindParametersToList(KloInstallation.class,
+                "klocwork.").toArray(new KloInstallation[0]);
+        save();
+        return true;
+    }
+
+    public FormValidation doCheckKwCommand(@QueryParameter String value) {
+        String kwCommand = Util.fixEmptyAndTrim(value);
+        if (kwCommand == null || kwCommand.isEmpty()) {
+            return FormValidation.error("command is mandatory");
+        } else {
+            return FormValidation.ok();
+        }
+    }
+}

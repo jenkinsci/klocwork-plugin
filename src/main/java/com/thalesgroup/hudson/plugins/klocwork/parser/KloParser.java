@@ -1,0 +1,220 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Thales Corporate Services SAS                             *
+ * Author : Loic Quentin                                                        *
+ *		                                                                        *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+ * copies of the Software, and to permit persons to whom the Software is        *
+ * furnished to do so, subject to the following conditions:                     *
+ *                                                                              *
+ * The above copyright notice and this permission notice shall be included in   *
+ * all copies or substantial portions of the Software.                          *
+ *                                                                              *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+ * THE SOFTWARE.                                                                *
+ *                                                                              *
+ *******************************************************************************/
+package com.thalesgroup.hudson.plugins.klocwork.parser;
+
+import com.thalesgroup.dtkit.util.validator.ValidationError;
+import com.thalesgroup.hudson.plugins.klocwork.model.*;
+import hudson.FilePath;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class KloParser implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private FilePath resultFilePath;
+    private ArrayList<KloFile> kloFiles;
+    Map<Integer, KloFile> agregateMap = new HashMap<Integer, KloFile>();
+
+    public KloParser() {
+        resultFilePath = null;
+        kloFiles = new ArrayList<KloFile>();
+    }
+
+    @SuppressWarnings("unused")
+    public FilePath getResultFilePath() {
+        return resultFilePath;
+    }
+
+    public KloReport parse(final File file) throws IOException {
+
+        if (file == null) {
+            throw new IllegalArgumentException("File input is mandatory.");
+        }
+
+        if (!file.exists()) {
+            throw new IllegalArgumentException("File input " + file.getName() + " must exist.");
+        }
+
+        KloReport report = new KloReport();
+
+        List<ValidationError> list = KlocworkModel.OUTPUT_KLOCWORK_9_2.validate(file);
+        if (!list.isEmpty()) {
+            StringBuilder sb = new StringBuilder("XML Validation failed. See errors below :\n");
+            for (ValidationError val : list) {
+                sb.append(val.toString()).append("\n");
+            }
+            throw new IllegalArgumentException(sb.toString());
+        }
+
+
+        try {
+
+            ErrorList errList = getErrorList(file);
+            List<KloFile> lowSeverities = new ArrayList<KloFile>();
+            List<KloFile> highSeverities = new ArrayList<KloFile>();
+            List<KloFile> errors = new ArrayList<KloFile>();
+            int i = 0;
+            for (Problem problem : errList.getProblem()) {
+                KloFile kloFile;
+                kloFile = new KloFile();
+                kloFile.setKey(i + 1);
+
+                /**
+                 * Using reflection to get the tags' name and value and to put them in kloFile map
+                 */
+                for (Field f : problem.getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+                    try {
+                        String name = f.getName();
+                        Object value = f.get(problem);
+                        if (value != null) {
+                            String valueToString = value.toString();
+                            //Changing the default value returned by Object.toString() by an empty value
+                            if (valueToString.startsWith("com.thalesgroup.hudson.plugins.klocwork.model") && valueToString.contains("@")) {
+                                kloFile.store(name, "");
+                            } else {
+                                kloFile.store(name, valueToString);
+                            }
+
+                            //Treating the trace tag
+                            if (name.equals("trace")) {
+                                Trace trace = (Trace) value;
+                                for (TraceBlock tracelt : trace.getTraceBlock()) {
+
+                                    kloFile.addTraceBlock(tracelt.getFile(),
+                                            tracelt.getMethod(), tracelt
+                                            .getName(), tracelt.getId());
+
+
+                                    for (TraceLine traceLinelt : tracelt.getTraceLine()) {
+
+                                        //Element traceLinelt = (Element) listTraceLine.get(k);
+                                        String refId = null;
+                                        if (problem.getRefID() != null && (refId = problem.getRefID().toString()) != null) {
+                                            kloFile.addTraceLine(tracelt.getId(),
+                                                    traceLinelt.getLine(),
+                                                    traceLinelt.getText(),
+                                                    traceLinelt.getType().charAt(0), Integer.parseInt(refId));
+                                        } else {
+                                            kloFile.addTraceLine(tracelt.getId(),
+                                                    traceLinelt.getLine(),
+                                                    traceLinelt.getText(),
+                                                    traceLinelt.getType().charAt(0));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    f.setAccessible(false);
+                }
+                //Adding a new entry in the map corresponding to the file name without its path
+                String fileName = kloFile.get("file");
+                String fileNameWithoutPath = extractFileName(fileName, "\\");
+                if (fileName.equals(fileNameWithoutPath)) {
+                    fileNameWithoutPath = extractFileName(fileName, "/");
+                }
+                kloFile.store("fileNameOnly", fileNameWithoutPath);
+
+                if (Integer.parseInt((String) kloFile.get("severitylevel")) > 3) {
+                    highSeverities.add(kloFile);
+                } else {
+                    lowSeverities.add(kloFile);
+                }
+
+                errors.add(kloFile);
+
+                agregateMap.put(kloFile.getKey(), kloFile);
+
+                kloFiles.add(kloFile);
+
+                i++;
+            }
+
+            if (!lowSeverities.isEmpty()) {
+                report.setLowSeverities(lowSeverities);
+            }
+
+            if (!highSeverities.isEmpty()) {
+                report.setHighSeverities(highSeverities);
+            }
+
+            report.setErrors(errors);
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+        }
+
+
+        return report;
+    }
+
+
+    @Override
+    public String toString() {
+
+        String ret = "";
+
+        for (int i = 0; i < kloFiles.size(); i++) {
+            KloFile kloFile = kloFiles.get(i);
+            ret += "Error n�" + (i + 1) + " " + kloFile.toString();
+        }
+
+        return ret;
+    }
+
+    /**
+     * Return the name of the given filename without its path
+     *
+     * @param fileNameWithPath The file name with its path
+     * @param separator        The separator uses by the OS for the file system (/ for linux, \ for windows)
+     */
+    private String extractFileName(String fileNameWithPath, String separator) {
+        int lastIndex = fileNameWithPath.lastIndexOf(separator);
+        return lastIndex == -1 ? fileNameWithPath : fileNameWithPath.substring(lastIndex + 1);
+    }
+
+    private ErrorList getErrorList(File xmlInputStream) throws JAXBException {
+        ClassLoader cl = ObjectFactory.class.getClassLoader();
+        JAXBContext jc = JAXBContext.newInstance("com.thalesgroup.hudson.plugins.klocwork.model", cl);
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+        return (ErrorList) unmarshaller.unmarshal(xmlInputStream);
+
+    }
+}
