@@ -12,7 +12,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Hudson Klocwork Plug-in</name>
-    <version>0.2.1</version>
+    <version>1.0-SNAPSHOT</version>
     <url>http://wiki.hudson-ci.org/display/HUDSON/Klocwork+Plugin</url>
 
     <licenses>
