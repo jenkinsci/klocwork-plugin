@@ -24,23 +24,21 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
+import com.thalesgroup.hudson.plugins.klocwork.model.KloFile;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
+import com.thalesgroup.hudson.plugins.klocwork.parser.KloParser;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thalesgroup.hudson.plugins.klocwork.model.KloFile;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
-import com.thalesgroup.hudson.plugins.klocwork.parser.KloParser;
-
 public class KlocworkParserTest {
 
-	KloParser kloParser;
+    KloParser kloParser;
 
     @Before
     public void setUp() throws Exception {
@@ -53,8 +51,7 @@ public class KlocworkParserTest {
         try {
             kloParser.parse(null);
             Assert.fail("null parameter is not allowed.");
-        }
-        catch (IllegalArgumentException iea) {
+        } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
         }
     }
@@ -64,38 +61,37 @@ public class KlocworkParserTest {
         try {
             kloParser.parse(new File("nonExistFile"));
             Assert.fail("A valid file is mandatory.");
-        }
-        catch (IllegalArgumentException iea) {
+        } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
         }
     }
-    
+
     //Reminder : in klocwork, the higher the severity is, the less important the error is
-    private void analyzeFiles(String file, int nbHighSeverities, int nbLowSeverities){
-    	try {
-			KloReport report = kloParser.parse(new File(this.getClass().getResource(file).toURI()));
-			List<KloFile> highSeverities = report.getHighSeverities();
-			List<KloFile> lowSeverities = report.getLowSeverities();
-			List<KloFile> allSeverities = report.getAllSeverities();
-			
-			assert highSeverities != null;
-			assert lowSeverities != null;
-			assert allSeverities != null;
-			
-			Assert.assertEquals("Wrong number of total severities",allSeverities.size(), nbHighSeverities+nbLowSeverities);
-			Assert.assertEquals("Wrong number of high severities",highSeverities.size(),nbHighSeverities);
-			Assert.assertEquals("Wrong number of low severities",lowSeverities.size(),nbLowSeverities);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
+    private void analyzeFiles(String file, int nbHighSeverities, int nbLowSeverities) {
+        try {
+            KloReport report = kloParser.parse(new File(this.getClass().getResource(file).toURI()));
+            List<KloFile> highSeverities = report.getHighSeverities();
+            List<KloFile> lowSeverities = report.getLowSeverities();
+            List<KloFile> allSeverities = report.getAllSeverities();
+
+            assert highSeverities != null;
+            assert lowSeverities != null;
+            assert allSeverities != null;
+
+            Assert.assertEquals("Wrong number of total severities", allSeverities.size(), nbHighSeverities + nbLowSeverities);
+            Assert.assertEquals("Wrong number of high severities", highSeverities.size(), nbHighSeverities);
+            Assert.assertEquals("Wrong number of low severities", lowSeverities.size(), nbLowSeverities);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     @Test
     //Warning : the version of Klocwork used was 9.0 and no custom java checker were used in Klocwork
-    public void testCsvToSQLProject(){
-    	analyzeFiles("report-csvtosql.xml", 66, 18);
+    public void testCsvToSQLProject() {
+        analyzeFiles("report-csvtosql.xml", 66, 18);
     }
     //TO BE COMPLETED (with other files to test)...
 }

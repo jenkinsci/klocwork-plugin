@@ -24,21 +24,20 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import hudson.model.HealthReport;
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigSeverityEvaluation;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildHealthEvaluator;
+import hudson.model.HealthReport;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class KlocworkBuildHealthEvaluatorTest {
-	private KloBuildHealthEvaluator klocworkBuildHealthEvaluator;
-	KloConfig klocworkConfig;
+    private KloBuildHealthEvaluator klocworkBuildHealthEvaluator;
+    KloConfig klocworkConfig;
 
     @Before
     public void initialize() {

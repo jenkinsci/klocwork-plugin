@@ -24,21 +24,19 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.Locale;
-
+import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloSummary;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloSummary;
+import java.util.Locale;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class KlocworkSummaryTest {
-	/**
+    /**
      * Initializes the locale to English.
      */
     @Before
@@ -131,5 +129,5 @@ public class KlocworkSummaryTest {
     @Test
     public void test5NewErrors() {
         checkSummaryDetailsText(5, "<li>New Errors: 5</li>");
-	}
+    }
 }

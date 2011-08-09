@@ -24,24 +24,22 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import junit.framework.Assert;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class KlocworkResultTest {
-	private BuildListener listener;
+    private BuildListener listener;
     private AbstractBuild owner;
     private KloReport report;
 
@@ -62,7 +60,7 @@ public class KlocworkResultTest {
 
         if (hasPreviousResult) {
             //Previous Report
-        	KloReport previousReport = mock(KloReport.class);
+            KloReport previousReport = mock(KloReport.class);
             when(previousReport.getNumberTotal()).thenReturn(nbPreviousReportError);
 
             // Previous Result and associate previous report
