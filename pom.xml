@@ -31,19 +31,22 @@
                 <role>Project maintainer</role>
             </roles>
         </developer>
-        <developer>
-            <id>Loic</id>
-            <name>Loic Quentin</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-            </roles>
-        </developer>
     </developers>
 
     <contributors>
         <contributor>
             <name>Gregory Boissinot</name>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Project Technical Lead</role>
+            </roles>
+        </contributor>
+        <contributor>
+            <name>Loic Quentin</name>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Project developer</role>
+            </roles>
         </contributor>
     </contributors>
 

@@ -44,6 +44,8 @@ public class KloBuilder extends Builder {
     private String projectName;
     private String kloName;
 
+    private final static String DEFAULT_CONFIGURATION = "Default";
+
     //AM : Variables for the building process
     private String kwCommand;
 
@@ -120,7 +122,7 @@ public class KloBuilder extends Builder {
         }
         //AM : avoiding having a currentInstall with null value
         else {
-            currentInstall = new KloInstallation("Default", "", "localhost", "8074", "localhost", "27000");
+            currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8074", "localhost", "27000");
         }
 
         /*if (!new File(build.getWorkspace().getRemote() + FS + "kloXML")
@@ -165,7 +167,8 @@ public class KloBuilder extends Builder {
         ArgumentListBuilder argsBuild = new ArgumentListBuilder();
         String execCmd = "";
         String moreArgs = "";
-        if (currentInstall != null) {
+        //if (currentInstall != null) {
+        if (!DEFAULT_CONFIGURATION.equals(currentInstall.getName())) {
             File exec = currentInstall.getExecutable();
 
             if (!currentInstall.getExists()) {
@@ -203,11 +206,6 @@ public class KloBuilder extends Builder {
             int rBuild = launcher.launch().cmds(argsBuild).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
             int rKwBuildproject = launcher.launch().cmds(argsKwbuildproject).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 
-            // Not very nice, but I had to be sure the build command had
-            // done its job
-            // before I launch the load and report commands
-            //Thread.sleep(1000);
-
             int rKwAdmin = launcher.launch().cmds(argsKwadmin).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 
             //AM : changing the way to add the arguments
@@ -220,14 +218,6 @@ public class KloBuilder extends Builder {
                 argsKwinspectreport.add("&&", "exit", "%%ERRORLEVEL%%");
                 argsKwinspectreport = new ArgumentListBuilder().add("cmd.exe", "/C").addQuoted(argsKwinspectreport.toStringWithQuote());
             }
-
-            // As said above, not very nice, but once more, I had to be
-            // sure the load command
-            // had finished performing its job before running the
-            // reporting command
-            // because the latter calls exec on the list-builds command,
-            // which needs the DB to be updated anyway
-            //Thread.sleep(1000);
 
             int rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 
@@ -254,6 +244,14 @@ public class KloBuilder extends Builder {
 
             //End of protected string
             if (currentChar == '\"' && inProtectedString) {
+                /** Special case :
+                 * 	If there are no spaces in the protected String (i.e. using an environment variable whose value contains whitespace),
+                 * 	we keep the opening and closing quotes.
+                 */
+                tmpStr += currentChar;
+                if (tmpStr.contains(" ")) {
+                    tmpStr = tmpStr.substring(1, tmpStr.length() - 1);
+                }
                 arguments.add(tmpStr);
                 nbQuotes++;
                 tmpStr = "";
@@ -263,6 +261,7 @@ public class KloBuilder extends Builder {
 
             //Begining of protected string
             if (currentChar == '\"' && !inProtectedString) {
+                tmpStr += currentChar;
                 inProtectedString = true;
                 nbQuotes++;
                 continue;
@@ -281,7 +280,7 @@ public class KloBuilder extends Builder {
             tmpStr += currentChar;
 
             //Final character : adding the word if not empty
-            if (i == length - 1 && !tmpStr.isEmpty()) {
+            if (i == length - 1 && !tmpStr.trim().isEmpty()) {
                 arguments.add(tmpStr);
                 tmpStr = "";
             }

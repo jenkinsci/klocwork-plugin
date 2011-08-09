@@ -38,7 +38,7 @@
        <f:textbox  />           		   
    </f:entry>
    
-   <f:entry title="Build command line using kwant or kwinject" description="" field="kwCommand">
+   <f:entry title="Build command line (with kwant, kwinject...)" description="" field="kwCommand">
 		<f:textbox />
 	</f:entry>
   
