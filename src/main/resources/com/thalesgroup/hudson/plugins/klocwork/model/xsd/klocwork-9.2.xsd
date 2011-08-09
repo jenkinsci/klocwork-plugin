@@ -49,7 +49,7 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="Analyze"/>
             <xs:enumeration value="Ignore"/>
-            <xs:enumeration value="Not a problem"/>
+            <xs:enumeration value="Not a Problem"/>
             <xs:enumeration value="Fix"/>
             <xs:enumeration value="Fix in Next Release"/>
             <xs:enumeration value="Fix in Later Release"/>
