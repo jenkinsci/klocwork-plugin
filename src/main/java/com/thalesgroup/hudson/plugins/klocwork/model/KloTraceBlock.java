@@ -23,10 +23,11 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class KloTraceBlock {
+public class KloTraceBlock implements Serializable{
 
     private String _file;
     private String _method;
