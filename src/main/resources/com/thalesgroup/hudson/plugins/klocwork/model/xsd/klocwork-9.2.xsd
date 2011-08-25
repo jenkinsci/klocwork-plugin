@@ -148,6 +148,21 @@
 
     <xs:element name="owner" type="xs:string"/>
 
+    <xs:element name="taxonomy">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="metaInf" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="taxonomies">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded">
+                <xs:element ref="tag:taxonomy"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <!-- Main tags -->
     <xs:element name="problem">
         <xs:complexType>
@@ -166,9 +181,10 @@
                 <xs:element ref="tag:severitylevel"/>
                 <xs:element ref="tag:displayAs"/>
                 <xs:element ref="tag:citingStatus"/>
-                <xs:element ref="tag:state"/>
-                <xs:element ref="tag:dateOriginated"/>
-                <xs:element ref="tag:url"/>
+
+                <xs:element ref="tag:state" minOccurs="0"/>
+                <xs:element ref="tag:dateOriginated" minOccurs="0"/>
+                <xs:element ref="tag:url" minOccurs="0"/>
 
 
                 <xs:element ref="tag:comment" minOccurs="0"/>
@@ -178,6 +194,7 @@
                 <xs:element ref="tag:dateFixed" minOccurs="0"/>
                 <xs:element ref="tag:category" minOccurs="0"/>
                 <xs:element ref="tag:lastCommit" minOccurs="0"/>
+                <xs:element ref="tag:taxonomies" minOccurs="0"/>
 
 
             </xs:all>

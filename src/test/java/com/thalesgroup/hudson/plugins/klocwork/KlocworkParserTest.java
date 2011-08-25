@@ -92,6 +92,7 @@ public class KlocworkParserTest {
     //Warning : the version of Klocwork used was 9.0 and no custom java checker were used in Klocwork
     public void testCsvToSQLProject() {
         analyzeFiles("report-csvtosql.xml", 66, 18);
+        analyzeFiles("bug-jenkins-10735.xml", 1, 0);
     }
     //TO BE COMPLETED (with other files to test)...
 }
