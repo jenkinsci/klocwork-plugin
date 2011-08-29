@@ -39,12 +39,12 @@ public class KloConfigGraph implements Serializable {
     public KloConfigGraph() {
     }
 
-    public KloConfigGraph(int xSize, int ySize, boolean diplayAllError,
+    public KloConfigGraph(int xSize, int ySize, boolean displayAllError,
                           boolean displayHighSeverity, boolean displayLowSeverity) {
         super();
         this.xSize = xSize;
         this.ySize = ySize;
-        this.displayAllError = diplayAllError;
+        this.displayAllError = displayAllError;
         this.displayHighSeverity = displayHighSeverity;
         this.displayLowSeverity = displayLowSeverity;
     }

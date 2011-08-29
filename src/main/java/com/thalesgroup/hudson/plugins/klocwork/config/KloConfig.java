@@ -44,7 +44,7 @@ public class KloConfig implements Serializable {
                      String newThreshold, String failureThreshold,
                      String newFailureThreshold, String healthy, String unHealthy,
                      boolean highSeverity, boolean lowSeverity,
-                     int xSize, int ySize, boolean diplayAllError,
+                     int xSize, int ySize, boolean displayAllError,
                      boolean displayHighSeverity, boolean displayLowSeverity) {
 
         this.klocworkReportPattern = klocworkReportPattern;
@@ -53,7 +53,7 @@ public class KloConfig implements Serializable {
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, highSeverity, lowSeverity);
 
-        this.configGraph = new KloConfigGraph(xSize, ySize, diplayAllError,
+        this.configGraph = new KloConfigGraph(xSize, ySize, displayAllError,
                 displayHighSeverity, displayLowSeverity);
     }
 
