@@ -181,7 +181,7 @@ public class KloProjectAction extends AbstractKloProjectAction {
     }*/
     @Override
     protected Integer getLastResultBuild() {
-        for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastStableBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
+        for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastSuccessfulBuild(); b != null; b = b.getPreviousNotFailedBuild()) {
             if (b.getResult() == Result.FAILURE)
                 continue;
             KloBuildAction r = b.getAction(KloBuildAction.class);
