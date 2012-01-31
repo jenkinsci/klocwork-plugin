@@ -71,6 +71,7 @@
 
     <!-- Mandatory tags -->
     <xs:element name="problemID" type="xs:int"/>
+    <xs:element name="isSystem" type="xs:string"/>
     <xs:element name="file" type="xs:string"/>
     <xs:element name="method" type="xs:string"/>
     <xs:element name="line" type="xs:int"/>
@@ -167,6 +168,7 @@
         <xs:complexType>
             <xs:all>
                 <xs:element ref="tag:problemID"/>
+                <xs:element ref="tag:isSystem" minOccurs="0"/>
                 <xs:element ref="tag:file"/>
                 <xs:element ref="tag:method"/>
                 <xs:element ref="tag:line"/>
