@@ -1,31 +1,31 @@
 /*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Loic Quentin                                                        *
- *		                                                                        *
- * Permission is hereby granted, free of charge, to any person obtaining a copy *
- * of this software and associated documentation files (the "Software"), to deal*
- * in the Software without restriction, including without limitation the rights *
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
- * copies of the Software, and to permit persons to whom the Software is        *
- * furnished to do so, subject to the following conditions:                     *
- *                                                                              *
- * The above copyright notice and this permission notice shall be included in   *
- * all copies or substantial portions of the Software.                          *
- *                                                                              *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
- * THE SOFTWARE.                                                                *
- *                                                                              *
- *******************************************************************************/
+* Copyright (c) 2011 Thales Corporate Services SAS *
+* Author : Loic Quentin *
+* *
+* Permission is hereby granted, free of charge, to any person obtaining a copy *
+* of this software and associated documentation files (the "Software"), to deal*
+* in the Software without restriction, including without limitation the rights *
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell *
+* copies of the Software, and to permit persons to whom the Software is *
+* furnished to do so, subject to the following conditions: *
+* *
+* The above copyright notice and this permission notice shall be included in *
+* all copies or substantial portions of the Software. *
+* *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, *
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER *
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN *
+* THE SOFTWARE. *
+* *
+*******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigGraph;
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloGraph;
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigTrendGraph;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
 import com.thalesgroup.hudson.plugins.klocwork.model.AbstractKloBuildAction;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildHealthEvaluator;
@@ -97,7 +97,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
             KloReport report = a.getResult().getReport();
 
-            KloConfigGraph configGraph = kloConfig.getConfigGraph();
+            KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
 
             if (configGraph.isDisplayHighSeverity()) {
                 //Severity higher than 3 --> Warnings and suggestions
@@ -126,8 +126,8 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
         if (req.checkIfModified(timestamp, rsp)) return;
 
-        Graph g = new KloGraph(getOwner(), getDataSetBuilder().build(),
-                "Number of error", kloConfig.getConfigGraph().getXSize(), kloConfig.getConfigGraph().getYSize());
+        Graph g = new KloTrendGraph(getOwner(), getDataSetBuilder().build(),
+                "Number of error", kloConfig.getTrendGraph().getXSize(), kloConfig.getTrendGraph().getYSize());
         g.doPng(req, rsp);
 
     }
@@ -137,3 +137,4 @@ public class KloBuildAction extends AbstractKloBuildAction {
     }
 
 }
+

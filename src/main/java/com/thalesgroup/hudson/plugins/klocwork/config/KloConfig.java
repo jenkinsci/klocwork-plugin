@@ -31,42 +31,137 @@ public class KloConfig implements Serializable {
 
     private String klocworkReportPattern;
 
+    private KloConfigTrendGraph trendGraph = new KloConfigTrendGraph();
+
+    private KloConfigBuildGraph buildGraph = new KloConfigBuildGraph();
+
     private KloConfigSeverityEvaluation configSeverityEvaluation = new KloConfigSeverityEvaluation();
 
-    private KloConfigGraph configGraph = new KloConfigGraph();
+    private boolean linkReview = true;
+    private boolean linkBuildLog = true;
+    private boolean linkParseLog = true;
+    private boolean publishTrendGraph = true;
+    private boolean publishBuildGraph = true;
+    private boolean publishKlocworkResults = true;
 
-    public KloConfig() {
+    private String trendNum = "ALL";
+    private String interval = "1";
+    private String numToKeep;
+
+    public KloConfig()
+    {
+
     }
-
+    
     @DataBoundConstructor
     @SuppressWarnings("unused")
-    public KloConfig(String klocworkReportPattern, String threshold,
+    public KloConfig(String klocworkReportPattern, boolean publishKlocworkResults,
+                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog,
+                     boolean publishTrendGraph, boolean publishBuildGraph,
+                     String trendNum, String interval,
+                     int trendXSize, int trendYSize, 
+                     boolean displayAllError,
+                     boolean displayHighSeverity, 
+                     boolean displayLowSeverity,
+                     int buildXSize, int buildYSize, boolean neww,
+                     boolean existing, boolean fixed,                     
+                     String threshold,
                      String newThreshold, String failureThreshold,
                      String newFailureThreshold, String healthy, String unHealthy,
-                     boolean highSeverity, boolean lowSeverity,
-                     int xSize, int ySize, boolean displayAllError,
-                     boolean displayHighSeverity, boolean displayLowSeverity) {
+                     boolean highSeverity, boolean lowSeverity )
+    {
 
         this.klocworkReportPattern = klocworkReportPattern;
+
+        this.publishKlocworkResults = publishKlocworkResults;
+        this.linkReview = linkReview;
+        this.linkBuildLog = linkBuildLog;
+        this.linkParseLog = linkParseLog;
+        this.publishTrendGraph = publishTrendGraph;
+        this.publishBuildGraph = publishBuildGraph;
+        this.interval = interval;
+        this.trendNum = trendNum;
+        //this.numToKeep = numToKeep;
+        // Publish trend graph, or not
+        if (publishTrendGraph)
+        {
+            this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
+                    displayHighSeverity, displayLowSeverity);
+        }
+        // Publish build graph, or not
+        if (publishBuildGraph)
+        {
+            this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
+                    existing, fixed);
+        }
 
         this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, highSeverity, lowSeverity);
 
-        this.configGraph = new KloConfigGraph(xSize, ySize, displayAllError,
-                displayHighSeverity, displayLowSeverity);
     }
 
-    public String getKlocworkReportPattern() {
+    public String getKlocworkReportPattern()
+    {
         return klocworkReportPattern;
     }
 
-    public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
+    public KloConfigSeverityEvaluation getConfigSeverityEvaluation()
+    {
         return configSeverityEvaluation;
     }
 
-    public KloConfigGraph getConfigGraph() {
-        return configGraph;
+    public KloConfigTrendGraph getTrendGraph()
+    {
+        return trendGraph;
+    }
+    
+    public KloConfigBuildGraph getBuildGraph()
+    {
+        return buildGraph;
     }
 
+    public boolean getPublishKlocworkResults()
+    {
+        return publishKlocworkResults;
+    }
+    
+    public boolean getPublishTrendGraph()
+    {
+        return publishTrendGraph;
+    }
+
+    public boolean getPublishBuildGraph()
+    {
+        return publishBuildGraph;
+    }
+    
+    public String getTrendNum()
+    {
+        return trendNum;
+    }
+    
+    public String getInterval()
+    {
+        return interval;
+    }
+    public boolean getLinkReview()
+    {
+        return linkReview;
+    }
+    
+    public boolean getLinkBuildLog()
+    {
+        return linkBuildLog;
+    }
+    
+    public boolean getLinkParseLog()
+    {
+        return linkParseLog;
+    }
+    
+    public String getNumToKeep()
+    {
+        return numToKeep;
+    }
 }

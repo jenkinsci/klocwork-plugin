@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Aravindan Mahendran                                                 *
- *                                                                              *
+ * Copyright (c) 2011 Emenda Software Ltd.                                      *
+ * Author : Jacob Larfors                                                       *
+ *		                                                                        *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
  * of this software and associated documentation files (the "Software"), to deal*
  * in the Software without restriction, including without limitation the rights *
@@ -19,43 +19,62 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
  * THE SOFTWARE.                                                                *
+ *                                                                              *
  *******************************************************************************/
+package com.thalesgroup.hudson.plugins.klocwork.config;
 
-package com.thalesgroup.hudson.plugins.klocwork.model;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloGraph;
 
-import hudson.model.*;
-import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import java.io.Serializable;
 
-import java.io.IOException;
+public class KloConfigBuildGraph implements Serializable {
 
-public abstract class AbstractKloBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
+    private int xSize = 500;
+    private int ySize = 300;
 
-    protected AbstractBuild<?, ?> owner;
+	// Build Graph Details
+	private boolean neww = true;
+	private boolean existing = true;
+	private boolean fixed = true;
+	
+	
+    public KloConfigBuildGraph() {
+    }
+	
+	public KloConfigBuildGraph(int buildXSize, int buildYSize, boolean neww, boolean existing,
+						boolean fixed)
+	{
+		super();
+		this.xSize = buildXSize;
+        this.ySize = buildYSize;
+		this.neww = neww;
+        this.existing = existing;
+        this.fixed = fixed;
+	}
 
-    protected AbstractKloBuildAction(AbstractBuild<?, ?> owner) {
-        this.owner = owner;
+    public int getXSize()
+    {
+        return xSize;
     }
 
-    public <T extends AbstractKloBuildAction> T getPreviousResult() {
-        AbstractBuild<?, ?> b = owner;
-        while (true) {
-            b = b.getPreviousBuild();
-            if (b == null)
-                return null;
-            if (b.getResult() == Result.FAILURE)
-                continue;
-            AbstractKloBuildAction r = b.getAction(this.getClass());
-            if (r != null)
-                return (T) r;
-        }
+    public int getYSize()
+    {
+        return ySize;
     }
 
-    public AbstractBuild<?, ?> getOwner() {
-        return owner;
+    public boolean isNeww()
+    {
+        return neww;
     }
-
-    //public abstract void doBuildGraph(StaplerRequest req, StaplerResponse rsp) throws IOException;
+	
+	public boolean isExisting()
+    {
+        return existing;
+    }
+	
+	public boolean isFixed()
+    {
+        return fixed;
+    }
 
 }

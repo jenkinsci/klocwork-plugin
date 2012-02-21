@@ -24,6 +24,8 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildInfo;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -149,7 +151,7 @@ public class KloBuilder extends Builder {
 					+ build.getId()).mkdir();
 		}
 
-
+        
 		//AM : changing lastBuildNo
 		String lastBuildNo = "build_ci_" + build.getId();
 		lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
@@ -166,7 +168,7 @@ public class KloBuilder extends Builder {
 
 		//AM : changing the way to add the arguments
 		argsKwbuildproject.add(execKwbuildproject);
-		argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() + FS + "kloTables" +
+		argsKwbuildproject.add(/*proj.getModuleRoot()*outputFile, "--project", projectName, "--tables-directory",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() + FS + "kloTables" +
 				FS + build.getId(), "--project-host", currentInstall.getProjectHost(), "--project-port", currentInstall.getProjectPort(),
 				"--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort(), "--force", "--verbose", "-j", "auto");
 
@@ -213,8 +215,9 @@ public class KloBuilder extends Builder {
 			argsKwbuildproject = new ArgumentListBuilder().add("cmd.exe", "/C").addQuoted(argsKwbuildproject.toStringWithQuote());
 			argsBuild = new ArgumentListBuilder().add("cmd.exe", "/C").addQuoted(argsBuild.toStringWithQuote());
 		}
-
+        
 		try {
+        /*
 			int rBuild = launcher.launch().cmds(argsBuild).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 			int rKwBuildproject = launcher.launch().cmds(argsKwbuildproject).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 
@@ -222,8 +225,8 @@ public class KloBuilder extends Builder {
 
 			//AM : changing the way to add the arguments
 			argsKwinspectreport.add(execKwinspectreport);
-			argsKwinspectreport.add("--project", projectName, "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
-					FS +/*"kloXML"+FS+build.getId()+".xml"*/"klocwork_result.xml", "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+			argsKwinspectreport.add("--project", projectName, "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*build.getWorkspace().getRemote() +
+					FS +/*"kloXML"+FS+build.getId()+".xml"*"klocwork_result.xml", "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
 					"--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort());
 
 			if (!launcher.isUnix()) {
@@ -233,7 +236,14 @@ public class KloBuilder extends Builder {
 
 			int rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
 
-			return (rBuild == 0 && rKwAdmin == 0 && rKwBuildproject == 0 && rKwInspectreport == 0);
+            */
+
+            // Finally store KloInstallation for publisher to use
+            EnvVars env = build.getEnvironment(listener);
+            build.addAction(new KloBuildInfo(build, currentInstall, projectName));
+
+			//return (rBuild == 0 && rKwAdmin == 0 && rKwBuildproject == 0 && rKwInspectreport == 0);
+            return true;
 
 
 		} catch (IOException e) {

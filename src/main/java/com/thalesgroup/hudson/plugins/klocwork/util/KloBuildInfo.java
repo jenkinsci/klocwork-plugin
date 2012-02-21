@@ -1,8 +1,7 @@
-<!--
 /*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Aravindan Mahendran                                                 *
- *                                                                              *
+ * Copyright (c) 2011 Emenda Software Ltd.                                      *
+ * Author : Jacob Larfors                                                       *
+ *		                                                                        *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
  * of this software and associated documentation files (the "Software"), to deal*
  * in the Software without restriction, including without limitation the rights *
@@ -20,29 +19,64 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
  * THE SOFTWARE.                                                                *
+ *                                                                              *
  *******************************************************************************/
- -->
 
-<j:jelly xmlns:j="jelly:core"
-	xmlns:d="jelly:define"
-    xmlns:l="/lib/layout"
-    xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form"
-    xmlns:st="jelly:stapler"
-    xmlns:i="jelly:fmt">
-    <t:summary icon="/plugin/klocwork/icons/klocwork-48.gif">
-		<!--${it.summary}-->
-		${it.result.summary}
-		<ul>
-		<!--${it.details}-->
-		${it.result.details}
-		</ul>
-	</t:summary>
-<!--
-    <j:if test="${it.graphActive}">
-		<div style="float:right">
-			<st:include page="graph.jelly"/>
-		</div>
-	</j:if>
--->
-</j:jelly>
+package com.thalesgroup.hudson.plugins.klocwork.util;
+
+import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
+
+import hudson.model.AbstractBuild;
+import hudson.model.Action;
+
+public class KloBuildInfo implements Action
+{
+
+    public static final String URL_NAME = null;
+    
+    private final String displayName = null;
+	
+	private AbstractBuild<?, ?> owner;
+	
+	private KloInstallation kloInstall;
+	
+	private String project;
+	
+    public KloBuildInfo(AbstractBuild<?, ?> owner, KloInstallation kloInstall, String project)
+    {
+    	this.owner = owner;
+    	this.kloInstall = kloInstall;
+    	this.project = project;
+    }
+    
+    public AbstractBuild<?, ?> getOwner()
+    {
+    	return owner;
+    }
+    
+    public KloInstallation getKloInstall()
+    {
+    	return kloInstall;
+    }
+    
+    public String getProject()
+    {
+    	return project;
+    }
+    
+    public String getIconFileName()
+    {
+        return null;
+    }
+
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public String getUrlName()
+    {
+        return URL_NAME;
+    }
+
+}

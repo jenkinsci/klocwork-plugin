@@ -29,7 +29,12 @@ import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildLog;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloLinkReview;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloParseErrorsLog;
+import hudson.model.Environment;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -58,8 +63,9 @@ public class KloPublisher extends Recorder implements Serializable {
 
 
     @Override
-    public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new KloProjectAction(project);
+    public Action getProjectAction(AbstractProject<?, ?> project)
+    {
+        return new KloProjectAction(project, kloConfig);
     }
 
     protected boolean canContinue(final Result result) {
@@ -109,9 +115,24 @@ public class KloPublisher extends Recorder implements Serializable {
                 build.setResult(buildResult);
             }
 
-            KloBuildAction buildAction = new KloBuildAction(build, result, kloConfig);
-            build.addAction(buildAction);
+            build.addAction(new KloBuildAction(build, result, kloConfig));
 
+            build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
+
+            // Check config whether to create links for Klocwork Review, parse_errors.log
+            // and build.log
+            if (kloConfig.getLinkReview())
+            {
+                build.addAction(new KloLinkReview(build));
+            }
+            if (kloConfig.getLinkBuildLog())
+            {
+                build.addAction(new KloBuildLog(build));
+            }
+            if (kloConfig.getLinkParseLog())
+            {
+                build.addAction(new KloParseErrorsLog(build));
+            }
 
             if (build.getWorkspace().isRemote()) {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());

@@ -33,23 +33,28 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
 
-public abstract class AbstractKloProjectAction extends Actionable implements ProminentProjectAction {
+public abstract class AbstractKloProjectAction extends Actionable implements ProminentProjectAction
+{
 
     protected final AbstractProject<?, ?> project;
 
-    public AbstractKloProjectAction(AbstractProject<?, ?> project) {
+    public AbstractKloProjectAction(AbstractProject<?, ?> project)
+    {
         this.project = project;
     }
 
-    public AbstractProject<?, ?> getProject() {
+    public AbstractProject<?, ?> getProject()
+    {
         return project;
     }
 
-    public String getIconFileName() {
+    public String getIconFileName()
+    {
         return "/plugin/klocwork/icons/klocwork-24.gif";
     }
 
-    public String getSearchUrl() {
+    public String getSearchUrl()
+    {
         return getUrlName();
     }
 
@@ -57,19 +62,25 @@ public abstract class AbstractKloProjectAction extends Actionable implements Pro
 
     protected abstract Integer getLastResultBuild();
 
-    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException
+    {
         AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
         KloBuildAction klocworkBuildAction = lastBuild.getAction(KloBuildAction.class);
-        if (klocworkBuildAction != null) {
+        if (klocworkBuildAction != null)
+        {
             klocworkBuildAction.doGraph(req, rsp);
         }
     }
 
-    public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException
+    {
         Integer buildNumber = getLastResultBuild();
-        if (buildNumber == null) {
+        if (buildNumber == null)
+        {
             rsp.sendRedirect2("nodata");
-        } else {
+        }
+        else
+        {
             rsp.sendRedirect2("../" + buildNumber + "/" + getUrlName());
         }
     }
