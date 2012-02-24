@@ -45,7 +45,8 @@ public class KloBuildLog implements Action
     public KloBuildLog(AbstractBuild<?, ?> owner)
     {
     	this.owner = owner;
-    	this.kloTables = new FilePath(new FilePath(owner.getWorkspace(), "kloTables"), /*owner.getId()*/ "build.log");
+    	this.kloTables = new FilePath(new FilePath(new FilePath(owner.getWorkspace(), "kloTables"),
+																owner.getId()), "build.log");
     }
     
     public AbstractBuild<?, ?> getOwner()
@@ -112,7 +113,7 @@ public class KloBuildLog implements Action
     private String txtToHTML(String input)
     {
     	// replace all line endings
-    	input = input.replaceAll("\r", "<br />").replaceAll("\n", "<br />");
+    	input = input.replaceAll("\n", "<br />");
     	// replace all tabs
     	input = input.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
     	

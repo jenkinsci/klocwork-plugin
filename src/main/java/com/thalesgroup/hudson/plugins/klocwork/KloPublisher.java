@@ -29,10 +29,12 @@ import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildInfo;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildLog;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloLinkReview;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildReviewLink;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloParseErrorsLog;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloProjectReviewLink;
 import hudson.model.Environment;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -49,7 +51,9 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 //AM : KloPublisher now extends Recorder instead of Publisher
@@ -62,10 +66,23 @@ public class KloPublisher extends Recorder implements Serializable {
     private KloConfig kloConfig;
 
 
+	/*
     @Override
     public Action getProjectAction(AbstractProject<?, ?> project)
     {
         return new KloProjectAction(project, kloConfig);
+    }*/
+	
+	@Override
+    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project)
+	{
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new KloProjectAction(project, kloConfig));
+		if (kloConfig.getLinkReview())
+		{
+			actions.add(new KloProjectReviewLink(project));	
+		}
+        return actions;
     }
 
     protected boolean canContinue(final Result result) {
@@ -123,7 +140,7 @@ public class KloPublisher extends Recorder implements Serializable {
             // and build.log
             if (kloConfig.getLinkReview())
             {
-                build.addAction(new KloLinkReview(build));
+                build.addAction(new KloBuildReviewLink(build));
             }
             if (kloConfig.getLinkBuildLog())
             {
@@ -139,6 +156,10 @@ public class KloPublisher extends Recorder implements Serializable {
             }
 
             listener.getLogger().println("End of the klocwork analysis.");
+			int interval = Integer.parseInt(kloConfig.getTrendGraph().getInterval());
+			int trendNum = Integer.parseInt(kloConfig.getTrendGraph().getTrendNum());
+			listener.getLogger().println(interval);
+			listener.getLogger().println(trendNum);
         }
         return true;
     }

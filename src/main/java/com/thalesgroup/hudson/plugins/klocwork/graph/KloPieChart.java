@@ -27,6 +27,7 @@ package com.thalesgroup.hudson.plugins.klocwork.graph;
 import hudson.model.AbstractBuild;
 import hudson.util.Graph;
 
+import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JPanel;
 
@@ -50,30 +51,23 @@ public class KloPieChart extends Graph
     {
         super(-1, chartWidth, chartHeight);
         this.dataset = dataset;
-        //setContentPane(createDemoPanel());
     }
 
     protected JFreeChart createGraph()
     {
         
         JFreeChart chart = ChartFactory.createPieChart(null, dataset, true, true, false);
-
+		chart.setBackgroundPaint(Color.white);
+		
         PiePlot plot = (PiePlot) chart.getPlot();
         plot.setDataset(dataset);
         plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         plot.setNoDataMessage("No Klocwork data found.");
         plot.setCircular(false);
-        //plot.setLabelGenerator(null);
         plot.setLabelGap(0.02);
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{1}"));
         return chart;
         
-    }
-    
-    public JPanel createDemoPanel()
-    {
-        JFreeChart chart = createGraph();
-        return new ChartPanel(chart);
     }
     
 }

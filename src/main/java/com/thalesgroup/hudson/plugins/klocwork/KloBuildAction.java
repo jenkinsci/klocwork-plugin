@@ -92,26 +92,34 @@ public class KloBuildAction extends AbstractKloBuildAction {
     private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
+		int interval = Integer.parseInt(kloConfig.getTrendGraph().getInterval());
+		int trendNum = Integer.parseInt(kloConfig.getTrendGraph().getTrendNum());
+		
+		int count = 0;
+		
         for (KloBuildAction a = this; a != null; a = a.getPreviousResult()) {
-            ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+		
+			if (checkBuildNumber(interval, trendNum, count)) {
+				ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
 
-            KloReport report = a.getResult().getReport();
+				KloReport report = a.getResult().getReport();
 
-            KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
+				KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
 
-            if (configGraph.isDisplayHighSeverity()) {
-                //Severity higher than 3 --> Warnings and suggestions
-                dsb.add(report.getNumberHighSeverities(), "Warnings and suggestions", label);
-            }
-            if (configGraph.isDisplayLowSeverity()) {
-                //Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
-                dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
-            }
+				if (configGraph.isDisplayHighSeverity()) {
+					//Severity higher than 3 --> Warnings and suggestions
+					dsb.add(report.getNumberHighSeverities(), "Warnings and\nsuggestions", label);
+				}
+				if (configGraph.isDisplayLowSeverity()) {
+					//Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
+					dsb.add(count + report.getNumberLowSeverities(), "Critical errors", label);
+				}
 
-            if (configGraph.isDisplayAllError()) {
-                dsb.add(report.getNumberTotal(), "All errors", label);
-            }
-
+				if (configGraph.isDisplayAllError()) {
+					dsb.add(report.getNumberTotal(), "All errors", label);
+				}
+			}
+			count++;
         }
         return dsb;
     }
@@ -124,13 +132,27 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
         Calendar timestamp = getBuild().getTimestamp();
 
-        if (req.checkIfModified(timestamp, rsp)) return;
+        //if (req.checkIfModified(timestamp, rsp)) return;
 
         Graph g = new KloTrendGraph(getOwner(), getDataSetBuilder().build(),
-                "Number of error", kloConfig.getTrendGraph().getXSize(), kloConfig.getTrendGraph().getYSize());
+                "Number of errors", kloConfig.getTrendGraph().getXSize(), kloConfig.getTrendGraph().getYSize());
         g.doPng(req, rsp);
 
     }
+	
+	public boolean checkBuildNumber(int interval, int trendNum, int count)
+	{
+		if ((count % interval) == 0)
+		//if ((count % 2) == 0)
+		{
+			if (((count / interval) < trendNum) || trendNum == 0)
+			{
+				return true;
+			}
+			
+		}
+		return false;
+	}
 
     public String getSearchUrl() {
         return getUrlName();

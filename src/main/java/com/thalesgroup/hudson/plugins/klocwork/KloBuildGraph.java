@@ -26,7 +26,6 @@ package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigBuildGraph;
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloBarChart;
 import com.thalesgroup.hudson.plugins.klocwork.graph.KloPieChart;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloFile;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;

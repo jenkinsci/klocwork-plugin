@@ -23,30 +23,36 @@
 
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloGraph;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
 
 import java.io.Serializable;
 
 public class KloConfigTrendGraph implements Serializable {
 
-    private int xSize = KloGraph.DEFAULT_CHART_WIDTH;
-    private int ySize = KloGraph.DEFAULT_CHART_HEIGHT;
+    private int xSize = KloTrendGraph.DEFAULT_CHART_WIDTH;
+    private int ySize = KloTrendGraph.DEFAULT_CHART_HEIGHT;
 
     private boolean displayAllError = true;
     private boolean displayHighSeverity = true;
     private boolean displayLowSeverity = true;
+	
+	private String interval = "1";
+	private String trendNum = "0";
 
     public KloConfigTrendGraph() {
     }
 
     public KloConfigTrendGraph(int xSize, int ySize, boolean displayAllError,
-                          boolean displayHighSeverity, boolean displayLowSeverity) {
+                          boolean displayHighSeverity, boolean displayLowSeverity,
+						  String interval, String trendNum) {
         super();
         this.xSize = xSize;
         this.ySize = ySize;
         this.displayAllError = displayAllError;
         this.displayHighSeverity = displayHighSeverity;
         this.displayLowSeverity = displayLowSeverity;
+		this.interval = interval;
+		this.trendNum = trendNum;
     }
 
     public int getXSize() {
@@ -67,6 +73,16 @@ public class KloConfigTrendGraph implements Serializable {
 
     public boolean isDisplayLowSeverity() {
         return displayLowSeverity;
+    }
+	
+	public String getTrendNum()
+    {
+        return trendNum;
+    }
+    
+    public String getInterval()
+    {
+        return interval;
     }
 
 }

@@ -44,8 +44,6 @@ public class KloConfig implements Serializable {
     private boolean publishBuildGraph = true;
     private boolean publishKlocworkResults = true;
 
-    private String trendNum = "ALL";
-    private String interval = "1";
     private String numToKeep;
 
     public KloConfig()
@@ -79,21 +77,12 @@ public class KloConfig implements Serializable {
         this.linkParseLog = linkParseLog;
         this.publishTrendGraph = publishTrendGraph;
         this.publishBuildGraph = publishBuildGraph;
-        this.interval = interval;
-        this.trendNum = trendNum;
-        //this.numToKeep = numToKeep;
-        // Publish trend graph, or not
-        if (publishTrendGraph)
-        {
-            this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
-                    displayHighSeverity, displayLowSeverity);
-        }
-        // Publish build graph, or not
-        if (publishBuildGraph)
-        {
-            this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
+		
+        this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
+                    displayHighSeverity, displayLowSeverity, interval, trendNum);
+					
+        this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
                     existing, fixed);
-        }
 
         this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
@@ -136,15 +125,6 @@ public class KloConfig implements Serializable {
         return publishBuildGraph;
     }
     
-    public String getTrendNum()
-    {
-        return trendNum;
-    }
-    
-    public String getInterval()
-    {
-        return interval;
-    }
     public boolean getLinkReview()
     {
         return linkReview;

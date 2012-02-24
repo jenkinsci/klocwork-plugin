@@ -23,8 +23,6 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloGraph;
-
 import java.io.Serializable;
 
 public class KloConfigBuildGraph implements Serializable {
