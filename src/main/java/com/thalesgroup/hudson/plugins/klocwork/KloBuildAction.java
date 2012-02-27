@@ -80,10 +80,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 	}
 
     public Object getTarget() {
-		if (kloConfig.getPublishKlocworkResults()) {
-			return this.result;
-		}
-		return null;
+		return this.result;
     }
 
     public HealthReport getBuildHealth() {

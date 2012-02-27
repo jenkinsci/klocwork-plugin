@@ -40,9 +40,7 @@ public class KloConfig implements Serializable {
     private boolean linkReview = true;
     private boolean linkBuildLog = true;
     private boolean linkParseLog = true;
-    private boolean publishTrendGraph = true;
     private boolean publishBuildGraph = true;
-    private boolean publishKlocworkResults = true;
 
     private String numToKeep;
 
@@ -53,9 +51,9 @@ public class KloConfig implements Serializable {
     
     @DataBoundConstructor
     @SuppressWarnings("unused")
-    public KloConfig(String klocworkReportPattern, boolean publishKlocworkResults,
+    public KloConfig(String klocworkReportPattern,
                      boolean linkReview, boolean linkBuildLog, boolean linkParseLog,
-                     boolean publishTrendGraph, boolean publishBuildGraph,
+					 boolean publishBuildGraph,
                      String trendNum, String interval,
                      int trendXSize, int trendYSize, 
                      boolean displayAllError,
@@ -71,11 +69,9 @@ public class KloConfig implements Serializable {
 
         this.klocworkReportPattern = klocworkReportPattern;
 
-        this.publishKlocworkResults = publishKlocworkResults;
         this.linkReview = linkReview;
         this.linkBuildLog = linkBuildLog;
         this.linkParseLog = linkParseLog;
-        this.publishTrendGraph = publishTrendGraph;
         this.publishBuildGraph = publishBuildGraph;
 		
         this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
@@ -108,16 +104,6 @@ public class KloConfig implements Serializable {
     public KloConfigBuildGraph getBuildGraph()
     {
         return buildGraph;
-    }
-
-    public boolean getPublishKlocworkResults()
-    {
-        return publishKlocworkResults;
-    }
-    
-    public boolean getPublishTrendGraph()
-    {
-        return publishTrendGraph;
     }
 
     public boolean getPublishBuildGraph()

@@ -272,7 +272,7 @@ public class KloProjectAction extends AbstractKloProjectAction {
             if (b.getResult() == Result.FAILURE)
                 continue;
             KloBuildAction r = b.getAction(KloBuildAction.class);
-            if (r != null && r.getConfig().getPublishKlocworkResults())
+            if (r != null)
                 return b.getNumber();
         }
         return null;

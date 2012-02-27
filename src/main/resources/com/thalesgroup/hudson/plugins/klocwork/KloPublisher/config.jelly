@@ -35,6 +35,7 @@
 	description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
         <f:textbox name="klocworkReportPattern" value="${config.klocworkReportPattern}"/>
     </f:entry>
+	<!--
     <f:entry title="${%Publish Klocwork Results}" help="/plugin/klocwork/resultsLink.html" >
 	    <table>
 		    <tr>
@@ -45,7 +46,7 @@
     		</tr>
 	    </table>
     </f:entry>
-  
+    -->
     <f:entry title="${%Create Links for}" help="/plugin/klocwork/buildLinks.html" >
 	    <table>
 		    <tr>
@@ -61,7 +62,7 @@
     		</tr>
 	    </table>
     </f:entry>
-    <!-- title="${%Publish Trend Graphs}" -->
+    <!--
     <f:entry title="${%Publish Graphs}" help="/plugin/klocwork/trend.html" >
 	    <table>
 		    <tr>
@@ -71,7 +72,8 @@
 	    	</tr>
     	</table>
     </f:entry>
-    <f:entry description="Enter the number of Klocwork builds to report on the project trend graph and the interval."
+	-->
+    <f:entry title="${%Publish Graphs}" description="Enter the number of Klocwork builds to report on the project trend graph and the interval."
              help="/plugin/klocwork/trendConfig.html">
 	    <table>
 		    <tr>
@@ -107,12 +109,12 @@
     		</tr>
 	    </table>
     </f:entry>
-    <!-- title="${%Publish Build Chart}" -->
+
     <f:entry help="/plugin/klocwork/buildGraph.html" >
 	    <table>
 		    <tr>
 			    <td style="width:200px">
-				    <f:checkbox name="publishBuildGraph" checked="${config.publishBuildGraph}" title="Build Chart" />
+				    <f:checkbox name="publishBuildGraph" checked="${config.publishBuildGraph}" title="${%Publish Pie Chart}" />
     			</td>
 	    	</tr>
     	</table>

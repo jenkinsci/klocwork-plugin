@@ -132,8 +132,7 @@ public class KloPublisher extends Recorder implements Serializable {
                 build.setResult(buildResult);
             }
 
-            build.addAction(new KloBuildAction(build, result, kloConfig));
-
+			build.addAction(new KloBuildAction(build, result, kloConfig));
             build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
 
             // Check config whether to create links for Klocwork Review, parse_errors.log
