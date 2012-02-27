@@ -156,10 +156,6 @@ public class KloPublisher extends Recorder implements Serializable {
             }
 
             listener.getLogger().println("End of the klocwork analysis.");
-			int interval = Integer.parseInt(kloConfig.getTrendGraph().getInterval());
-			int trendNum = Integer.parseInt(kloConfig.getTrendGraph().getTrendNum());
-			listener.getLogger().println(interval);
-			listener.getLogger().println(trendNum);
         }
         return true;
     }

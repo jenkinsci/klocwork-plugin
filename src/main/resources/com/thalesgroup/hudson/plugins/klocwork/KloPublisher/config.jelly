@@ -35,7 +35,7 @@
 	description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}">
         <f:textbox name="klocworkReportPattern" value="${config.klocworkReportPattern}"/>
     </f:entry>
-    <f:entry title="${%Publish Klocwork Results}" help="/plugin/klocwork/kwResults.html" >
+    <f:entry title="${%Publish Klocwork Results}" help="/plugin/klocwork/resultsLink.html" >
 	    <table>
 		    <tr>
 			    <td style="width:200px">

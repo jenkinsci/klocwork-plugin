@@ -120,7 +120,7 @@ public class KloBuildGraph implements Action {
 		//Graph g = new KloBarChart(getDataSetBuilder(kloConfigBuildGraph),
         //                kloConfigBuildGraph.getXSize(), kloConfigBuildGraph.getYSize());
 		
-		Graph g = new KloPieChart(getDataSetBuilder(kloConfigBuildGraph),
+		Graph g = new KloPieChart(getDataSetBuilder(kloConfigBuildGraph), kloConfig, kloReport,
                         kloConfigBuildGraph.getXSize(), kloConfigBuildGraph.getYSize());
 		
         g.doPng(req, rsp);
@@ -133,11 +133,17 @@ public class KloBuildGraph implements Action {
         DefaultPieDataset dataset = new DefaultPieDataset();
         
    		if (kloConfigBuildGraph.isNeww() && kloReport.getNeww()>0)
+		{
 	        dataset.setValue("New", kloReport.getNeww());
+		}
     	if (kloConfigBuildGraph.isExisting() && kloReport.getExisting()>0)
+		{
 	        dataset.setValue("Existing", kloReport.getExisting());
+		}
    		if (kloConfigBuildGraph.isFixed() && kloReport.getFixed()>0)
+		{
     	    dataset.setValue("Fixed", kloReport.getFixed());
+		}
         
         return dataset;
     }

@@ -71,12 +71,19 @@ public class KloBuildAction extends AbstractKloBuildAction {
         return this.result;
     }
 
-    AbstractBuild<?, ?> getBuild() {
+    public AbstractBuild<?, ?> getBuild() {
         return owner;
     }
+	
+	public KloConfig getConfig() {
+		return kloConfig;
+	}
 
     public Object getTarget() {
-        return this.result;
+		if (kloConfig.getPublishKlocworkResults()) {
+			return this.result;
+		}
+		return null;
     }
 
     public HealthReport getBuildHealth() {
@@ -112,7 +119,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 				}
 				if (configGraph.isDisplayLowSeverity()) {
 					//Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
-					dsb.add(count + report.getNumberLowSeverities(), "Critical errors", label);
+					dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
 				}
 
 				if (configGraph.isDisplayAllError()) {
@@ -132,7 +139,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
         Calendar timestamp = getBuild().getTimestamp();
 
-        //if (req.checkIfModified(timestamp, rsp)) return;
+        if (req.checkIfModified(timestamp, rsp)) return;
 
         Graph g = new KloTrendGraph(getOwner(), getDataSetBuilder().build(),
                 "Number of errors", kloConfig.getTrendGraph().getXSize(), kloConfig.getTrendGraph().getYSize());
@@ -143,7 +150,6 @@ public class KloBuildAction extends AbstractKloBuildAction {
 	public boolean checkBuildNumber(int interval, int trendNum, int count)
 	{
 		if ((count % interval) == 0)
-		//if ((count % 2) == 0)
 		{
 			if (((count / interval) < trendNum) || trendNum == 0)
 			{
