@@ -76,6 +76,7 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
 
             for (String kloReportFileName : kloReportFiles) {
                 KloReport kloReport = new KloParser().parse(new File(basedir, kloReportFileName));
+
                 mergeReport(kloReportResult, kloReport);
             }
         } catch (Exception e) {
@@ -91,6 +92,9 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         kloReportResult.getHighSeverities().addAll(kloReport.getHighSeverities());
         kloReportResult.getLowSeverities().addAll(kloReport.getLowSeverities());
         kloReportResult.getAllSeverities().addAll(kloReport.getAllSeverities());
+        kloReportResult.setNeww(kloReportResult.getNeww() + kloReport.getNeww());
+        kloReportResult.setFixed(kloReportResult.getFixed() + kloReport.getFixed());
+        kloReportResult.setExisting(kloReportResult.getExisting() + kloReport.getExisting());
 
     }
 

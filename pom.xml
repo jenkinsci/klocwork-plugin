@@ -56,6 +56,13 @@
                 <role>Project developer</role>
             </roles>
         </contributor>
+		<contributor>
+            <name>Jacob Larfors</name>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Project developer</role>
+            </roles>
+        </contributor>
     </contributors>
 
     <properties>

@@ -24,20 +24,28 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigTrendGraph;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
 import com.thalesgroup.hudson.plugins.klocwork.model.AbstractKloProjectAction;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Result;
+import hudson.util.ChartUtil.NumberOnlyBuildLabel;
+import hudson.util.DataSetBuilder;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class KloProjectAction extends AbstractKloProjectAction {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
     public static final String URL_NAME = "kloResult";
@@ -45,10 +53,14 @@ public class KloProjectAction extends AbstractKloProjectAction {
     public static final int CHART_WIDTH = 500;
     public static final int CHART_HEIGHT = 200;
 
+    private KloConfig kloConfig;
+
     //public AbstractProject<?,?> project;
 
-    public KloProjectAction(final AbstractProject<?, ?> project) {
+    public KloProjectAction(final AbstractProject<?, ?> project, KloConfig kloConfig)
+    {
         super(project);
+        this.kloConfig = kloConfig;
     }
 
     public String getIconFileName() {
@@ -179,6 +191,81 @@ public class KloProjectAction extends AbstractKloProjectAction {
                 CHART_HEIGHT);
         
     }*/
+
+/*
+    public void doTrendGraph(StaplerRequest req, StaplerResponse rsp) throws IOException
+	{
+
+		DataSetBuilder<String, NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, NumberOnlyBuildLabel>();
+
+		List<Object[]> builds = getKwBuilds();
+		int intervalNum = 0;
+		int intTrendNum = builds.size();
+		int maxBuilds = 0;
+		try
+        {
+			intervalNum = Integer.parseInt(kloConfig.getInterval());
+			if (!kloConfig.getTrendNum().equals("ALL"))
+            {
+				intTrendNum = Integer.parseInt(kloConfig.getTrendNum());
+            }
+		} catch (NumberFormatException nfe) {
+			// Bugger!
+			intervalNum = 1;
+		}
+		
+        // Calculate the total number of builds to display
+        // on the trend chart
+		maxBuilds = intTrendNum * intervalNum;
+
+		int i = 0;
+
+		while (i<builds.size() && i<maxBuilds)
+		{
+			if ((i%intervalNum)==0)
+			{
+				Object[] build = builds.get(i);
+			
+				NumberOnlyBuildLabel label = new NumberOnlyBuildLabel((AbstractBuild) build[0]);
+				
+
+				if (kloConfig.getTrendGraph().isDisplayAllError())
+					dsb.add((Long) build[4], "All Issues", label);
+				if (kloConfig.getTrendGraph().isDisplayHighSeverity())
+					dsb.add((Long) build[1], "Low Severity", label);
+				if (kloConfig.getTrendGraph().isDisplayMedSeverity())
+					dsb.add((Long) build[2], "Med Severity", label);
+				if (kloConfig.getTrendGraph().isDisplayLowSeverity())
+					dsb.add((Long) build[3], "High Severity", label);
+			}
+			i++;
+		}
+		
+		KloTrendGraph kwgraph = new KloTrendGraph(dsb.build(),kloConfig,"No. of Issues","Build No.",500,300,
+															new Color(200,0,0),new Color(0,0,200),new Color(200,200,0),new Color(0,200,0));
+		kwgraph.doPng(req,rsp);
+	}
+
+
+    public List<Object[]> getKwBuilds()
+	{
+		List<Object[]> builds = new ArrayList<Object[]>();
+		for (AbstractBuild build : project.getBuilds())
+		{
+			KloBuildGraph kwBuild = build.getAction(KloBuildGraph.class);
+			KloReport report = null;
+			if (kwBuild != null && kwBuild.getKloReport()!=null)
+			{
+				report = kwBuild.getKloReport();
+				builds.add(new Object[] {kwBuild.getOwner(), new Long(report.getNumberHighSeverities()),
+							new Long(report.getNumberMedSeverities()), new Long(report.getNumberLowSeverities()),
+                            new Long(report.getNumberTotal())});
+			}
+		}
+		return builds;
+	}
+*/
+
     @Override
     protected Integer getLastResultBuild() {
         for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastSuccessfulBuild(); b != null; b = b.getPreviousNotFailedBuild()) {

@@ -37,6 +37,15 @@
    <f:entry title="Project Name" field="projectName" description="Specify Klocwork project name (must be an existing project)">
        <f:textbox  />           		   
    </f:entry>
+
+	<!-- Allows user to chose to build from command or existing build spec. -->
+   <f:entry title="Build Using" description="Build using a build command or build specification" field="buildUsing" help="/plugin/klocwork/help-build.html">
+      <select name="buildUsing">
+         <f:option selected="${instance.getBuildUsing()==0}" value="0">Build Command</f:option>
+         <f:option selected="${instance.getBuildUsing()==1}" value="1">Build Specification</f:option>
+      </select>
+   </f:entry>
+
    
    <f:entry title="Build command line (with kwant, kwinject...)" description="" field="kwCommand">
 		<f:textbox />
@@ -45,5 +54,10 @@
    <!--<f:entry title="file_out" field="fileOut" description="Specify the file .out to use" help="/plugin/klocwork/fileOut.html">
        <f:textbox />
    </f:entry>-->
+   <!-- Binary build option. Stop build if build errors exist -->
+   <f:entry title="Binary Build" description="Set whether to stop the build process if a build error exists." help="/plugin/klocwork/help-binaryBuild.html">
+		<f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)" checked="${instance.compilerBinaryBuild}" /> <br />
+		<f:checkbox name="kwBinaryBuild" title="Stop build if a Klocwork build error exists (Less Strict)" checked="${instance.kwBinaryBuild}" />
+	</f:entry>
 
 </j:jelly>
