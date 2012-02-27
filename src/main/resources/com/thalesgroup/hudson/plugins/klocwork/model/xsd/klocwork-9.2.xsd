@@ -58,7 +58,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!-- Type used for state tag -->
     <xs:simpleType name="stateValue">
         <xs:restriction base="xs:string">
             <xs:enumeration value="New"/>
@@ -181,6 +180,7 @@
                 <xs:element ref="tag:severitylevel"/>
                 <xs:element ref="tag:displayAs"/>
                 <xs:element ref="tag:citingStatus"/>
+                <xs:element ref="tag:owner" minOccurs="0"/>
 
                 <xs:element ref="tag:state" minOccurs="0"/>
                 <xs:element ref="tag:dateOriginated" minOccurs="0"/>

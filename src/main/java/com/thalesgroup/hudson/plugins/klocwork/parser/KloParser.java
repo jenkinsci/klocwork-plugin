@@ -85,6 +85,11 @@ public class KloParser implements Serializable {
             List<KloFile> lowSeverities = new ArrayList<KloFile>();
             List<KloFile> highSeverities = new ArrayList<KloFile>();
             List<KloFile> errors = new ArrayList<KloFile>();
+    
+            double numFixed = 0.0;
+        	double numExisting = 0.0;
+        	double numNew = 0.0;
+
             int i = 0;
             for (Problem problem : errList.getProblem()) {
                 KloFile kloFile;
@@ -152,10 +157,29 @@ public class KloParser implements Serializable {
                 }
                 kloFile.store("fileNameOnly", fileNameWithoutPath);
 
-                if (Integer.parseInt((String) kloFile.get("severitylevel")) > 3) {
+                if (Integer.parseInt((String) kloFile.get("severitylevel")) > 3)
+                {
                     highSeverities.add(kloFile);
-                } else {
+                }
+                else
+                {
                     lowSeverities.add(kloFile);
+                }
+
+                if (kloFile.get("state") != null)
+                {
+                    if (kloFile.get("state").equalsIgnoreCase("New"))
+                    {
+                        numNew++;
+                    }
+                    else if (kloFile.get("state").equalsIgnoreCase("Existing"))
+                    {
+                        numExisting++;
+                    }
+                    else if (kloFile.get("state").equalsIgnoreCase("Fixed"))
+                    {
+                        numFixed++;
+                    }
                 }
 
                 errors.add(kloFile);
@@ -167,15 +191,21 @@ public class KloParser implements Serializable {
                 i++;
             }
 
-            if (!lowSeverities.isEmpty()) {
+            if (!lowSeverities.isEmpty())
+            {
                 report.setLowSeverities(lowSeverities);
             }
 
-            if (!highSeverities.isEmpty()) {
+            if (!highSeverities.isEmpty())
+            {
                 report.setHighSeverities(highSeverities);
             }
 
             report.setErrors(errors);
+
+            report.setFixed(numFixed);
+            report.setExisting(numExisting);
+            report.setNeww(numNew);
 
         } catch (JAXBException e) {
             e.printStackTrace();

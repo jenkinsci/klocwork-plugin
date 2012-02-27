@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Aravindan Mahendran                                                 *
- *                                                                              *
+ * Copyright (c) 2011 Emenda Software Ltd.                                      *
+ * Author : Jacob Larfors                                                       *
+ *		                                                                        *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
  * of this software and associated documentation files (the "Software"), to deal*
  * in the Software without restriction, including without limitation the rights *
@@ -19,54 +19,60 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
  * THE SOFTWARE.                                                                *
+ *                                                                              *
  *******************************************************************************/
-
 package com.thalesgroup.hudson.plugins.klocwork.config;
-
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloGraph;
 
 import java.io.Serializable;
 
-public class KloConfigGraph implements Serializable {
+public class KloConfigBuildGraph implements Serializable {
 
-    private int xSize = KloGraph.DEFAULT_CHART_WIDTH;
-    private int ySize = KloGraph.DEFAULT_CHART_HEIGHT;
+    private int xSize = 500;
+    private int ySize = 300;
 
-    private boolean displayAllError = true;
-    private boolean displayHighSeverity = true;
-    private boolean displayLowSeverity = true;
-
-    public KloConfigGraph() {
+	// Build Graph Details
+	private boolean neww = true;
+	private boolean existing = true;
+	private boolean fixed = true;
+	
+	
+    public KloConfigBuildGraph() {
     }
+	
+	public KloConfigBuildGraph(int buildXSize, int buildYSize, boolean neww, boolean existing,
+						boolean fixed)
+	{
+		super();
+		this.xSize = buildXSize;
+        this.ySize = buildYSize;
+		this.neww = neww;
+        this.existing = existing;
+        this.fixed = fixed;
+	}
 
-    public KloConfigGraph(int xSize, int ySize, boolean displayAllError,
-                          boolean displayHighSeverity, boolean displayLowSeverity) {
-        super();
-        this.xSize = xSize;
-        this.ySize = ySize;
-        this.displayAllError = displayAllError;
-        this.displayHighSeverity = displayHighSeverity;
-        this.displayLowSeverity = displayLowSeverity;
-    }
-
-    public int getXSize() {
+    public int getXSize()
+    {
         return xSize;
     }
 
-    public int getYSize() {
+    public int getYSize()
+    {
         return ySize;
     }
 
-    public boolean isDisplayAllError() {
-        return displayAllError;
+    public boolean isNeww()
+    {
+        return neww;
     }
-
-    public boolean isDisplayHighSeverity() {
-        return displayHighSeverity;
+	
+	public boolean isExisting()
+    {
+        return existing;
     }
-
-    public boolean isDisplayLowSeverity() {
-        return displayLowSeverity;
+	
+	public boolean isFixed()
+    {
+        return fixed;
     }
 
 }

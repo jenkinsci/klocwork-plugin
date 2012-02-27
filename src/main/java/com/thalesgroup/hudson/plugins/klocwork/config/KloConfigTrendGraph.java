@@ -21,41 +21,69 @@
  * THE SOFTWARE.                                                                *
  *******************************************************************************/
 
-package com.thalesgroup.hudson.plugins.klocwork.model;
+package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import hudson.model.*;
-import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
 
-import java.io.IOException;
+import java.io.Serializable;
 
-public abstract class AbstractKloBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
+public class KloConfigTrendGraph implements Serializable {
 
-    protected AbstractBuild<?, ?> owner;
+    private int xSize = KloTrendGraph.DEFAULT_CHART_WIDTH;
+    private int ySize = KloTrendGraph.DEFAULT_CHART_HEIGHT;
 
-    protected AbstractKloBuildAction(AbstractBuild<?, ?> owner) {
-        this.owner = owner;
+    private boolean displayAllError = true;
+    private boolean displayHighSeverity = true;
+    private boolean displayLowSeverity = true;
+	
+	private String interval = "1";
+	private String trendNum = "0";
+
+    public KloConfigTrendGraph() {
     }
 
-    public <T extends AbstractKloBuildAction> T getPreviousResult() {
-        AbstractBuild<?, ?> b = owner;
-        while (true) {
-            b = b.getPreviousBuild();
-            if (b == null)
-                return null;
-            if (b.getResult() == Result.FAILURE)
-                continue;
-            AbstractKloBuildAction r = b.getAction(this.getClass());
-            if (r != null)
-                return (T) r;
-        }
+    public KloConfigTrendGraph(int xSize, int ySize, boolean displayAllError,
+                          boolean displayHighSeverity, boolean displayLowSeverity,
+						  String interval, String trendNum) {
+        super();
+        this.xSize = xSize;
+        this.ySize = ySize;
+        this.displayAllError = displayAllError;
+        this.displayHighSeverity = displayHighSeverity;
+        this.displayLowSeverity = displayLowSeverity;
+		this.interval = interval;
+		this.trendNum = trendNum;
     }
 
-    public AbstractBuild<?, ?> getOwner() {
-        return owner;
+    public int getXSize() {
+        return xSize;
     }
 
-    //public abstract void doBuildGraph(StaplerRequest req, StaplerResponse rsp) throws IOException;
+    public int getYSize() {
+        return ySize;
+    }
+
+    public boolean isDisplayAllError() {
+        return displayAllError;
+    }
+
+    public boolean isDisplayHighSeverity() {
+        return displayHighSeverity;
+    }
+
+    public boolean isDisplayLowSeverity() {
+        return displayLowSeverity;
+    }
+	
+	public String getTrendNum()
+    {
+        return trendNum;
+    }
+    
+    public String getInterval()
+    {
+        return interval;
+    }
 
 }
+
