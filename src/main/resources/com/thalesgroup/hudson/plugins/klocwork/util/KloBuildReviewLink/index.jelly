@@ -1,0 +1,14 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout xmlns:plugin="/hudson/plugins/javancss/tags" css="/plugin/javancss/css/style.css">
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
+        <l:main-panel>
+            <a href="http://${it.kloHost}:${it.kloPort}/review/insight-review.html#issuelist_goto:offset=0,project=${it.project},scope=1,searchquery=,sortcolumn=id,sortdirection=ASC,start=0" target="_blank">Open Review in new tab</a>
+		<iframe src="http://${it.kloHost}:${it.kloPort}/review/insight-review.html#issuelist_goto:offset=0,project=${it.project},scope=1,searchquery=,sortcolumn=id,sortdirection=ASC,start=0" frameborder="0" style="width:100%;height:${it.reviewHeight}">
+		<!--
+      	  <a href="http://${it.kloHost}:${it.kloPort}/review/insight-review.html#issuelist_goto:offset=0,project=${it.project},scope=1,searchquery=,sortcolumn=id,sortdirection=ASC,start=0" target="_blank"></a>
+		  -->
+    		</iframe>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
