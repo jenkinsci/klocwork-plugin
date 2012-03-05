@@ -141,14 +141,21 @@ public class KloParser implements Serializable {
                                     }
                                 }
                             }
+                            
+                            
                         }
                     } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
+                                        
                     f.setAccessible(false);
                 }
+                //AM : adding a href in the message to the corresponding defect in klocwork review
+                StringBuilder message = new StringBuilder(kloFile.get("message")).append(" <a href=\"").append(kloFile.get("url")).append("\" target=\"_blank\">Link to defect in Klocwork Review</a>");
+                kloFile.store("message", message.toString());
+                
                 //Adding a new entry in the map corresponding to the file name without its path
                 String fileName = kloFile.get("file");
                 String fileNameWithoutPath = extractFileName(fileName, "\\");
@@ -223,7 +230,7 @@ public class KloParser implements Serializable {
 
         for (int i = 0; i < kloFiles.size(); i++) {
             KloFile kloFile = kloFiles.get(i);
-            ret += "Error n�" + (i + 1) + " " + kloFile.toString();
+            ret += "Error n " + (i + 1) + " " + kloFile.toString();
         }
 
         return ret;
