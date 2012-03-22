@@ -204,7 +204,7 @@ public class KloBuilder extends Builder {
 			if (kloOption.getCmdOption().replace(" ", "").equals("--tables-directory") ||
 			        kloOption.getCmdOption().replace(" ", "").equals("-o"))
 			{
-				kloTables = kloOption.getCmdValue();
+				kloTables = kloOption.getCmdValue().replace("${BUILD_ID}", build.getId());
 			}
 			else
 			{

@@ -1,5 +1,6 @@
 <div>
   Here you can specify options to be used when running kwbuildproject. In the options box please enter the option (ex. --add-compiler-options) and in the second box please enter the value (ex. -D__MY_DEFINE__). <br />
+  To create a unique Klocwork tables directory in another location using the "-o" or "--tables-directory" options, use the variable "${BUILD_ID}" which will represent a value unique to each build. e.g. -o C:\kloTables\${BUILD_ID}. <br />
   You can also specify options which do not require a value, e.g. --verbose. <br />
   <tt>Do not specify the following options:
 	  <ul>
