@@ -61,9 +61,14 @@ public abstract class AbstractKloProjectAction extends Actionable implements Pro
     protected abstract AbstractBuild<?, ?> getLastFinishedBuild();
 
     protected abstract Integer getLastResultBuild();
+	
+	protected abstract boolean getPublishProjectGraph();
 
     public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException
     {
+		if (!getPublishProjectGraph()) {
+			return ;
+		}
         AbstractBuild<?, ?> lastBuild = getLastFinishedBuild();
         KloBuildAction klocworkBuildAction = lastBuild.getAction(KloBuildAction.class);
         if (klocworkBuildAction != null)

@@ -74,8 +74,16 @@ public class KloProjectAction extends AbstractKloProjectAction {
     public String getUrlName() {
         return URL_NAME;
     }
+	
+	public boolean getPublishProjectGraph()	{
+		return kloConfig.getPublishProjectGraph();
+	}
 
     public final boolean isDisplayGraph() {
+		// Check that user has ticked to publish project graph
+		if (!kloConfig.getPublishProjectGraph()) {
+			return false;
+		}
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
         if (b == null) {

@@ -108,7 +108,12 @@ public class KloProjectReviewLink implements ProminentProjectAction
 
 	public String getUrlName()
 	{
-		return URL_NAME;
+		if (project.getLastSuccessfulBuild() !=null){
+			return project.getLastSuccessfulBuild().number+"/"+URL_NAME;
+		}
+		else {
+			return URL_NAME;
+		}
 	}
 
 	public String getKloHost()

@@ -24,6 +24,7 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloOption;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildInfo;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -52,12 +53,19 @@ public class KloBuilder extends Builder {
 	
 	private boolean compilerBinaryBuild = false;
 	private boolean kwBinaryBuild = false;
+	
+	private KloOption[] kloOptions = new KloOption[0];
 
 	private final static String DEFAULT_CONFIGURATION = "Default";
 
 	//AM : Variables for the building process
 	private String kwCommand;
 
+	public KloBuilder()
+	{
+	
+	}
+	
 	@DataBoundConstructor
 	public KloBuilder(String projectName, String kloName, String buildUsing, String kwCommand,
 						boolean compilerBinaryBuild, boolean kwBinaryBuild) {
@@ -102,7 +110,16 @@ public class KloBuilder extends Builder {
 	{
 		return kwBinaryBuild;
 	}
-
+	
+	public void setKloOptions(KloOption[] kloOptions)
+	{
+		this.kloOptions = kloOptions;
+	}
+	
+	public KloOption[] getKloOptions()
+	{
+		return kloOptions;
+	}
 
 	public KloInstallation getKlo() {
 		for (KloInstallation i : DESCRIPTOR.getInstallations()) {
@@ -131,8 +148,7 @@ public class KloBuilder extends Builder {
 		} else {
 			FS = "/";
 		}
-
-
+		
 		if (currentInstall != null) {
 
 			//File exec = currentInstall.getExecutable();
@@ -179,11 +195,27 @@ public class KloBuilder extends Builder {
 		//AM : changing lastBuildNo
 		String lastBuildNo = "build_ci_" + build.getId();
 		lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
-
+		
+		String kloTables = build.getWorkspace().getRemote() + FS + "kloTables" + FS + build.getId();
+		// Add kwbuildproject options provided on the configuration page
+		for (KloOption kloOption : kloOptions)
+		{
+			// If tables directory was specified, set kloTables, as this will be added later
+			if (kloOption.getCmdOption().replace(" ", "").equals("--tables-directory") ||
+			        kloOption.getCmdOption().replace(" ", "").equals("-o"))
+			{
+				kloTables = kloOption.getCmdValue();
+			}
+			else
+			{
+				argsKwbuildproject.add(kloOption.getCmdOption(), kloOption.getCmdValue());
+			}
+		}
+		
 		//AM : changing the way to add the arguments
 		argsKwadmin.add(execKwadmin);
-		argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load", projectName,/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
-				FS + "kloTables" + FS + build.getId(), "--name", lastBuildNo);
+		argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load",
+						projectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
 
 		//AM : Since version 0.2.1, fileOut doesn't exist anymore
@@ -200,10 +232,11 @@ public class KloBuilder extends Builder {
 		
 		//AM : changing the way to add the arguments
 		argsKwbuildproject.add(execKwbuildproject);
-		argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() + FS + "kloTables" +
-				FS + build.getId(), "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
-				"--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort(), "--force", "--verbose", "-j", "auto");
-
+		argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",
+				/*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port",
+				currentInstall.getProjectPort(), "--license-host", currentInstall.getLicenseHost(), "--license-port",
+				currentInstall.getLicensePort(), "--force");
+		
 		//Building process
 		ArgumentListBuilder argsBuild = new ArgumentListBuilder();
 		String execCmd = "";

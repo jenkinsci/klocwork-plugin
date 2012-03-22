@@ -41,6 +41,8 @@ public class KloReport implements Serializable {
     private double fixed = 0.0;
 	private double existing = 0.0;
 	private double neww = 0.0;
+	
+	private String kloVersion = "";
 
     public List<KloFile> getHighSeverities() {
         return highSeverities;
@@ -67,6 +69,19 @@ public class KloReport implements Serializable {
         this.all = errors;
     }
 
+	public void setKloVersion(String kloVersion) {
+		if (kloVersion != null) {
+			this.kloVersion = kloVersion;
+		}
+	}
+		
+	public String getKloVersion() {
+		if (kloVersion != null) {
+			return kloVersion;
+		}
+		return "";
+	}
+	
     @Exported
     public int getNumberTotal() {
         return (all == null) ? 0 : all.size();

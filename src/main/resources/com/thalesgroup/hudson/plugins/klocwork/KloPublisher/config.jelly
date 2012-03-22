@@ -110,11 +110,15 @@
 	    </table>
     </f:entry>
 
-    <f:entry help="/plugin/klocwork/buildGraph.html" >
+    <f:entry help="/plugin/klocwork/graphs.html" >
 	    <table>
 		    <tr>
 			    <td style="width:200px">
 				    <f:checkbox name="publishBuildGraph" checked="${config.publishBuildGraph}" title="${%Publish Pie Chart}" />
+    			</td>
+				<td style="width:200px">
+				    <f:checkbox name="publishProjectGraph" checked="${config.publishProjectGraph}"
+					            title="${%Publish Trend Graph}" />
     			</td>
 	    	</tr>
     	</table>

@@ -41,9 +41,27 @@ public class KloBuildReviewLink implements Action
 	
 	private String project;
 	
-    public KloBuildReviewLink(AbstractBuild<?, ?> owner)
+	private String klocworkHost;
+	
+	private String klocworkPort;
+	
+	private String klocworkProject;
+	
+	
+	//Adding klocwork server information in parameters because some users does not use the builder part
+    public KloBuildReviewLink(AbstractBuild<?, ?> owner, String klocworkHost, String klocworkPort, String klocworkProject)
     {
     	this.owner = owner;
+    	if (klocworkHost == null || klocworkPort==null || klocworkProject==null){
+    		this.klocworkHost = "";
+    		this.klocworkPort = "";
+    		this.klocworkProject = "";
+    	}
+    	else {
+    		this.klocworkHost = klocworkHost;
+    		this.klocworkPort = klocworkPort;
+    		this.klocworkProject = klocworkProject;
+    	}
     	setKloHostPort();
     }
     
@@ -55,6 +73,11 @@ public class KloBuildReviewLink implements Action
     private void setKloHostPort()
     {
 		KloBuildInfo kloInfo = owner.getAction(KloBuildInfo.class);
+		if (kloInfo==null){
+			kloInstall = new KloInstallation("No Klocwork Build Step", null, klocworkHost, klocworkPort, null, null);
+			kloInfo = new KloBuildInfo(owner, kloInstall, klocworkProject);
+			owner.addAction(kloInfo);
+		}
 		kloInstall = kloInfo.getKloInstall();
 		project = kloInfo.getProject();
     }

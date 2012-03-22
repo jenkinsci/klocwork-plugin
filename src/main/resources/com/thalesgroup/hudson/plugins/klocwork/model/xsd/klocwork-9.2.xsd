@@ -129,7 +129,7 @@
     <xs:element name="statusUpdate">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="tag:comment"/>
+                <xs:element ref="tag:comment" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="user" type="xs:string"/>
             <xs:attribute name="status" type="tag:citingStatusValue"/>

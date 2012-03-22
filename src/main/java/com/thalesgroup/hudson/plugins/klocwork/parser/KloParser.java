@@ -89,7 +89,20 @@ public class KloParser implements Serializable {
             double numFixed = 0.0;
         	double numExisting = 0.0;
         	double numNew = 0.0;
-
+			
+			String kloVersion = null;
+			try {
+				kloVersion = errList.getVersion();
+			} catch (Exception e) {
+				
+			}
+			
+			int severityDelimiter = 3; // default
+			// Version 9.5 Klocwork changed issue severity levels
+			if (kloVersion != null && kloVersion.startsWith("9.5")) {
+				severityDelimiter = 2;
+			}
+			
             int i = 0;
             for (Problem problem : errList.getProblem()) {
                 KloFile kloFile;
@@ -141,14 +154,21 @@ public class KloParser implements Serializable {
                                     }
                                 }
                             }
+                            
+                            
                         }
                     } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
+                                        
                     f.setAccessible(false);
                 }
+                //AM : adding a href in the message to the corresponding defect in klocwork review
+                StringBuilder message = new StringBuilder(kloFile.get("message")).append(" <a href=\"").append(kloFile.get("url")).append("\" target=\"_blank\">Link to defect in Klocwork Review</a>");
+                kloFile.store("message", message.toString());
+                
                 //Adding a new entry in the map corresponding to the file name without its path
                 String fileName = kloFile.get("file");
                 String fileNameWithoutPath = extractFileName(fileName, "\\");
@@ -156,8 +176,8 @@ public class KloParser implements Serializable {
                     fileNameWithoutPath = extractFileName(fileName, "/");
                 }
                 kloFile.store("fileNameOnly", fileNameWithoutPath);
-
-                if (Integer.parseInt((String) kloFile.get("severitylevel")) > 3)
+				
+                if (Integer.parseInt((String) kloFile.get("severitylevel")) > severityDelimiter)
                 {
                     highSeverities.add(kloFile);
                 }
@@ -168,15 +188,17 @@ public class KloParser implements Serializable {
 
                 if (kloFile.get("state") != null)
                 {
-                    if (kloFile.get("state").equalsIgnoreCase("New"))
+					String state = kloFile.get("state");
+                    if (state.equalsIgnoreCase("New") || state.equalsIgnoreCase("Recurred"))
                     {
                         numNew++;
                     }
-                    else if (kloFile.get("state").equalsIgnoreCase("Existing"))
+                    else if (state.equalsIgnoreCase("Existing"))
                     {
                         numExisting++;
                     }
-                    else if (kloFile.get("state").equalsIgnoreCase("Fixed"))
+                    else if (state.equalsIgnoreCase("Fixed") || state.equalsIgnoreCase("Obsolete") ||
+						     state.equalsIgnoreCase("Not in scope"))
                     {
                         numFixed++;
                     }
@@ -206,6 +228,7 @@ public class KloParser implements Serializable {
             report.setFixed(numFixed);
             report.setExisting(numExisting);
             report.setNeww(numNew);
+			report.setKloVersion(kloVersion);
 
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -223,7 +246,7 @@ public class KloParser implements Serializable {
 
         for (int i = 0; i < kloFiles.size(); i++) {
             KloFile kloFile = kloFiles.get(i);
-            ret += "Error n�" + (i + 1) + " " + kloFile.toString();
+            ret += "Error n " + (i + 1) + " " + kloFile.toString();
         }
 
         return ret;
