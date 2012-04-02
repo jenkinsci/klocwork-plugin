@@ -175,7 +175,7 @@ public class KloPublisher extends Recorder implements Serializable {
 			if (build.getWorkspace().isRemote()) {
 				copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
 			}
-			
+
 			listener.getLogger().println("End of the klocwork analysis.");
 		}
 		return true;
@@ -270,7 +270,6 @@ public class KloPublisher extends Recorder implements Serializable {
 			KloPublisher pub = new KloPublisher();
 			
 			KloConfig kloConfig = req.bindJSON(KloConfig.class, formData);
-				
 			pub.setKloConfig(kloConfig);
 
 			return pub;
