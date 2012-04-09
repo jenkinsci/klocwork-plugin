@@ -29,95 +29,73 @@ import hudson.model.AbstractBuild;
 import hudson.model.Action;
 
 import java.io.IOException;
-import java.lang.InterruptedException;
 
-public class KloParseErrorsLog implements Action
-{
+public class KloParseErrorsLog implements Action {
 
     public static final String URL_NAME = "kloparselog";
-    
+
     private final String displayName = "Parse Errors Log";
-	
-	private AbstractBuild<?, ?> owner;
-	
-	private FilePath kloTables;
-	
-    public KloParseErrorsLog(AbstractBuild<?, ?> owner)
-    {
-    	this.owner = owner;
-    	this.kloTables = new FilePath(new FilePath(new FilePath(owner.getWorkspace(), "kloTables"),
-																owner.getId()), "parse_errors.log");
+
+    private AbstractBuild<?, ?> owner;
+
+    private FilePath kloTables;
+
+    public KloParseErrorsLog(AbstractBuild<?, ?> owner) {
+        this.owner = owner;
+        this.kloTables = new FilePath(new FilePath(new FilePath(owner.getWorkspace(), "kloTables"),
+                owner.getId()), "parse_errors.log");
     }
-    
-    public AbstractBuild<?, ?> getOwner()
-    {
-    	return owner;
+
+    public AbstractBuild<?, ?> getOwner() {
+        return owner;
     }
-    
-    public String getIconFileName()
-    {
+
+    public String getIconFileName() {
         return "notepad.png";
     }
 
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public String getUrlName()
-    {
+    public String getUrlName() {
         return URL_NAME;
     }
-    
-    public boolean getFoundParseErrorsLog()
-    {
-    	try
-    	{
-    		if (kloTables.exists())
-	    	{
-    			return true;
-    		}
-	    }
-	    catch (IOException e)
-	    {
-	    	// ignore
-	    }
-	    catch (InterruptedException e)
-	    {
-	    	// ignore
-	    }
-	    return false;
+
+    public boolean getFoundParseErrorsLog() {
+        try {
+            if (kloTables.exists()) {
+                return true;
+            }
+        } catch (IOException e) {
+            // ignore
+        } catch (InterruptedException e) {
+            // ignore
+        }
+        return false;
     }
-    
-    public String getParseErrorsLog()
-    {
-    	try
-    	{
-    		if (!kloTables.exists())
-	    	{
-    			return null;
-    		}
-    	
-	    	return txtToHTML(kloTables.readToString());
-	    }
-	    catch (IOException e)
-	    {
-	    	return txtToHTML(e.getMessage());
-	    }
-	    catch (InterruptedException e)
-	    {
-	    	return txtToHTML(e.getMessage());
-	    }
+
+    public String getParseErrorsLog() {
+        try {
+            if (!kloTables.exists()) {
+                return null;
+            }
+
+            return txtToHTML(kloTables.readToString());
+        } catch (IOException e) {
+            return txtToHTML(e.getMessage());
+        } catch (InterruptedException e) {
+            return txtToHTML(e.getMessage());
+        }
     }
-    
-    private String txtToHTML(String input)
-    {
-    	// replace all line endings
-    	input = input.replaceAll("\n", "<br />");
-    	// replace all tabs
-    	input = input.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-    	
-    	return input;
+
+    private String txtToHTML(String input) {
+        // replace all line endings
+        input = input.replaceAll("\n", "<br />");
+        // replace all tabs
+        input = input.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+
+        return input;
     }
 
 }

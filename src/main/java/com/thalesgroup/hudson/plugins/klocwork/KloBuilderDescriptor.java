@@ -64,21 +64,21 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
         return installations;
     }
 
-	@Override
-	public Builder newInstance(StaplerRequest req, JSONObject formData)
-	throws hudson.model.Descriptor.FormException {
+    @Override
+    public Builder newInstance(StaplerRequest req, JSONObject formData)
+            throws hudson.model.Descriptor.FormException {
 
-		KloBuilder builder = req.bindJSON(KloBuilder.class, formData);
-		KloOption[] kloOptions = new KloOption[0];
-		
-		kloOptions = req.bindParametersToList(KloOption.class,
-			"kloOption.").toArray(new KloOption[0]);
-			
-		builder.setKloOptions(kloOptions);
+        KloBuilder builder = req.bindJSON(KloBuilder.class, formData);
+        KloOption[] kloOptions = new KloOption[0];
 
-		return builder;
-	}
-	
+        kloOptions = req.bindParametersToList(KloOption.class,
+                "kloOption.").toArray(new KloOption[0]);
+
+        builder.setKloOptions(kloOptions);
+
+        return builder;
+    }
+
     public boolean configure(StaplerRequest req, JSONObject json) {
         installations = req.bindParametersToList(KloInstallation.class,
                 "klocwork.").toArray(new KloInstallation[0]);

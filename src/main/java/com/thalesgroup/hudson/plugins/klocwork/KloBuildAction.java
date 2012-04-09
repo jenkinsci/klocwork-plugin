@@ -1,26 +1,26 @@
 /*******************************************************************************
-* Copyright (c) 2011 Thales Corporate Services SAS *
-* Author : Loic Quentin *
-* *
-* Permission is hereby granted, free of charge, to any person obtaining a copy *
-* of this software and associated documentation files (the "Software"), to deal*
-* in the Software without restriction, including without limitation the rights *
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell *
-* copies of the Software, and to permit persons to whom the Software is *
-* furnished to do so, subject to the following conditions: *
-* *
-* The above copyright notice and this permission notice shall be included in *
-* all copies or substantial portions of the Software. *
-* *
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, *
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER *
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN *
-* THE SOFTWARE. *
-* *
-*******************************************************************************/
+ * Copyright (c) 2011 Thales Corporate Services SAS *
+ * Author : Loic Quentin *
+ * *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy *
+ * of this software and associated documentation files (the "Software"), to deal*
+ * in the Software without restriction, including without limitation the rights *
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell *
+ * copies of the Software, and to permit persons to whom the Software is *
+ * furnished to do so, subject to the following conditions: *
+ * *
+ * The above copyright notice and this permission notice shall be included in *
+ * all copies or substantial portions of the Software. *
+ * *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN *
+ * THE SOFTWARE. *
+ * *
+ *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
@@ -74,13 +74,13 @@ public class KloBuildAction extends AbstractKloBuildAction {
     public AbstractBuild<?, ?> getBuild() {
         return owner;
     }
-	
-	public KloConfig getConfig() {
-		return kloConfig;
-	}
+
+    public KloConfig getConfig() {
+        return kloConfig;
+    }
 
     public Object getTarget() {
-		return this.result;
+        return this.result;
     }
 
     public HealthReport getBuildHealth() {
@@ -96,34 +96,34 @@ public class KloBuildAction extends AbstractKloBuildAction {
     private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
 
-		int interval = Integer.parseInt(kloConfig.getTrendGraph().getInterval());
-		int trendNum = Integer.parseInt(kloConfig.getTrendGraph().getTrendNum());
-		
-		int count = 0;
-		
+        int interval = Integer.parseInt(kloConfig.getTrendGraph().getInterval());
+        int trendNum = Integer.parseInt(kloConfig.getTrendGraph().getTrendNum());
+
+        int count = 0;
+
         for (KloBuildAction a = this; a != null; a = a.getPreviousResult()) {
-		
-			if (checkBuildNumber(interval, trendNum, count)) {
-				ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
 
-				KloReport report = a.getResult().getReport();
+            if (checkBuildNumber(interval, trendNum, count)) {
+                ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
 
-				KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
+                KloReport report = a.getResult().getReport();
 
-				if (configGraph.isDisplayHighSeverity()) {
-					//Severity higher than 3 --> Warnings and suggestions
-					dsb.add(report.getNumberHighSeverities(), "Warnings and\nsuggestions", label);
-				}
-				if (configGraph.isDisplayLowSeverity()) {
-					//Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
-					dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
-				}
+                KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
 
-				if (configGraph.isDisplayAllError()) {
-					dsb.add(report.getNumberTotal(), "All errors", label);
-				}
-			}
-			count++;
+                if (configGraph.isDisplayHighSeverity()) {
+                    //Severity higher than 3 --> Warnings and suggestions
+                    dsb.add(report.getNumberHighSeverities(), "Warnings and\nsuggestions", label);
+                }
+                if (configGraph.isDisplayLowSeverity()) {
+                    //Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
+                    dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
+                }
+
+                if (configGraph.isDisplayAllError()) {
+                    dsb.add(report.getNumberTotal(), "All errors", label);
+                }
+            }
+            count++;
         }
         return dsb;
     }
@@ -143,19 +143,16 @@ public class KloBuildAction extends AbstractKloBuildAction {
         g.doPng(req, rsp);
 
     }
-	
-	public boolean checkBuildNumber(int interval, int trendNum, int count)
-	{
-		if ((count % interval) == 0)
-		{
-			if (((count / interval) < trendNum) || trendNum == 0)
-			{
-				return true;
-			}
-			
-		}
-		return false;
-	}
+
+    public boolean checkBuildNumber(int interval, int trendNum, int count) {
+        if ((count % interval) == 0) {
+            if (((count / interval) < trendNum) || trendNum == 0) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 
     public String getSearchUrl() {
         return getUrlName();

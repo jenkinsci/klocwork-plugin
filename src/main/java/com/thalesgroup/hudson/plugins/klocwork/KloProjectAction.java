@@ -25,23 +25,14 @@ package com.thalesgroup.hudson.plugins.klocwork;
 
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigTrendGraph;
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
 import com.thalesgroup.hudson.plugins.klocwork.model.AbstractKloProjectAction;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Result;
-import hudson.util.ChartUtil.NumberOnlyBuildLabel;
-import hudson.util.DataSetBuilder;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class KloProjectAction extends AbstractKloProjectAction {
@@ -57,8 +48,7 @@ public class KloProjectAction extends AbstractKloProjectAction {
 
     //public AbstractProject<?,?> project;
 
-    public KloProjectAction(final AbstractProject<?, ?> project, KloConfig kloConfig)
-    {
+    public KloProjectAction(final AbstractProject<?, ?> project, KloConfig kloConfig) {
         super(project);
         this.kloConfig = kloConfig;
     }
@@ -74,16 +64,16 @@ public class KloProjectAction extends AbstractKloProjectAction {
     public String getUrlName() {
         return URL_NAME;
     }
-	
-	public boolean getPublishProjectGraph()	{
-		return kloConfig.getPublishProjectGraph();
-	}
+
+    public boolean getPublishProjectGraph() {
+        return kloConfig.getPublishProjectGraph();
+    }
 
     public final boolean isDisplayGraph() {
-		// Check that user has ticked to publish project graph
-		if (!kloConfig.getPublishProjectGraph()) {
-			return false;
-		}
+        // Check that user has ticked to publish project graph
+        if (!kloConfig.getPublishProjectGraph()) {
+            return false;
+        }
         //Latest
         AbstractBuild<?, ?> b = getLastFinishedBuild();
         if (b == null) {
@@ -273,7 +263,6 @@ public class KloProjectAction extends AbstractKloProjectAction {
 		return builds;
 	}
 */
-
     @Override
     protected Integer getLastResultBuild() {
         for (AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) project.getLastSuccessfulBuild(); b != null; b = b.getPreviousNotFailedBuild()) {

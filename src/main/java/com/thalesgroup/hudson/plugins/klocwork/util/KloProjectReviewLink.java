@@ -24,111 +24,81 @@
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
-
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Job;
 import hudson.model.ProminentProjectAction;
-import hudson.model.Run;
-import hudson.model.Hudson;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 /*
  * This class sets up a link on the project page to view Klocwork Review
  */
-public class KloProjectReviewLink implements ProminentProjectAction
-{
-	public static final String URL_NAME = "reviewlink";
-    
+public class KloProjectReviewLink implements ProminentProjectAction {
+    public static final String URL_NAME = "reviewlink";
+
     private final String displayName = "Klocwork Review";
 
-	private final AbstractProject<?, ?> project;
+    private final AbstractProject<?, ?> project;
 
-	private String projectName;
+    private String projectName;
 
-	private KloInstallation kloInstall;
+    private KloInstallation kloInstall;
 
-	public KloProjectReviewLink(AbstractProject<?, ?> project)
-	{
-		this.project = project;
-		setKloHostPort();
-	}
-	
-	private void setKloHostPort()
-	{
-		KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
-		if (kloInfo != null)
-		{
-			kloInstall = kloInfo.getKloInstall();
-			projectName = kloInfo.getProject();
-		}
-	}
-	
-	public boolean isDisplayLink()
-	{
-		KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
-		if (kloInfo != null)
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	public AbstractProject<?, ?> getProject()
-	{
-		return project;
-	}
-    
-	public String getReviewHeight()
-	{
-		if (project.getNextBuildNumber()>20)
-			return "90%";
-		else
-			return "800px";
-	}
-
-	public String getDisplayName()
-	{
-		return displayName;
-	}
-
-	public String getIconFileName()
-	{
-		return "/plugin/klocwork/icons/klocwork-48.gif";
-	}
-
-	public String getUrlName()
-	{
-		if (project.getLastSuccessfulBuild() !=null){
-			return project.getLastSuccessfulBuild().number+"/"+URL_NAME;
-		}
-		else {
-			return URL_NAME;
-		}
-	}
-
-	public String getKloHost()
-    {
-    	return kloInstall.getProjectHost();
+    public KloProjectReviewLink(AbstractProject<?, ?> project) {
+        this.project = project;
+        setKloHostPort();
     }
-    
-    public String getKloPort()
-    {
-    	return kloInstall.getProjectPort();
+
+    private void setKloHostPort() {
+        KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
+        if (kloInfo != null) {
+            kloInstall = kloInfo.getKloInstall();
+            projectName = kloInfo.getProject();
+        }
     }
-    
-    public String getProjectName()
-    {
-    	return projectName;
+
+    public boolean isDisplayLink() {
+        KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
+        if (kloInfo != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public AbstractProject<?, ?> getProject() {
+        return project;
+    }
+
+    public String getReviewHeight() {
+        if (project.getNextBuildNumber() > 20)
+            return "90%";
+        else
+            return "800px";
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getIconFileName() {
+        return "/plugin/klocwork/icons/klocwork-48.gif";
+    }
+
+    public String getUrlName() {
+        if (project.getLastSuccessfulBuild() != null) {
+            return project.getLastSuccessfulBuild().number + "/" + URL_NAME;
+        } else {
+            return URL_NAME;
+        }
+    }
+
+    public String getKloHost() {
+        return kloInstall.getProjectHost();
+    }
+
+    public String getKloPort() {
+        return kloInstall.getProjectPort();
+    }
+
+    public String getProjectName() {
+        return projectName;
     }
 
 }

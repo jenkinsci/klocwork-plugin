@@ -24,96 +24,83 @@
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
-
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 
-public class KloBuildReviewLink implements Action
-{
+public class KloBuildReviewLink implements Action {
 
     public static final String URL_NAME = "reviewlink";
-    
+
     private final String displayName = "Klocwork Review";
-	
-	private AbstractBuild<?, ?> owner;
-	
-	private KloInstallation kloInstall;
-	
-	private String project;
-	
-	private String klocworkHost;
-	
-	private String klocworkPort;
-	
-	private String klocworkProject;
-	
-	
-	//Adding klocwork server information in parameters because some users does not use the builder part
-    public KloBuildReviewLink(AbstractBuild<?, ?> owner, String klocworkHost, String klocworkPort, String klocworkProject)
-    {
-    	this.owner = owner;
-    	if (klocworkHost == null || klocworkPort==null || klocworkProject==null){
-    		this.klocworkHost = "";
-    		this.klocworkPort = "";
-    		this.klocworkProject = "";
-    	}
-    	else {
-    		this.klocworkHost = klocworkHost;
-    		this.klocworkPort = klocworkPort;
-    		this.klocworkProject = klocworkProject;
-    	}
-    	setKloHostPort();
+
+    private AbstractBuild<?, ?> owner;
+
+    private KloInstallation kloInstall;
+
+    private String project;
+
+    private String klocworkHost;
+
+    private String klocworkPort;
+
+    private String klocworkProject;
+
+
+    //Adding klocwork server information in parameters because some users does not use the builder part
+    public KloBuildReviewLink(AbstractBuild<?, ?> owner, String klocworkHost, String klocworkPort, String klocworkProject) {
+        this.owner = owner;
+        if (klocworkHost == null || klocworkPort == null || klocworkProject == null) {
+            this.klocworkHost = "";
+            this.klocworkPort = "";
+            this.klocworkProject = "";
+        } else {
+            this.klocworkHost = klocworkHost;
+            this.klocworkPort = klocworkPort;
+            this.klocworkProject = klocworkProject;
+        }
+        setKloHostPort();
     }
-    
-    public AbstractBuild<?, ?> getOwner()
-    {
-    	return owner;
+
+    public AbstractBuild<?, ?> getOwner() {
+        return owner;
     }
-    
-    private void setKloHostPort()
-    {
-		KloBuildInfo kloInfo = owner.getAction(KloBuildInfo.class);
-		if (kloInfo==null){
-			kloInstall = new KloInstallation("No Klocwork Build Step", null, klocworkHost, klocworkPort, null, null);
-			kloInfo = new KloBuildInfo(owner, kloInstall, klocworkProject);
-			owner.addAction(kloInfo);
-		}
-		kloInstall = kloInfo.getKloInstall();
-		project = kloInfo.getProject();
+
+    private void setKloHostPort() {
+        KloBuildInfo kloInfo = owner.getAction(KloBuildInfo.class);
+        if (kloInfo == null) {
+            kloInstall = new KloInstallation("No Klocwork Build Step", null, klocworkHost, klocworkPort, null, null);
+            kloInfo = new KloBuildInfo(owner, kloInstall, klocworkProject);
+            owner.addAction(kloInfo);
+        }
+        kloInstall = kloInfo.getKloInstall();
+        project = kloInfo.getProject();
     }
-    
-    public String getKloHost()
-    {
-    	return kloInstall.getProjectHost();
+
+    public String getKloHost() {
+        return kloInstall.getProjectHost();
     }
-    
-    public String getKloPort()
-    {
-    	return kloInstall.getProjectPort();
+
+    public String getKloPort() {
+        return kloInstall.getProjectPort();
     }
-    
-    public String getProject()
-    {
-    	return project;
+
+    public String getProject() {
+        return project;
     }
-    
-    public String getReviewHeight()
-    {
-    	return "800px";
+
+    public String getReviewHeight() {
+        return "800px";
     }
-    
-    public String getIconFileName()
-    {
+
+    public String getIconFileName() {
         return "/plugin/klocwork/icons/klocwork-24.gif";
     }
 
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public String getUrlName()
-    {
+    public String getUrlName() {
         return URL_NAME;
     }
 

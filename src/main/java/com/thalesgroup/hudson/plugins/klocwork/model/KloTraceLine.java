@@ -25,7 +25,7 @@ package com.thalesgroup.hudson.plugins.klocwork.model;
 
 import java.io.Serializable;
 
-public class KloTraceLine implements Serializable{
+public class KloTraceLine implements Serializable {
 
     private int _line;
     private String _text;

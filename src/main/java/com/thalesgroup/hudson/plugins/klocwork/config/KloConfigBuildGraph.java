@@ -30,48 +30,42 @@ public class KloConfigBuildGraph implements Serializable {
     private int xSize = 500;
     private int ySize = 300;
 
-	// Build Graph Details
-	private boolean neww = true;
-	private boolean existing = true;
-	private boolean fixed = true;
-	
-	
+    // Build Graph Details
+    private boolean neww = true;
+    private boolean existing = true;
+    private boolean fixed = true;
+
+
     public KloConfigBuildGraph() {
     }
-	
-	public KloConfigBuildGraph(int buildXSize, int buildYSize, boolean neww, boolean existing,
-						boolean fixed)
-	{
-		super();
-		this.xSize = buildXSize;
+
+    public KloConfigBuildGraph(int buildXSize, int buildYSize, boolean neww, boolean existing,
+                               boolean fixed) {
+        super();
+        this.xSize = buildXSize;
         this.ySize = buildYSize;
-		this.neww = neww;
+        this.neww = neww;
         this.existing = existing;
         this.fixed = fixed;
-	}
+    }
 
-    public int getXSize()
-    {
+    public int getXSize() {
         return xSize;
     }
 
-    public int getYSize()
-    {
+    public int getYSize() {
         return ySize;
     }
 
-    public boolean isNeww()
-    {
+    public boolean isNeww() {
         return neww;
     }
-	
-	public boolean isExisting()
-    {
+
+    public boolean isExisting() {
         return existing;
     }
-	
-	public boolean isFixed()
-    {
+
+    public boolean isFixed() {
         return fixed;
     }
 

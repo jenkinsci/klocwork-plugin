@@ -25,57 +25,48 @@
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
-
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 
-public class KloBuildInfo implements Action
-{
+public class KloBuildInfo implements Action {
 
     public static final String URL_NAME = null;
-    
+
     private final String displayName = null;
-	
-	private AbstractBuild<?, ?> owner;
-	
-	private KloInstallation kloInstall;
-	
-	private String project;
-	
-    public KloBuildInfo(AbstractBuild<?, ?> owner, KloInstallation kloInstall, String project)
-    {
-    	this.owner = owner;
-    	this.kloInstall = kloInstall;
-    	this.project = project;
+
+    private AbstractBuild<?, ?> owner;
+
+    private KloInstallation kloInstall;
+
+    private String project;
+
+    public KloBuildInfo(AbstractBuild<?, ?> owner, KloInstallation kloInstall, String project) {
+        this.owner = owner;
+        this.kloInstall = kloInstall;
+        this.project = project;
     }
-    
-    public AbstractBuild<?, ?> getOwner()
-    {
-    	return owner;
+
+    public AbstractBuild<?, ?> getOwner() {
+        return owner;
     }
-    
-    public KloInstallation getKloInstall()
-    {
-    	return kloInstall;
+
+    public KloInstallation getKloInstall() {
+        return kloInstall;
     }
-    
-    public String getProject()
-    {
-    	return project;
+
+    public String getProject() {
+        return project;
     }
-    
-    public String getIconFileName()
-    {
+
+    public String getIconFileName() {
         return null;
     }
 
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return displayName;
     }
 
-    public String getUrlName()
-    {
+    public String getUrlName() {
         return URL_NAME;
     }
 

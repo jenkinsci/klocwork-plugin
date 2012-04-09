@@ -39,10 +39,10 @@ public class KloReport implements Serializable {
     private List<KloFile> all = new ArrayList<KloFile>();
 
     private double fixed = 0.0;
-	private double existing = 0.0;
-	private double neww = 0.0;
-	
-	private String kloVersion = "";
+    private double existing = 0.0;
+    private double neww = 0.0;
+
+    private String kloVersion = "";
 
     public List<KloFile> getHighSeverities() {
         return highSeverities;
@@ -69,19 +69,19 @@ public class KloReport implements Serializable {
         this.all = errors;
     }
 
-	public void setKloVersion(String kloVersion) {
-		if (kloVersion != null) {
-			this.kloVersion = kloVersion;
-		}
-	}
-		
-	public String getKloVersion() {
-		if (kloVersion != null) {
-			return kloVersion;
-		}
-		return "";
-	}
-	
+    public void setKloVersion(String kloVersion) {
+        if (kloVersion != null) {
+            this.kloVersion = kloVersion;
+        }
+    }
+
+    public String getKloVersion() {
+        if (kloVersion != null) {
+            return kloVersion;
+        }
+        return "";
+    }
+
     @Exported
     public int getNumberTotal() {
         return (all == null) ? 0 : all.size();
@@ -97,33 +97,27 @@ public class KloReport implements Serializable {
         return (lowSeverities == null) ? 0 : lowSeverities.size();
     }
 
-    public void setFixed(double fixed)
-    {
+    public void setFixed(double fixed) {
         this.fixed = fixed;
     }
-    
-    public double getFixed()
-    {
+
+    public double getFixed() {
         return fixed;
     }
 
-    public void setExisting(double existing)
-    {
+    public void setExisting(double existing) {
         this.existing = existing;
     }
 
-    public double getExisting()
-    {
+    public double getExisting() {
         return existing;
     }
 
-    public void setNeww(double neww)
-    {
+    public void setNeww(double neww) {
         this.neww = neww;
     }
 
-    public double getNeww()
-    {
+    public double getNeww() {
         return neww;
     }
 

@@ -41,32 +41,30 @@ public class KloConfig implements Serializable {
     private boolean linkBuildLog = true;
     private boolean linkParseLog = true;
     private boolean publishBuildGraph = true;
-	private boolean publishProjectGraph = true;
+    private boolean publishProjectGraph = true;
 
     private String numToKeep;
 
-    public KloConfig()
-    {
+    public KloConfig() {
 
     }
-    
+
     @DataBoundConstructor
     @SuppressWarnings("unused")
     public KloConfig(String klocworkReportPattern,
                      boolean linkReview, boolean linkBuildLog, boolean linkParseLog,
-					 boolean publishBuildGraph, boolean publishProjectGraph,
+                     boolean publishBuildGraph, boolean publishProjectGraph,
                      String trendNum, String interval,
-                     int trendXSize, int trendYSize, 
+                     int trendXSize, int trendYSize,
                      boolean displayAllError,
-                     boolean displayHighSeverity, 
+                     boolean displayHighSeverity,
                      boolean displayLowSeverity,
                      int buildXSize, int buildYSize, boolean neww,
-                     boolean existing, boolean fixed,                     
+                     boolean existing, boolean fixed,
                      String threshold,
                      String newThreshold, String failureThreshold,
                      String newFailureThreshold, String healthy, String unHealthy,
-                     boolean highSeverity, boolean lowSeverity )
-    {
+                     boolean highSeverity, boolean lowSeverity) {
 
         this.klocworkReportPattern = klocworkReportPattern;
 
@@ -74,13 +72,13 @@ public class KloConfig implements Serializable {
         this.linkBuildLog = linkBuildLog;
         this.linkParseLog = linkParseLog;
         this.publishBuildGraph = publishBuildGraph;
-		this.publishProjectGraph = publishProjectGraph;
-		
+        this.publishProjectGraph = publishProjectGraph;
+
         this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
-                    displayHighSeverity, displayLowSeverity, interval, trendNum);
-					
+                displayHighSeverity, displayLowSeverity, interval, trendNum);
+
         this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
-                    existing, fixed);
+                existing, fixed);
 
         this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
@@ -88,53 +86,43 @@ public class KloConfig implements Serializable {
 
     }
 
-    public String getKlocworkReportPattern()
-    {
+    public String getKlocworkReportPattern() {
         return klocworkReportPattern;
     }
 
-    public KloConfigSeverityEvaluation getConfigSeverityEvaluation()
-    {
+    public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
         return configSeverityEvaluation;
     }
 
-    public KloConfigTrendGraph getTrendGraph()
-    {
+    public KloConfigTrendGraph getTrendGraph() {
         return trendGraph;
     }
-    
-    public KloConfigBuildGraph getBuildGraph()
-    {
+
+    public KloConfigBuildGraph getBuildGraph() {
         return buildGraph;
     }
 
-    public boolean getPublishBuildGraph()
-    {
+    public boolean getPublishBuildGraph() {
         return publishBuildGraph;
     }
-	
-	public boolean getPublishProjectGraph()
-	{
-		return publishProjectGraph;
-	}
-    
-    public boolean getLinkReview()
-    {
+
+    public boolean getPublishProjectGraph() {
+        return publishProjectGraph;
+    }
+
+    public boolean getLinkReview() {
         return linkReview;
     }
-    
-    public boolean getLinkBuildLog()
-    {
+
+    public boolean getLinkBuildLog() {
         return linkBuildLog;
     }
-    
-    public boolean getLinkParseLog()
-    {
+
+    public boolean getLinkParseLog() {
         return linkParseLog;
     }
-    
-    public String getNumToKeep()
-    {
+
+    public String getNumToKeep() {
         return numToKeep;
     }
 }

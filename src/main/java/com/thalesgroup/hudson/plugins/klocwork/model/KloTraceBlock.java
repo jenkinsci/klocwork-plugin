@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class KloTraceBlock implements Serializable{
+public class KloTraceBlock implements Serializable {
 
     private String _file;
     private String _method;

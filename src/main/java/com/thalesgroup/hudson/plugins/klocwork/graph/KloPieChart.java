@@ -26,79 +26,64 @@ package com.thalesgroup.hudson.plugins.klocwork.graph;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
-
-import hudson.model.AbstractBuild;
 import hudson.util.Graph;
-
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.JPanel;
-
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
+
+import java.awt.*;
 
 
-public class KloPieChart extends Graph
-{
+public class KloPieChart extends Graph {
 
-	private PieDataset dataset;
-	private KloConfig kloConfig;
-	private KloReport kloReport;
+    private PieDataset dataset;
+    private KloConfig kloConfig;
+    private KloReport kloReport;
 
     public KloPieChart(PieDataset dataset, KloConfig kloConfig, KloReport kloReport,
-						int chartWidth, int chartHeight)
-    {
+                       int chartWidth, int chartHeight) {
         super(-1, chartWidth, chartHeight);
         this.dataset = dataset;
-		this.kloConfig = kloConfig;
-		this.kloReport = kloReport;
+        this.kloConfig = kloConfig;
+        this.kloReport = kloReport;
     }
 
-    protected JFreeChart createGraph()
-    {
-        
+    protected JFreeChart createGraph() {
+
         JFreeChart chart = ChartFactory.createPieChart(null, dataset, true, true, false);
-		chart.setBackgroundPaint(Color.white);
-		
+        chart.setBackgroundPaint(Color.white);
+
         PiePlot plot = (PiePlot) chart.getPlot();
         plot.setDataset(dataset);
-		plot.setOutlinePaint(null);
+        plot.setOutlinePaint(null);
         plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
         plot.setNoDataMessage("No Klocwork data found.");
         plot.setCircular(false);
         plot.setLabelGap(0.02);
         plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{1}"));
-		
-		// Set colours
-		//plot.setOutlinePaint("New", new Color(200, 0, 0));
-		int i = 0;
-		if (kloConfig.getBuildGraph().isNeww() && kloReport.getNeww()>0)
-		{
-			plot.setSectionPaint(plot.getDataset().getKey(i), new Color(200, 0, 0));
-			i++;
-		}
-		if (kloConfig.getBuildGraph().isExisting() && kloReport.getExisting()>0)
-		{
-			plot.setSectionPaint(plot.getDataset().getKey(i), new Color(0, 0, 200));
-			i++;
-		}
-		if (kloConfig.getBuildGraph().isFixed() && kloReport.getFixed()>0)
-		{
-			plot.setSectionPaint(plot.getDataset().getKey(i), new Color(0, 200, 0));
-		}
 
-		//plot.setOutlinePaint("Existing", new Color(0, 0, 200));
-		//plot.setOutlinePaint("Fixed", new Color(0, 200, 0));
-		
+        // Set colours
+        //plot.setOutlinePaint("New", new Color(200, 0, 0));
+        int i = 0;
+        if (kloConfig.getBuildGraph().isNeww() && kloReport.getNeww() > 0) {
+            plot.setSectionPaint(plot.getDataset().getKey(i), new Color(200, 0, 0));
+            i++;
+        }
+        if (kloConfig.getBuildGraph().isExisting() && kloReport.getExisting() > 0) {
+            plot.setSectionPaint(plot.getDataset().getKey(i), new Color(0, 0, 200));
+            i++;
+        }
+        if (kloConfig.getBuildGraph().isFixed() && kloReport.getFixed() > 0) {
+            plot.setSectionPaint(plot.getDataset().getKey(i), new Color(0, 200, 0));
+        }
+
+        //plot.setOutlinePaint("Existing", new Color(0, 0, 200));
+        //plot.setOutlinePaint("Fixed", new Color(0, 200, 0));
+
         return chart;
-        
+
     }
-    
+
 }

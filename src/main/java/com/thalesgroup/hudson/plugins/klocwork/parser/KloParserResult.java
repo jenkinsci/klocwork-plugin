@@ -95,7 +95,7 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         kloReportResult.setNeww(kloReportResult.getNeww() + kloReport.getNeww());
         kloReportResult.setFixed(kloReportResult.getFixed() + kloReport.getFixed());
         kloReportResult.setExisting(kloReportResult.getExisting() + kloReport.getExisting());
-		kloReportResult.setKloVersion(kloReport.getKloVersion());
+        kloReportResult.setKloVersion(kloReport.getKloVersion());
     }
 
     /**

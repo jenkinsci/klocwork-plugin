@@ -48,9 +48,9 @@ public class KloTrendGraph extends Graph {
     public static final int DEFAULT_CHART_HEIGHT = 300;
     private String yLabel;
     private CategoryDataset categoryDataset;
-	
+
     public KloTrendGraph(AbstractBuild<?, ?> owner, CategoryDataset categoryDataset,
-							String yLabel, int chartWidth, int chartHeight) {
+                         String yLabel, int chartWidth, int chartHeight) {
         super(owner.getTimestamp(), chartWidth, chartHeight);
         this.yLabel = yLabel;
         this.categoryDataset = categoryDataset;
