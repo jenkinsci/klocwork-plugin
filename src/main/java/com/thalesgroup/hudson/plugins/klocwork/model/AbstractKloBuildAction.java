@@ -25,10 +25,6 @@ package com.thalesgroup.hudson.plugins.klocwork.model;
 
 import hudson.model.*;
 import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import java.io.IOException;
 
 public abstract class AbstractKloBuildAction extends Actionable implements Action, HealthReportingAction, StaplerProxy {
 
