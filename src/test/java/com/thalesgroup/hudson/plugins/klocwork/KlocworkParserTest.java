@@ -93,6 +93,7 @@ public class KlocworkParserTest {
     public void testCsvToSQLProject() {
         analyzeFiles("report-csvtosql.xml", 66, 18);
         analyzeFiles("bug-jenkins-10735.xml", 1, 0);
+        analyzeFiles("bug-jenkins-12601-parse-isSystem.xml", 1, 0);
     }
     //TO BE COMPLETED (with other files to test)...
 }
