@@ -134,12 +134,14 @@ public class KloPublisher extends Recorder implements Serializable {
                 String host = null, port = null, project = null;
                 if (kloReport.getAllSeverities().get(0) != null) {
                     String url = kloReport.getAllSeverities().get(0).get("url");
-                    Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
-                    Matcher m = p.matcher(url);
-                    if (m.matches()) {
-                        host = m.group(1);
-                        port = m.group(2);
-                        project = m.group(3);
+                    if (url !=null){
+	                    Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
+	                    Matcher m = p.matcher(url);
+	                    if (m.matches()) {
+	                        host = m.group(1);
+	                        port = m.group(2);
+	                        project = m.group(3);
+	                    }
                     }
                 }
                 build.addAction(new KloBuildReviewLink(build, host, port, project));
