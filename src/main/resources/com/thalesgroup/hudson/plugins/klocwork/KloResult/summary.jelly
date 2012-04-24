@@ -53,7 +53,7 @@
                      ${kloFile.fileNameOnly}
                 </j:if>
                 <j:if test="${not elt.isSourceIgnored()}">
-                      <a href="source.${kloFile.key}">${kloFile.fileNameOnly}</a>
+                      <a href="source.${kloFile.key}?#${kloFile.line}">${kloFile.fileNameOnly}</a>
                 </j:if>
 
 
