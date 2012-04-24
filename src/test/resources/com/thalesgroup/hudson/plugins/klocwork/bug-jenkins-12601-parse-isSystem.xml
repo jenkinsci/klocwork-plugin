@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<errorList xmlns="http://www.klocwork.com/inForce/report/1.0">
+<problem>
+ <problemID>2</problemID>
+ <isSystem>true</isSystem>
+ <file>C:\Jenkins_Home\jobs\NUnit Quick Learning\workspace\NUnit_Quick_Learn_1\AccountTest.cs</file>
+ <method>AccountTest.cs</method>
+ <line>64</line>
+ <column>20</column>
+ <code>CS.FLOAT.EQCHECK</code>
+ <message>Equality check on floating point type</message>
+ <anchor>0</anchor>
+ <prefix>result=0;doublestep=(x2-x1)/700;</prefix>
+ <postfix>{result=result+x*step;x=x+step;b</postfix>
+ <citingStatus>Analyze</citingStatus>
+ <severity>Style</severity>
+ <severitylevel>8</severitylevel>
+ <displayAs>Warning</displayAs>
+ <taxonomies>
+  <taxonomy name="C#" metaInf=""/>
+ </taxonomies>
+</problem>
+</errorList>
