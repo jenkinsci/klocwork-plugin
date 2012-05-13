@@ -40,15 +40,13 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 
 //AM : KloPublisher now extends Recorder instead of Publisher
@@ -204,6 +202,11 @@ public class KloPublisher extends Recorder implements Serializable {
     public KloDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
+    
+    @DataBoundConstructor
+    public KloPublisher(KloConfig config) {
+        this.kloConfig = config;
+    }
 
     @Extension
     public static final KloDescriptor DESCRIPTOR = new KloDescriptor();
@@ -243,19 +246,6 @@ public class KloPublisher extends Recorder implements Serializable {
         public KloConfig getConfig() {
             return new KloConfig();
         }
-
-        @Override
-        public Publisher newInstance(StaplerRequest req, JSONObject formData)
-                throws hudson.model.Descriptor.FormException {
-
-            KloPublisher pub = new KloPublisher();
-
-            KloConfig kloConfig = req.bindJSON(KloConfig.class, formData);
-            pub.setKloConfig(kloConfig);
-
-            return pub;
-        }
-
     }
 
     public KloConfig getKloConfig() {
