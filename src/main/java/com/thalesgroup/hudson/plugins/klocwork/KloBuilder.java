@@ -249,7 +249,7 @@ public class KloBuilder extends Builder {
                 moreArgs = moreArgs.replaceAll("[\t\r\n]+", " ");
 
                 List<String> arguments = splitArgs(moreArgs);
-                if (arguments.get(0) != null) {
+                if (arguments.size() >0 && arguments.get(0) != null) {
                     argsBuild.add(execCmd + arguments.get(0));
                 }
                 argsBuild.add("--output").add(outputFile);
