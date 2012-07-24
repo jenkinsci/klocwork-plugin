@@ -24,29 +24,43 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
-import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
-import com.thalesgroup.hudson.plugins.klocwork.util.*;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.matrix.MatrixProject;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import java.io.*;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
+import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildLog;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildResultEvaluator;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildReviewLink;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloParseErrorsLog;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloProjectReviewLink;
 
 
 //AM : KloPublisher now extends Recorder instead of Publisher
@@ -240,7 +254,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return FreeStyleProject.class.isAssignableFrom(jobType) || MatrixProject.class.isAssignableFrom(jobType);
+            return true;
         }
 
         public KloConfig getConfig() {
