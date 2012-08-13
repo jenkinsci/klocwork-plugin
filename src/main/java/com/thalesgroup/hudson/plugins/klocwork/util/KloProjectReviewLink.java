@@ -24,6 +24,7 @@
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.ProminentProjectAction;
 
@@ -47,11 +48,22 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     }
 
     private void setKloHostPort() {
-        KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
-        if (kloInfo != null) {
-            kloInstall = kloInfo.getKloInstall();
-            projectName = kloInfo.getProject();
+        if (project == null) {
+            return;
         }
+
+        AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
+        if (lastSuccessfulBuild == null) {
+            return;
+        }
+
+        KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+        if (kloInfo == null) {
+            return;
+        }
+
+        kloInstall = kloInfo.getKloInstall();
+        projectName = kloInfo.getProject();
     }
 
     public boolean isDisplayLink() {
