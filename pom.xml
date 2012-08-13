@@ -7,7 +7,6 @@
         <version>1.410</version>
     </parent>
 
-    <groupId>com.thalesgroup.jenkins-ci.plugins</groupId>
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
