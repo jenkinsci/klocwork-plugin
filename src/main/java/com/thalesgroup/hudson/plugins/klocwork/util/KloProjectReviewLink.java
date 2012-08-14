@@ -67,9 +67,12 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     }
 
     public boolean isDisplayLink() {
-        KloBuildInfo kloInfo = project.getLastSuccessfulBuild().getAction(KloBuildInfo.class);
-        if (kloInfo != null) {
-            return true;
+        AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
+        if (lastSuccessfulBuild != null) {
+            KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+            if (kloInfo != null) {
+                return true;
+            }
         }
         return false;
     }
