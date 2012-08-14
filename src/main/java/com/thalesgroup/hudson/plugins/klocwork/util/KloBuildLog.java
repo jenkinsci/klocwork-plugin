@@ -34,11 +34,9 @@ public class KloBuildLog implements Action {
 
     public static final String URL_NAME = "klobuildlog";
 
-    private final String displayName = "Build Log";
-
-    private AbstractBuild<?, ?> owner;
-
-    private FilePath kloTables;
+    private transient final String displayName = "Build Log";
+    private transient AbstractBuild<?, ?> owner;
+    private transient FilePath kloTables;
 
     public KloBuildLog(AbstractBuild<?, ?> owner) {
         this.owner = owner;
