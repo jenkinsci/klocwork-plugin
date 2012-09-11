@@ -49,6 +49,7 @@ public class KloBuilder extends Builder {
 
     private int buildUsing;
 
+	private boolean kwinspectreportDeprecated = false;
     private boolean compilerBinaryBuild = false;
     private boolean kwBinaryBuild = false;
 
@@ -64,8 +65,10 @@ public class KloBuilder extends Builder {
     }
 
     @DataBoundConstructor
-    public KloBuilder(String projectName, String kloName, String buildUsing, String kwCommand,
-                      boolean compilerBinaryBuild, boolean kwBinaryBuild) {
+    public KloBuilder(boolean kwinspectreportDeprecated, String projectName, String kloName,
+					  String buildUsing, String kwCommand, boolean compilerBinaryBuild,
+					  boolean kwBinaryBuild) {
+		this.kwinspectreportDeprecated = kwinspectreportDeprecated;
         this.projectName = projectName;
         this.kloName = kloName;
         this.kwCommand = kwCommand;
@@ -97,6 +100,10 @@ public class KloBuilder extends Builder {
         return buildUsing;
     }
 
+	public boolean getKwinspectreportDeprecated() {
+		return kwinspectreportDeprecated;
+	}
+	
     public boolean getCompilerBinaryBuild() {
         return compilerBinaryBuild;
     }
@@ -302,8 +309,12 @@ public class KloBuilder extends Builder {
                 argsKwinspectreport = new ArgumentListBuilder().add("cmd.exe", "/C").addQuoted(argsKwinspectreport.toStringWithQuote());
             }
 
-            int rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
-
+			int rKwInspectreport = 0;
+			// check whether to run kwinspectreport. Klocwork v9.6 or later does not support xml
+			// report generation through kwinspectreport
+            if (!kwinspectreportDeprecated) {
+				rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
+			}
 
             // Finally store currentInstall and projectName for publisher to use
             build.addAction(new KloBuildInfo(build, currentInstall, projectName));

@@ -54,15 +54,23 @@ public class KloProjectAction extends AbstractKloProjectAction {
     }
 
     public String getIconFileName() {
-        return "/plugin/klocwork/icons/klocwork-24.gif";
+		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+			return null;
+		} else {
+			return "/plugin/klocwork/icons/klocwork-24.gif";
+		}
     }
 
     public String getDisplayName() {
-        return "Klocwork Results";
+		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+			return null;
+		} else {
+			return "Klocwork Results";
+		}
     }
 
     public String getUrlName() {
-        return URL_NAME;
+		return URL_NAME;
     }
 
     public boolean getPublishProjectGraph() {
@@ -270,7 +278,8 @@ public class KloProjectAction extends AbstractKloProjectAction {
                 continue;
             KloBuildAction r = b.getAction(KloBuildAction.class);
             if (r != null)
-                return b.getNumber();
+				if (r.getResult() != null)
+					return b.getNumber();
         }
         return null;
     }

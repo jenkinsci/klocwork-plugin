@@ -48,33 +48,33 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     }
 
     private void setKloHostPort() {
-        if (project == null) {
-            return;
-        }
+		if (project == null) {
+			return;
+		}
 
         AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
-        if (lastSuccessfulBuild == null) {
-            return;
-        }
+		if (lastSuccessfulBuild == null) {
+			return;
+	   	}
+	
+		KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+		if (kloInfo == null) {
+				return;
+		}
 
-        KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
-        if (kloInfo == null) {
-            return;
-        }
-
-        kloInstall = kloInfo.getKloInstall();
-        projectName = kloInfo.getProject();
+		kloInstall = kloInfo.getKloInstall();
+		projectName = kloInfo.getProject();
     }
 
     public boolean isDisplayLink() {
-        AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
+		AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
         if (lastSuccessfulBuild != null) {
-            KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
-            if (kloInfo != null) {
-                return true;
-            }
-        }
-        return false;
+	        KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+			if (kloInfo != null) {
+				return true;											           				
+			}
+		}
+		return false;
     }
 
     public AbstractProject<?, ?> getProject() {
