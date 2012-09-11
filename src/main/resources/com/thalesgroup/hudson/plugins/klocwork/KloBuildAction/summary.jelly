@@ -30,14 +30,16 @@
 	xmlns:f="/lib/form"
     xmlns:st="jelly:stapler"
     xmlns:i="jelly:fmt">
-    <t:summary icon="/plugin/klocwork/icons/klocwork-48.gif">
-		<!--${it.summary}-->
-		${it.result.summary}
-		<ul>
-		<!--${it.details}-->
-		${it.result.details}
-		</ul>
-	</t:summary>
+	<j:if test="${it.isSummary()}">
+		<t:summary icon="/plugin/klocwork/icons/klocwork-48.gif">
+			<!--${it.summary}-->
+			${it.result.summary}
+			<ul>
+			<!--${it.details}-->
+			${it.result.details}
+			</ul>
+		</t:summary>
+	</j:if>
 <!--
     <j:if test="${it.graphActive}">
 		<div style="float:right">

@@ -45,7 +45,10 @@ import java.util.Calendar;
 public class KloBuildAction extends AbstractKloBuildAction {
 
     public static final String URL_NAME = "kloResult";
-
+	private String iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
+	private String displayName = "Klocwork Results";
+	
+	
     private KloResult result;
     private KloConfig kloConfig;
 
@@ -53,14 +56,26 @@ public class KloBuildAction extends AbstractKloBuildAction {
         super(owner);
         this.result = result;
         this.kloConfig = kloConfig;
+		if ((kloConfig != null) && (kloConfig.getNoKwinspectreport() != null)) {
+			// if kwinspectreport has not been used, do not provide
+			// links to results
+			if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+				iconFileName = null;
+				displayName = null;
+			} else {
+				iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
+				displayName = "Klocwork Results";
+			}
+		}
+		
     }
 
     public String getIconFileName() {
-        return "/plugin/klocwork/icons/klocwork-24.gif";
+        return iconFileName;
     }
 
     public String getDisplayName() {
-        return "Klocwork Results";
+        return displayName;
     }
 
     public String getUrlName() {
@@ -82,16 +97,22 @@ public class KloBuildAction extends AbstractKloBuildAction {
     public Object getTarget() {
         return this.result;
     }
+	
+	public boolean isSummary() {
+		return !kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated();
+	}
 
     public HealthReport getBuildHealth() {
-
-        try {
-            return new KloBuildHealthEvaluator().evaluatBuildHealth(kloConfig, result.getNumberErrorsAccordingConfiguration(kloConfig, false));
-        } catch (IOException ioe) {
-            return new HealthReport();
-        }
+		if (result == null) {
+			return new HealthReport();
+		} else {
+			try {
+				return new KloBuildHealthEvaluator().evaluatBuildHealth(kloConfig, result.getNumberErrorsAccordingConfiguration(kloConfig, false));
+			} catch (IOException ioe) {
+				return new HealthReport();
+			}
+		}
     }
-
 
     private DataSetBuilder<String, NumberOnlyBuildLabel> getDataSetBuilder() {
         DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
@@ -105,23 +126,24 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
             if (checkBuildNumber(interval, trendNum, count)) {
                 ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+				if (a.getResult() != null) {
+					KloReport report = a.getResult().getReport();
 
-                KloReport report = a.getResult().getReport();
+					KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
 
-                KloConfigTrendGraph configGraph = kloConfig.getTrendGraph();
+					if (configGraph.isDisplayHighSeverity()) {
+						//Severity higher than 3 --> Warnings and suggestions
+						dsb.add(report.getNumberHighSeverities(), "Warnings and\nsuggestions", label);
+					}
+					if (configGraph.isDisplayLowSeverity()) {
+						//Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
+						dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
+					}
 
-                if (configGraph.isDisplayHighSeverity()) {
-                    //Severity higher than 3 --> Warnings and suggestions
-                    dsb.add(report.getNumberHighSeverities(), "Warnings and\nsuggestions", label);
-                }
-                if (configGraph.isDisplayLowSeverity()) {
-                    //Severity lower than 4 (1=Critical, 2=Severe, 3=Error)
-                    dsb.add(report.getNumberLowSeverities(), "Critical errors", label);
-                }
-
-                if (configGraph.isDisplayAllError()) {
-                    dsb.add(report.getNumberTotal(), "All errors", label);
-                }
+					if (configGraph.isDisplayAllError()) {
+						dsb.add(report.getNumberTotal(), "All errors", label);
+					}
+				}
             }
             count++;
         }
@@ -136,12 +158,13 @@ public class KloBuildAction extends AbstractKloBuildAction {
 
         Calendar timestamp = getBuild().getTimestamp();
 
-        if (req.checkIfModified(timestamp, rsp)) return;
+        if (req.checkIfModified(timestamp, rsp)) {
+			return;
+		}
 
         Graph g = new KloTrendGraph(getOwner(), getDataSetBuilder().build(),
                 "Number of errors", kloConfig.getTrendGraph().getXSize(), kloConfig.getTrendGraph().getYSize());
         g.doPng(req, rsp);
-
     }
 
     public boolean checkBuildNumber(int interval, int trendNum, int count) {
@@ -154,7 +177,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
         return false;
     }
 
-    public String getSearchUrl() {
+	public String getSearchUrl() {
         return getUrlName();
     }
 

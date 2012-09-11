@@ -91,6 +91,11 @@ public class KloBuildReviewLink implements Action {
     public String getReviewHeight() {
         return "800px";
     }
+	
+	public boolean isViewable() {
+		return (kloInstall.getProjectHost() != "") &&
+				(kloInstall.getProjectPort() != "") && (project != "");
+	}
 
     public String getIconFileName() {
         return "/plugin/klocwork/icons/klocwork-24.gif";

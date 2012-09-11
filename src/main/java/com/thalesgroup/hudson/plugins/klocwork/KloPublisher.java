@@ -24,43 +24,29 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.remoting.VirtualChannel;
-import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Publisher;
-import hudson.tasks.Recorder;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildLog;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildResultEvaluator;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildReviewLink;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloParseErrorsLog;
-import com.thalesgroup.hudson.plugins.klocwork.util.KloProjectReviewLink;
+import com.thalesgroup.hudson.plugins.klocwork.util.*;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
+import hudson.matrix.MatrixProject;
+import hudson.model.*;
+import hudson.remoting.VirtualChannel;
+import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Publisher;
+import hudson.tasks.Recorder;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 
 //AM : KloPublisher now extends Recorder instead of Publisher
@@ -99,82 +85,120 @@ public class KloPublisher extends Recorder implements Serializable {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
-
+    public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
+			throws InterruptedException, IOException {
+   
 
         if (this.canContinue(build.getResult())) {
             listener.getLogger().println("Starting the klocwork analysis.");
+			KloResult result = null;
+			KloReport kloReport = null;
+			KloSourceContainer kloSourceContainer = null;
 
             //            final FilePath[] moduleRoots = build.getModuleRoots();
             //            final boolean multipleModuleRoots = moduleRoots != null && moduleRoots.length > 1;
             //            final FilePath moduleRoot = multipleModuleRoots ? build.getWorkspace() : build.getModuleRoot();
+			if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+				KloParserResult parser = new KloParserResult(listener, kloConfig.getKlocworkReportPattern());
+				try {
+					kloReport = build.getWorkspace().act(parser);
+				} catch (Exception e) {
+					listener.getLogger().println("Error on klocwork analysis: " + e);
+					build.setResult(Result.FAILURE);
+					return false;
+				}
 
-            KloParserResult parser = new KloParserResult(listener, kloConfig.getKlocworkReportPattern());
-            KloReport kloReport;
-            try {
-                kloReport = build.getWorkspace().act(parser);
-            } catch (Exception e) {
-                listener.getLogger().println("Error on klocwork analysis: " + e);
-                build.setResult(Result.FAILURE);
-                return false;
-            }
+				if (kloReport == null) {
+					build.setResult(Result.FAILURE);
+					return false;
+				}
 
-            if (kloReport == null) {
-                build.setResult(Result.FAILURE);
-                return false;
-            }
+				kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
 
-            KloSourceContainer kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
+				result = new KloResult(kloReport, kloSourceContainer, build);
 
-            KloResult result = new KloResult(kloReport, kloSourceContainer, build);
+				Result buildResult = new KloBuildResultEvaluator().evaluateBuildResult(
+						listener, result.getNumberErrorsAccordingConfiguration(kloConfig, false),
+						result.getNumberErrorsAccordingConfiguration(kloConfig, true),
+						kloConfig);
 
-            Result buildResult = new KloBuildResultEvaluator().evaluateBuildResult(
-                    listener, result.getNumberErrorsAccordingConfiguration(kloConfig, false),
-                    result.getNumberErrorsAccordingConfiguration(kloConfig, true),
-                    kloConfig);
-
-            if (buildResult != Result.SUCCESS) {
-                build.setResult(buildResult);
-            }
-
-            build.addAction(new KloBuildAction(build, result, kloConfig));
-            build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
-
+				if (buildResult != Result.SUCCESS) {
+					build.setResult(buildResult);
+				}
+				build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
+			} else {
+				listener.getLogger().println("Version 9.6 or later of Klocwork detected. Only Klocwork review is available. Parse_errors.log and build.log can be accessed on the review");
+			}
+			
+                     
+				build.addAction(new KloBuildAction(build, result, kloConfig));
+			
+                       
+					
+			
+			
             // Check config whether to create links for Klocwork Review, parse_errors.log
             // and build.log
             if (kloConfig.getLinkReview()) {
                 String host = null, port = null, project = null;
-                if (kloReport.getNumberTotal() != 0) {
-                    if (kloReport.getAllSeverities().get(0) != null) {
-                        String url = kloReport.getAllSeverities().get(0).get("url");
-                        if (url !=null){
-	                        Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
-	                        Matcher m = p.matcher(url);
-	                        if (m.matches()) {
-	                            host = m.group(1);
-	                            port = m.group(2);
-	                            project = m.group(3);
-	                        }
-                        }
-                    }
-                }
+				if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+					if (kloReport.getAllSeverities().get(0) != null) {
+						String url = kloReport.getAllSeverities().get(0).get("url");
+						if (url !=null){
+							Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
+							Matcher m = p.matcher(url);
+							if (m.matches()) {
+								host = m.group(1);
+								port = m.group(2);
+								project = m.group(3);
+							}
+						}
+					}
+				}
+                            else
+                                {          
+                                    host = kloConfig.getHost();
+                                    port = kloConfig.getPort();
+                                    project = kloConfig.getProject();                                         
+                                }
+                                    
+                        
+                                
                 build.addAction(new KloBuildReviewLink(build, host, port, project));
+                
             }
-            if (kloConfig.getLinkBuildLog()) {
-                build.addAction(new KloBuildLog(build));
-            }
+            
+           
+
+            
+
+           if (kloConfig.getLinkBuildLog()) {
+                
+                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()){
+                    build.addAction(new KloBuildLog(build));
+                }
+                
+           }
+        
+			
             if (kloConfig.getLinkParseLog()) {
-                build.addAction(new KloParseErrorsLog(build));
+                
+                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()){
+                    build.addAction(new KloParseErrorsLog(build));
+                }
+                 
             }
-
-            if (build.getWorkspace().isRemote()) {
-                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
+           
+         
+            if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated() && build.getWorkspace().isRemote()) {
+                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());                
             }
-
+          
             listener.getLogger().println("End of the klocwork analysis.");
         }
         return true;
     }
+
 
     /**
      * Copies all the source files from slave to master for a remote build.
@@ -215,7 +239,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
 
     @Override
-    public KloDescriptor getDescriptor() {
+    public KloPublisher.KloDescriptor getDescriptor() {
         return DESCRIPTOR;
     }
     
@@ -225,7 +249,7 @@ public class KloPublisher extends Recorder implements Serializable {
     }
 
     @Extension
-    public static final KloDescriptor DESCRIPTOR = new KloDescriptor();
+    public static final KloPublisher.KloDescriptor DESCRIPTOR = new KloPublisher.KloDescriptor();
 
     public static final class KloDescriptor extends BuildStepDescriptor<Publisher> {
 
@@ -256,7 +280,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return true;
+            return FreeStyleProject.class.isAssignableFrom(jobType) || MatrixProject.class.isAssignableFrom(jobType);
         }
 
         public KloConfig getConfig() {

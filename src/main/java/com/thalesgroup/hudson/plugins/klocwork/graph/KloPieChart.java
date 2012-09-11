@@ -38,6 +38,8 @@ import java.awt.*;
 
 public class KloPieChart extends Graph {
 
+	public static final int DEFAULT_CHART_WIDTH = 500;
+    public static final int DEFAULT_CHART_HEIGHT = 300;
     private PieDataset dataset;
     private KloConfig kloConfig;
     private KloReport kloReport;
