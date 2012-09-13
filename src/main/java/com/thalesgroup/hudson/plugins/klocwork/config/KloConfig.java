@@ -23,13 +23,16 @@
 
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloPieChart;
+import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.Serializable;
 
 public class KloConfig implements Serializable {
 
-    private String klocworkReportPattern;
+	private KloConfigNoKwinspectreport noKwinspectreport;
 
     private KloConfigTrendGraph trendGraph = new KloConfigTrendGraph();
 
@@ -37,22 +40,33 @@ public class KloConfig implements Serializable {
 
     private KloConfigSeverityEvaluation configSeverityEvaluation = new KloConfigSeverityEvaluation();
 
+	private String klocworkReportPattern;
     private boolean linkReview = true;
     private boolean linkBuildLog = true;
     private boolean linkParseLog = true;
     private boolean publishBuildGraph = true;
     private boolean publishProjectGraph = true;
-
+	
     private String numToKeep;
+    private String host;
+    private String port;
+    private String project;
+
+    
+    
 
     public KloConfig() {
-
+        
     }
 
-    @DataBoundConstructor
-    @SuppressWarnings("unused")
-    public KloConfig(String klocworkReportPattern,
-                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog,
+       @DataBoundConstructor
+        @SuppressWarnings("unused")
+    public KloConfig(// boolean noKwinspectreport, // String klocworkReportPattern,
+    				 KloConfigNoKwinspectreport noKwinspectreport,
+					 // boolean klocworkReportPatternConfig,
+                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
+                     String host, String port,String project
+					 /*,
                      boolean publishBuildGraph, boolean publishProjectGraph,
                      String trendNum, String interval,
                      int trendXSize, int trendYSize,
@@ -64,30 +78,75 @@ public class KloConfig implements Serializable {
                      String threshold,
                      String newThreshold, String failureThreshold,
                      String newFailureThreshold, String healthy, String unHealthy,
-                     boolean highSeverity, boolean lowSeverity) {
-
-        this.klocworkReportPattern = klocworkReportPattern;
-
+                     boolean highSeverity, boolean lowSeverity */ ) {
+					 
+		// this.noKwinspectreport = noKwinspectreport;
+                
+		if (noKwinspectreport == null) {
+			if (this.noKwinspectreport == null ) {
+				this.noKwinspectreport = new KloConfigNoKwinspectreport(
+													/* bool noKwinspectreport */true,
+													/* klocworkReportPattern */ "",
+													/* publishBuildGraph */ true,
+													/* publishProjectGraph */ true,
+													/* trendNum */ "0",
+													/* interval */ "1",
+													/* trendXSize */ KloTrendGraph.DEFAULT_CHART_WIDTH,
+													/* trendYSize */KloTrendGraph.DEFAULT_CHART_HEIGHT,
+													/* displayAllError */ true,
+													/* displayHighSeverity */ true,
+													/* displayLowSeverity */ true,
+													/* buildXSize */ KloPieChart.DEFAULT_CHART_WIDTH,
+													/* buildYSize */ KloPieChart.DEFAULT_CHART_HEIGHT,
+													/* neww */ true,
+													/* existing */ true,
+													/* fixed */ true,
+													/* threshold */ "",
+													/* newThreshold */ "",
+													/* failureThreshold */ "",
+													/* newFailureThreshold */ "",
+													/* healthy */ "",
+													/* unHealthy */ "",
+													/* highSeverity */ true,
+													/* lowSeverity */ true
+													);
+                                
+				// klocworkReportPattern = new KloConfigNoKwinspectreport("", true);
+			} else {
+				noKwinspectreport.setKwinspectreportDeprecated(true);
+			}
+		} else {
+                     
+			this.noKwinspectreport = noKwinspectreport;
+                     
+		}
+		
+        this.klocworkReportPattern = this.noKwinspectreport.getKlocworkReportPattern();
         this.linkReview = linkReview;
         this.linkBuildLog = linkBuildLog;
         this.linkParseLog = linkParseLog;
-        this.publishBuildGraph = publishBuildGraph;
-        this.publishProjectGraph = publishProjectGraph;
+        this.publishBuildGraph = this.noKwinspectreport.getPublishBuildGraph();
+        this.publishProjectGraph = this.noKwinspectreport.getPublishProjectGraph();
 
-        this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
-                displayHighSeverity, displayLowSeverity, interval, trendNum);
+        this.trendGraph = this.noKwinspectreport.getTrendGraph();
 
-        this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
-                existing, fixed);
+        this.buildGraph = this.noKwinspectreport.getBuildGraph();
 
-        this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
-                threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
-                unHealthy, highSeverity, lowSeverity);
+        this.configSeverityEvaluation = this.noKwinspectreport.getConfigSeverityEvaluation();
+        
+        this.host=host;
+        this.port=port;
+        this.project=project;
+
 
     }
-
+    public KloConfigNoKwinspectreport getNoKwinspectreport() {
+	return noKwinspectreport;
+    }
+	
     public String getKlocworkReportPattern() {
-        return klocworkReportPattern;
+        // return noKwinspectreport.getKlocworkReportPattern();
+		return klocworkReportPattern;
     }
 
     public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
@@ -125,4 +184,18 @@ public class KloConfig implements Serializable {
     public String getNumToKeep() {
         return numToKeep;
     }
+
+    public String getHost() {
+        return host;
+    }   
+
+    public String getPort() {
+        return port;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    
 }
