@@ -138,7 +138,7 @@ public class KloPublisher extends Recorder implements Serializable {
             // and build.log
             if (kloConfig.getLinkReview()) {
                 String host = null, port = null, project = null;
-                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
                     if (kloReport.getNumberTotal() != 0) {
                         if (kloReport.getAllSeverities().get(0) != null) {
                             String url = kloReport.getAllSeverities().get(0).get("url");
@@ -159,35 +159,28 @@ public class KloPublisher extends Recorder implements Serializable {
                     project = kloConfig.getProject();
                 }
 
-
                 build.addAction(new KloBuildReviewLink(build, host, port, project));
-
             }
 
 
             if (kloConfig.getLinkBuildLog()) {
-
-                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
                     build.addAction(new KloBuildLog(build));
                 }
-
             }
-
 
             if (kloConfig.getLinkParseLog()) {
-
-                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
                     build.addAction(new KloParseErrorsLog(build));
                 }
-
             }
 
-
-            if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated() && build.getWorkspace().isRemote()) {
+            if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated() && build.getWorkspace().isRemote()) {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
             }
 
             listener.getLogger().println("End of the klocwork analysis.");
+
         }
         return true;
     }
