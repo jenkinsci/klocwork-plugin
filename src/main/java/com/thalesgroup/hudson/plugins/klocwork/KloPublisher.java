@@ -156,31 +156,22 @@ public class KloPublisher extends Recorder implements Serializable {
 							}
 						}
 					}
-				}
-                            else
-                                {          
-                                    host = kloConfig.getHost();
-                                    port = kloConfig.getPort();
-                                    project = kloConfig.getProject();                                         
-                                }
+				} else {
+                    host = kloConfig.getHost();
+                    port = kloConfig.getPort();
+                    project = kloConfig.getProject();                                         
+                }
                                     
-                        
-                                
                 build.addAction(new KloBuildReviewLink(build, host, port, project));
-                
             }
-            
-           
 
-            
-
-           if (kloConfig.getLinkBuildLog()) {
+            if (kloConfig.getLinkBuildLog()) {
                 
                 if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()){
                     build.addAction(new KloBuildLog(build));
                 }
                 
-           }
+            }
         
 			
             if (kloConfig.getLinkParseLog()) {
