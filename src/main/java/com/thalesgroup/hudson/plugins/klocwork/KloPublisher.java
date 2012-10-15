@@ -138,40 +138,6 @@ public class KloPublisher extends Recorder implements Serializable {
             // and build.log
             if (kloConfig.getLinkReview()) {
                 String host = null, port = null, project = null;
-				if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
-					if (kloReport.getNumberTotal() != 0) {
-						if (kloReport.getAllSeverities().get(0) != null) {
-							String url = kloReport.getAllSeverities().get(0).get("url");
-							if (url !=null){
-								Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
-								Matcher m = p.matcher(url);
-								if (m.matches()) {
-									host = m.group(1);
-									port = m.group(2);
-									project = m.group(3);
-								}
-							}
-						}
-					}
-				} else {
-                    host = kloConfig.getHost();
-                    port = kloConfig.getPort();
-                    project = kloConfig.getProject();                                         
-                }
-                                    
-                build.addAction(new KloBuildReviewLink(build, host, port, project));
-            }
-
-            if (kloConfig.getLinkBuildLog()) {
-                
-                if (!kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()){
-                    build.addAction(new KloBuildLog(build));
-                }
-                
-            }
-        
-			
-=======
                 if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
                     if (kloReport.getNumberTotal() != 0) {
                         if (kloReport.getAllSeverities().get(0) != null) {
@@ -203,7 +169,6 @@ public class KloPublisher extends Recorder implements Serializable {
                 }
             }
 
->>>>>>> cittools/master
             if (kloConfig.getLinkParseLog()) {
                 if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
                     build.addAction(new KloParseErrorsLog(build));

@@ -1,0 +1,1924 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<errorList xmlns="http://www.klocwork.com/inForce/report/1.0" version="9.0.0">
+    <problem>
+        <problemID>2</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\configuration\ManualConfigurator.java</file>
+        <method>getStorage</method>
+        <line>131</line>
+        <column>16</column>
+        <code>REDUN.DEF</code>
+        <message>Assignment of &apos;this.storage&apos; to itself</message>
+        <anchor>7021355</anchor>
+        <prefix>gumentException(&quot;nullstorage&quot;);}</prefix>
+        <postfix>}}</postfix>
+        <severity>Severe</severity>
+        <severitylevel>2</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <comment></comment>
+        <lastCommit>1292345077000</lastCommit>
+        <lastCommitter></lastCommitter>
+        <state>Existing</state>
+        <history>
+            <statusUpdate user="" status="Ignore" timestamp="1292345059000">
+                <comment></comment>
+            </statusUpdate>
+        </history>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=2</url>
+    </problem>
+    <problem>
+        <problemID>3</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\configuration\sections\TableStructure.java</file>
+        <method>TableStructure</method>
+        <line>42</line>
+        <column>32</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;tableName&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>1402415049</anchor>
+        <prefix>)throwsIllegalArgumentException{</prefix>
+        <postfix>thrownewIllegalArgumentException</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=3</url>
+    </problem>
+    <problem>
+        <problemID>4</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\console\ConsoleMain.java</file>
+        <method>run</method>
+        <line>62</line>
+        <column>5</column>
+        <code>EXC.BROADTHROWS</code>
+        <message>The &apos;run&apos; method throws a generic exception &apos;java.lang.Exception&apos;</message>
+        <anchor>-1022080806</anchor>
+        <prefix>rowsExceptionifanyerroroccured*/</prefix>
+        <postfix>//readconfigurationXmlConfigurat</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Poor Error Handling</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=4</url>
+    </problem>
+    <problem>
+        <problemID>6</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\JFrameHelp.java</file>
+        <method>JFrameHelp</method>
+        <line>21</line>
+        <column>20</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;strHtmlrow&apos; was never read after being assigned.</message>
+        <anchor>-617890082</anchor>
+        <prefix>StreamReader(url.openStream()));</prefix>
+        <postfix>StringBuffersb=newStringBuffer()</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=6</url>
+    </problem>
+    <problem>
+        <problemID>8</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\JFrameHelp.java</file>
+        <method>JFrameHelp</method>
+        <line>21</line>
+        <column>33</column>
+        <code>UC.STRV</code>
+        <message>Unnecessary object creation, new String() method can be replaced with empty string</message>
+        <anchor>0</anchor>
+        <prefix>StreamReader(url.openStream()));</prefix>
+        <postfix>StringBuffersb=newStringBuffer()</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=8</url>
+    </problem>
+    <problem>
+        <problemID>9</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\SimpleGui.java</file>
+        <method>jButton3ActionPerformed</method>
+        <line>108</line>
+        <column>60</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;new FileWriter(...)&apos; is not closed on exit.</message>
+        <anchor>-290449265</anchor>
+        <prefix>FileChooser.APPROVE_OPTION){try{</prefix>
+        <postfix>Iteratorit=statements.iterator()</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\SimpleGui.java"
+                        method="jButton3ActionPerformed" id="0">
+                <traceLine line="108" text="[source] &apos;new FileWriter(...)&apos;" type="E"/>
+                <traceLine line="108" text="tracking &apos;new BufferedWriter(...)&apos;" type="E"/>
+                <traceLine line="111" text="&apos;java.io.IOException&apos; is thrown by write(...)" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=9</url>
+    </problem>
+    <problem>
+        <problemID>10</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java</file>
+        <method>loadPreferences</method>
+        <line>703</line>
+        <column>34</column>
+        <code>RLK.IN</code>
+        <message>Input stream &apos;new FileInputStream(...)&apos; is not closed on exit.</message>
+        <anchor>784846587</anchor>
+        <prefix>,&quot;/*defaultproperties*/&quot;);}else{</prefix>
+        <postfix>}}catch(Exceptione){System.err.p</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java" method="loadPreferences"
+                        id="0">
+                <traceLine line="703" text="[source] &apos;new FileInputStream(...)&apos;" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=10</url>
+    </problem>
+    <problem>
+        <problemID>11</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java</file>
+        <method>savePreferences</method>
+        <line>683</line>
+        <column>36</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;out&apos; is not closed on exit.</message>
+        <anchor>-1855917696</anchor>
+        <prefix>sql/&quot;+&quot;preferences.properties&quot;);</prefix>
+        <postfix>preferences.store(out,&quot;/*savedpr</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java" method="savePreferences"
+                        id="0">
+                <traceLine line="683" text="[source] &apos;new FileOutputStream(...)&apos;" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=11</url>
+    </problem>
+    <problem>
+        <problemID>12</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java</file>
+        <method>loadPreferences</method>
+        <line>700</line>
+        <column>40</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;out&apos; is not closed on exit.</message>
+        <anchor>-1855917696</anchor>
+        <prefix>printResultOnLogWindow&quot;,&quot;true&quot;);</prefix>
+        <postfix>preferences.store(out,&quot;/*default</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java" method="loadPreferences"
+                        id="0">
+                <traceLine line="700" text="[source] &apos;new FileOutputStream(...)&apos;" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=12</url>
+    </problem>
+    <problem>
+        <problemID>13</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java</file>
+        <method>initPreferences</method>
+        <line>79</line>
+        <column>46</column>
+        <code>UC.BOOLS</code>
+        <message>Unnecessary object creation, new Boolean(string expression) method can be replaced with
+            Boolean.valueOf(string expression)
+        </message>
+        <anchor>0</anchor>
+        <prefix>);}privatevoidinitPreferences(){</prefix>
+        <postfix>}privatevoidinitComponents(){//G</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=13</url>
+    </problem>
+    <problem>
+        <problemID>14</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\ThinGui.java</file>
+        <method>jMenuItemStartConversionActionPerformed</method>
+        <line>621</line>
+        <column>30</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;sb&apos; was never read after being assigned.</message>
+        <anchor>3663</anchor>
+        <prefix>inthighLightStop=highLightStart;</prefix>
+        <postfix>for(inti=0;i&lt;config.getStorage()</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=14</url>
+    </problem>
+    <problem>
+        <problemID>15</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>69</line>
+        <column>36</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;className&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1678396321</anchor>
+        <prefix>mapping.get(type.toUpperCase());</prefix>
+        <postfix>thrownewClassNotFoundException(&quot;</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=15</url>
+    </problem>
+    <problem>
+        <problemID>16</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>65</line>
+        <column>23</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;field&apos; was never read after null being assigned.</message>
+        <anchor>97427706</anchor>
+        <prefix>p)throwsGrammarFactoryException{</prefix>
+        <postfix>try{StringclassName=(String)mapp</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=16</url>
+    </problem>
+    <problem>
+        <problemID>17</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldBigint.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=17</url>
+    </problem>
+    <problem>
+        <problemID>18</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldBit.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=18</url>
+    </problem>
+    <problem>
+        <problemID>19</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldChar.java</file>
+        <method>doRender</method>
+        <line>43</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=19</url>
+    </problem>
+    <problem>
+        <problemID>20</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldChar.java</file>
+        <method>doRender</method>
+        <line>48</line>
+        <column>20</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;strValue&apos; was never read after being assigned.</message>
+        <anchor>1777080768</anchor>
+        <prefix>efaulNullValue();}try{//getvalue</prefix>
+        <postfix>//renderreturnPRE+((String)value</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=20</url>
+    </problem>
+    <problem>
+        <problemID>21</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldDate.java</file>
+        <method>doRender</method>
+        <line>47</line>
+        <column>38</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=21</url>
+    </problem>
+    <problem>
+        <problemID>22</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldDate.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=22</url>
+    </problem>
+    <problem>
+        <problemID>23</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldDouble.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=23</url>
+    </problem>
+    <problem>
+        <problemID>24</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldFloat.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=24</url>
+    </problem>
+    <problem>
+        <problemID>25</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldInt.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=25</url>
+    </problem>
+    <problem>
+        <problemID>26</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldMediumint.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=26</url>
+    </problem>
+    <problem>
+        <problemID>27</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldSmallint.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=27</url>
+    </problem>
+    <problem>
+        <problemID>28</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\mysql\MysqlFieldTinyint.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=28</url>
+    </problem>
+    <problem>
+        <problemID>29</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>59</line>
+        <column>36</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;className&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1678396321</anchor>
+        <prefix>mapping.get(type.toUpperCase());</prefix>
+        <postfix>thrownewClassNotFoundException(&quot;</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=29</url>
+    </problem>
+    <problem>
+        <problemID>30</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>55</line>
+        <column>23</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;field&apos; was never read after null being assigned.</message>
+        <anchor>97427706</anchor>
+        <prefix>p)throwsGrammarFactoryException{</prefix>
+        <postfix>try{StringclassName=(String)mapp</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=30</url>
+    </problem>
+    <problem>
+        <problemID>31</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldDate.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=31</url>
+    </problem>
+    <problem>
+        <problemID>32</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldDate.java</file>
+        <method>doRender</method>
+        <line>48</line>
+        <column>38</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=32</url>
+    </problem>
+    <problem>
+        <problemID>33</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldNumber.java</file>
+        <method>doRender</method>
+        <line>48</line>
+        <column>19</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;result&apos; was never read after being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>ring)value).replaceAll(&quot;,&quot;,&quot;.&quot;);</prefix>
+        <postfix>//renderreturnString.valueOf(str</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=33</url>
+    </problem>
+    <problem>
+        <problemID>34</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldNumber.java</file>
+        <method>doRender</method>
+        <line>42</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=34</url>
+    </problem>
+    <problem>
+        <problemID>35</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldVarchar.java</file>
+        <method>doRender</method>
+        <line>43</line>
+        <column>33</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{//getvalueStringstrValue=((S</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=35</url>
+    </problem>
+    <problem>
+        <problemID>36</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\oracle\OracleFieldVarchar.java</file>
+        <method>doRender</method>
+        <line>48</line>
+        <column>20</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;strValue&apos; was never read after being assigned.</message>
+        <anchor>1777080768</anchor>
+        <prefix>efaulNullValue();}try{//getvalue</prefix>
+        <postfix>//renderreturnPRE+((String)value</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=36</url>
+    </problem>
+    <problem>
+        <problemID>37</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>54</line>
+        <column>36</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;className&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1678396321</anchor>
+        <prefix>mapping.get(type.toUpperCase());</prefix>
+        <postfix>thrownewClassNotFoundException(&quot;</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=37</url>
+    </problem>
+    <problem>
+        <problemID>38</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>50</line>
+        <column>23</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;field&apos; was never read after null being assigned.</message>
+        <anchor>97427706</anchor>
+        <prefix>p)throwsGrammarFactoryException{</prefix>
+        <postfix>try{StringclassName=(String)mapp</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=38</url>
+    </problem>
+    <problem>
+        <problemID>39</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\PostgresFieldCharacter.java</file>
+        <method>doRender</method>
+        <line>48</line>
+        <column>20</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;strValue&apos; was never read after being assigned.</message>
+        <anchor>1777080768</anchor>
+        <prefix>efaulNullValue();}try{//getvalue</prefix>
+        <postfix>//renderreturnPRE+((String)value</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=39</url>
+    </problem>
+    <problem>
+        <problemID>40</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\PostgresFieldInteger.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>26</column>
+        <code>UMC.TOSTRING</code>
+        <message>Unnecessary toString() method is called for String argument. Use argument instead</message>
+        <anchor>0</anchor>
+        <prefix>sult=getDefaulNullValue();}else{</prefix>
+        <postfix>}}catch(NumberFormatExceptione){</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=40</url>
+    </problem>
+    <problem>
+        <problemID>41</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\PostgresFieldInteger.java</file>
+        <method>doRender</method>
+        <line>42</line>
+        <column>82</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=41</url>
+    </problem>
+    <problem>
+        <problemID>42</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\postgres\PostgresFieldInteger.java</file>
+        <method>doRender</method>
+        <line>40</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((&quot;null&quot;.equalsIgnoreCase(</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=42</url>
+    </problem>
+    <problem>
+        <problemID>43</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\DateField.java</file>
+        <method>doRender</method>
+        <line>47</line>
+        <column>38</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=43</url>
+    </problem>
+    <problem>
+        <problemID>44</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\DateField.java</file>
+        <method>doRender</method>
+        <line>44</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=44</url>
+    </problem>
+    <problem>
+        <problemID>45</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\FloatField.java</file>
+        <method>doRender</method>
+        <line>42</line>
+        <column>38</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=45</url>
+    </problem>
+    <problem>
+        <problemID>46</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\FloatField.java</file>
+        <method>doRender</method>
+        <line>40</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=46</url>
+    </problem>
+    <problem>
+        <problemID>47</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>50</line>
+        <column>23</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;field&apos; was never read after null being assigned.</message>
+        <anchor>97427706</anchor>
+        <prefix>p)throwsGrammarFactoryException{</prefix>
+        <postfix>try{StringclassName=(String)mapp</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=47</url>
+    </problem>
+    <problem>
+        <problemID>48</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\GrammarFactory.java</file>
+        <method>createField</method>
+        <line>54</line>
+        <column>36</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;className&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1678396321</anchor>
+        <prefix>mapping.get(type.toUpperCase());</prefix>
+        <postfix>thrownewClassNotFoundException(&quot;</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=48</url>
+    </problem>
+    <problem>
+        <problemID>49</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\IntegerField.java</file>
+        <method>doRender</method>
+        <line>42</line>
+        <column>38</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;(String)value&apos; using equals(), instead of length() == 0
+        </message>
+        <anchor>-1412613055</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=49</url>
+    </problem>
+    <problem>
+        <problemID>50</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\IntegerField.java</file>
+        <method>doRender</method>
+        <line>40</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=50</url>
+    </problem>
+    <problem>
+        <problemID>51</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\StringField.java</file>
+        <method>doRender</method>
+        <line>45</line>
+        <column>37</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;value&apos; using equals(), instead of length() == 0</message>
+        <anchor>-612098479</anchor>
+        <prefix>Exception{Stringresult=null;try{</prefix>
+        <postfix>result=getDefaulNullValue();}els</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=51</url>
+    </problem>
+    <problem>
+        <problemID>52</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\grammars\standard\StringField.java</file>
+        <method>doRender</method>
+        <line>43</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;result&apos; was never read after null being assigned.</message>
+        <anchor>-934426595</anchor>
+        <prefix>alue)throwsFieldRenderException{</prefix>
+        <postfix>try{if((value==null)||(&quot;&quot;.equals</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=52</url>
+    </problem>
+    <problem>
+        <problemID>53</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>225</line>
+        <column>21</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;currentLine.trim()&apos; using equals(), instead of length()
+            == 0
+        </message>
+        <anchor>-1156232600</anchor>
+        <prefix>ne=line;//don&apos;tfeedtheemptylines</prefix>
+        <postfix>//getarrayofvaluesofarowString[]</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=53</url>
+    </problem>
+    <problem>
+        <problemID>54</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>218</line>
+        <column>20</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;line&apos; was never read after being assigned.</message>
+        <anchor>3321844</anchor>
+        <prefix>enerator=calculateIdGenerator();</prefix>
+        <postfix>while((line=in.readLine())!=null</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=54</url>
+    </problem>
+    <problem>
+        <problemID>55</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>243</line>
+        <column>28</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;valueToRender&apos; was never read after null being assigned.</message>
+        <anchor>1730619522</anchor>
+        <prefix>cture().getFields().size();i++){</prefix>
+        <postfix>//OPTIONif(&quot;true&quot;.equals(getRend</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=55</url>
+    </problem>
+    <problem>
+        <problemID>56</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>197</line>
+        <column>35</column>
+        <code>RLK.IN</code>
+        <message>Input stream &apos;fis&apos; is not closed on exit.</message>
+        <anchor>-1918072385</anchor>
+        <prefix>nalStringend=&quot;);&quot;;try{//openfile</prefix>
+        <postfix>BufferedReaderin=newBufferedRead</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java"
+                        method="buildStatementFieldsValues" id="0">
+                <traceLine line="197" text="[source] &apos;new FileInputStream(...)&apos;" type="E"/>
+                <traceLine line="203" text="&apos;java.io.IOException&apos; is thrown by readLine(...)" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=56</url>
+    </problem>
+    <problem>
+        <problemID>57</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRenderer.java</file>
+        <method>calculateSeparator</method>
+        <line>157</line>
+        <column>13</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;getRenderProperties().getProperty(separator)&apos; using
+            equals(), instead of length() == 0
+        </message>
+        <anchor>-1622877507</anchor>
+        <prefix>sInvalidParameterValueException{</prefix>
+        <postfix>thrownewInvalidParameterValueExc</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=57</url>
+    </problem>
+    <problem>
+        <problemID>58</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromArray.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>205</line>
+        <column>24</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;valueToRender&apos; was never read after null being assigned.</message>
+        <anchor>1730619522</anchor>
+        <prefix>cture().getFields().size();i++){</prefix>
+        <postfix>//OPTIONif(&quot;true&quot;.equals(getRend</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=58</url>
+    </problem>
+    <problem>
+        <problemID>59</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromArray.java</file>
+        <method>calculateSeparator</method>
+        <line>129</line>
+        <column>13</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;getRenderProperties().getProperty(separator)&apos; using
+            equals(), instead of length() == 0
+        </message>
+        <anchor>-1622877507</anchor>
+        <prefix>sInvalidParameterValueException{</prefix>
+        <postfix>thrownewInvalidParameterValueExc</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=59</url>
+    </problem>
+    <problem>
+        <problemID>60</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromArray.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>187</line>
+        <column>17</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;currentLine.trim()&apos; using equals(), instead of length()
+            == 0
+        </message>
+        <anchor>-1156232600</anchor>
+        <prefix>rrentLine.trim()==null)continue;</prefix>
+        <postfix>//getarrayofvaluesofarowString[]</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=60</url>
+    </problem>
+    <problem>
+        <problemID>61</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromDBF.java</file>
+        <method>buildStatementFieldsValues</method>
+        <line>146</line>
+        <column>31</column>
+        <code>RLK.IN</code>
+        <message>Input stream &apos;is&apos; is not closed on exit.</message>
+        <anchor>-1231807717</anchor>
+        <prefix>art=&quot;(&quot;;finalStringend=&quot;);&quot;;try{</prefix>
+        <postfix>DBFReaderreader=newDBFReader(is)</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromDBF.java"
+                        method="buildStatementFieldsValues" id="0">
+                <traceLine line="146" text="[source] &apos;new FileInputStream(...)&apos;" type="E"/>
+                <traceLine line="147" text="&apos;com.linuxense.javadbf.DBFException&apos; is thrown by DBFReader(...)"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=61</url>
+    </problem>
+    <problem>
+        <problemID>62</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromExcel.java</file>
+        <method>calculateSkipFields</method>
+        <line>106</line>
+        <column>22</column>
+        <code>NPE.RET.UTIL</code>
+        <message>Null pointer dereference of &apos;getRenderProperties().getProperty(...)&apos; where null is returned
+            from a map or a collection
+        </message>
+        <anchor>741393139</anchor>
+        <prefix>etProperty(&quot;skipfields&quot;)!=null){</prefix>
+        <postfix>for(inti=0;i&lt;test.length;i++){fi</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromExcel.java"
+                        method="calculateSkipFields" id="0">
+                <traceLine line="106" text="[source] &apos;getRenderProperties().getProperty(...)&apos;" type="E"/>
+                <traceLine line="106" text="[sink] direct dereference" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Critical</severity>
+        <severitylevel>1</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Possible Runtime Failures</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=62</url>
+    </problem>
+    <problem>
+        <problemID>63</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\splitters\Standard.java</file>
+        <method>split</method>
+        <line>46</line>
+        <column>89</column>
+        <code>NPE.RET</code>
+        <message>Null pointer dereference of &apos;matcher.group(...)&apos; where null is returned from a method
+        </message>
+        <anchor>-167249927</anchor>
+        <prefix>her(line);while(matcher.find()){</prefix>
+        <postfix>}String[]arr=newString[result.si</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\renders\splitters\Standard.java" method="split" id="0">
+                <traceLine line="46" text="[source] &apos;matcher.group(...)&apos;" type="E"/>
+                <traceLine line="46" text="[sink] direct dereference" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Critical</severity>
+        <severitylevel>1</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Possible Runtime Failures</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=63</url>
+    </problem>
+    <problem>
+        <problemID>64</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>finalize</method>
+        <line>133</line>
+        <column>5</column>
+        <code>FIN.NOSUPER</code>
+        <message>Implementation of the finalize() method should call super.finalize()</message>
+        <anchor>0</anchor>
+        <prefix>tion(&quot;can&apos;tcreatetempfile&quot;,e);}}</prefix>
+        <postfix>throwsThrowable{clear();}publicH</postfix>
+        <severity>Unexpected</severity>
+        <severitylevel>4</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Suspicious Code Practices</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=64</url>
+    </problem>
+    <problem>
+        <problemID>65</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>add</method>
+        <line>54</line>
+        <column>13</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;raf&apos; was never read after null being assigned.</message>
+        <anchor>112663</anchor>
+        <prefix>.write(buf.array());raf.close();</prefix>
+        <postfix>returntrue;}catch(IOExceptione){</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=65</url>
+    </problem>
+    <problem>
+        <problemID>66</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>get</method>
+        <line>73</line>
+        <column>13</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;raf&apos; was never read after null being assigned.</message>
+        <anchor>112663</anchor>
+        <prefix>ingstr=newString(b);raf.close();</prefix>
+        <postfix>returnstr.trim();}catch(IOExcept</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=66</url>
+    </problem>
+    <problem>
+        <problemID>67</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>size</method>
+        <line>88</line>
+        <column>13</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;raf&apos; was never read after null being assigned.</message>
+        <anchor>112663</anchor>
+        <prefix>ngth()/bufferLength;raf.close();</prefix>
+        <postfix>returnlength;}catch(IOExceptione</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=67</url>
+    </problem>
+    <problem>
+        <problemID>68</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>add</method>
+        <line>45</line>
+        <column>36</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;raf&apos; is not closed on exit.</message>
+        <anchor>-317911532</anchor>
+        <prefix>ingo)throwsStorageException{try{</prefix>
+        <postfix>raf.seek(raf.length());ByteBuffe</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java" method="add" id="0">
+                <traceLine line="45" text="[source] &apos;new RandomAccessFile(...)&apos;" type="E"/>
+                <traceLine line="46" text="&apos;java.io.IOException&apos; is thrown by length(...)" type="E"/>
+                <traceLine line="58" text="&apos;net.sf.csv2sql.storage.exceptions.StorageException&apos; is thrown"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=68</url>
+    </problem>
+    <problem>
+        <problemID>69</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>get</method>
+        <line>65</line>
+        <column>36</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;raf&apos; is not closed on exit.</message>
+        <anchor>-317911532</anchor>
+        <prefix>sException,StorageException{try{</prefix>
+        <postfix>raf.seek(index*bufferLength);byt</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java" method="get" id="0">
+                <traceLine line="65" text="[source] &apos;new RandomAccessFile(...)&apos;" type="E"/>
+                <traceLine line="66" text="&apos;java.io.IOException&apos; is thrown by seek(...)" type="E"/>
+                <traceLine line="77" text="&apos;net.sf.csv2sql.storage.exceptions.StorageException&apos; is thrown"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=69</url>
+    </problem>
+    <problem>
+        <problemID>70</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java</file>
+        <method>size</method>
+        <line>84</line>
+        <column>36</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;raf&apos; is not closed on exit.</message>
+        <anchor>-317911532</anchor>
+        <prefix>ize()throwsStorageException{try{</prefix>
+        <postfix>intlength=(int)raf.length()/buff</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\storage\Disk.java" method="size" id="0">
+                <traceLine line="84" text="[source] &apos;new RandomAccessFile(...)&apos;" type="E"/>
+                <traceLine line="85" text="&apos;java.io.IOException&apos; is thrown by length(...)" type="E"/>
+                <traceLine line="92" text="&apos;net.sf.csv2sql.storage.exceptions.StorageException&apos; is thrown"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=70</url>
+    </problem>
+    <problem>
+        <problemID>71</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\utils\DBUtils.java</file>
+        <method>closeConnection</method>
+        <line>63</line>
+        <column>17</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;conn&apos; was never read after null being assigned.</message>
+        <anchor>3059500</anchor>
+        <prefix>try{if(conn!=null){conn.close();</prefix>
+        <postfix>}}catch(SQLExceptionex){thrownew</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=71</url>
+    </problem>
+    <problem>
+        <problemID>72</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\JdbcBatchWriter.java</file>
+        <method>init</method>
+        <line>63</line>
+        <column>34</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &apos;strJdbcJar&apos; and &quot;&quot; using equals(), instead of length() == 0
+        </message>
+        <anchor>50863611</anchor>
+        <prefix>erties().getProperty(&quot;jdbcjar&quot;);</prefix>
+        <postfix>jdbcJar=newFile(strJdbcJar);if(!</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=72</url>
+    </problem>
+    <problem>
+        <problemID>73</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\JdbcBatchWriter.java</file>
+        <method>write</method>
+        <line>82</line>
+        <column>24</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;connection&apos; was never read after null being assigned.</message>
+        <anchor>-775651618</anchor>
+        <prefix>tconfigurationoptionsinit();try{</prefix>
+        <postfix>if(jdbcJar!=null){connection=DBU</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=73</url>
+    </problem>
+    <problem>
+        <problemID>74</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\JdbcWriter.java</file>
+        <method>init</method>
+        <line>61</line>
+        <column>34</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &apos;strJdbcJar&apos; and &quot;&quot; using equals(), instead of length() == 0
+        </message>
+        <anchor>50863611</anchor>
+        <prefix>erties().getProperty(&quot;jdbcjar&quot;);</prefix>
+        <postfix>jdbcJar=newFile(strJdbcJar);if(!</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=74</url>
+    </problem>
+    <problem>
+        <problemID>75</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\JdbcWriter.java</file>
+        <method>write</method>
+        <line>89</line>
+        <column>31</column>
+        <code>RLK.SQLOBJ</code>
+        <message>Sql object &apos;stmt&apos; is not closed on exit.</message>
+        <anchor>2128986284</anchor>
+        <prefix>(driver,url,username,password);}</prefix>
+        <postfix>//starttransactionif(commit){con</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\writers\JdbcWriter.java" method="write" id="0">
+                <traceLine line="89" text="[source] &apos;connection.createStatement()&apos;" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=75</url>
+    </problem>
+    <problem>
+        <problemID>76</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\JdbcWriter.java</file>
+        <method>write</method>
+        <line>77</line>
+        <column>19</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;stmt&apos; was never read after null being assigned.</message>
+        <anchor>3540936</anchor>
+        <prefix>ption{Connectionconnection=null;</prefix>
+        <postfix>try{//getconfigurationoptionsini</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=76</url>
+    </problem>
+    <problem>
+        <problemID>77</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlFileWriter.java</file>
+        <method>write</method>
+        <line>43</line>
+        <column>56</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;new FileWriter(...)&apos; is not closed on exit.</message>
+        <anchor>-290449265</anchor>
+        <prefix>ties().getProperty(&quot;filename&quot;));</prefix>
+        <postfix>for(inti=0;i&lt;getStorage().size()</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\writers\SqlFileWriter.java" method="write" id="0">
+                <traceLine line="43" text="[source] &apos;new FileWriter(...)&apos;" type="E"/>
+                <traceLine line="43" text="tracking &apos;new BufferedWriter(...)&apos;" type="E"/>
+                <traceLine line="46" text="&apos;java.lang.IndexOutOfBoundsException&apos; is thrown by get(...)"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=77</url>
+    </problem>
+    <problem>
+        <problemID>78</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java</file>
+        <method>calculateBreakLines</method>
+        <line>51</line>
+        <column>13</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;breaklines&apos; was never read after being assigned.</message>
+        <anchor>1315159392</anchor>
+        <prefix>sInvalidParameterValueException{</prefix>
+        <postfix>Stringbl=getWriterProperties().g</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=78</url>
+    </problem>
+    <problem>
+        <problemID>79</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java</file>
+        <method>write</method>
+        <line>75</line>
+        <column>60</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;new FileWriter(...)&apos; is not closed on exit.</message>
+        <anchor>-290449265</anchor>
+        <prefix>ties().getProperty(&quot;filename&quot;));</prefix>
+        <postfix>for(inti=0;i&lt;getStorage().size()</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java" method="write" id="0">
+                <traceLine line="75" text="[source] &apos;new FileWriter(...)&apos;" type="E"/>
+                <traceLine line="75" text="tracking &apos;new BufferedWriter(...)&apos;" type="E"/>
+                <traceLine line="77" text="&apos;java.lang.IndexOutOfBoundsException&apos; is thrown by get(...)"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=79</url>
+    </problem>
+    <problem>
+        <problemID>80</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java</file>
+        <method>write</method>
+        <line>87</line>
+        <column>64</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;new FileWriter(...)&apos; is not closed on exit.</message>
+        <anchor>-290449265</anchor>
+        <prefix>&quot;+formatSequence(i,(int)pages));</prefix>
+        <postfix>intfrom=breaklines*(i-1);intto=(</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java" method="write" id="0">
+                <traceLine line="87" text="[source] &apos;new FileWriter(...)&apos;" type="E"/>
+                <traceLine line="87" text="tracking &apos;new BufferedWriter(...)&apos;" type="E"/>
+                <traceLine line="92" text="&apos;java.lang.IndexOutOfBoundsException&apos; is thrown by get(...)"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=80</url>
+    </problem>
+    <problem>
+        <problemID>81</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java</file>
+        <method>write</method>
+        <line>102</line>
+        <column>64</column>
+        <code>RLK.OUT</code>
+        <message>Output stream &apos;new FileWriter(...)&apos; is not closed on exit.</message>
+        <anchor>-290449265</anchor>
+        <prefix>equence((int)pages,(int)pages));</prefix>
+        <postfix>for(inti=sequence;i&lt;getStorage()</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java" method="write" id="0">
+                <traceLine line="102" text="[source] &apos;new FileWriter(...)&apos;" type="E"/>
+                <traceLine line="102" text="tracking &apos;new BufferedWriter(...)&apos;" type="E"/>
+                <traceLine line="105" text="&apos;java.lang.IndexOutOfBoundsException&apos; is thrown by get(...)"
+                           type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=81</url>
+    </problem>
+    <problem>
+        <problemID>82</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\SqlMultipleFileWriter.java</file>
+        <method>write</method>
+        <line>99</line>
+        <column>21</column>
+        <code>CMPF.FLOAT</code>
+        <message>Equality checks on floating point types should be avoided</message>
+        <anchor>0</anchor>
+        <prefix>();output.close();}//lastifexist</prefix>
+        <postfix>Fileout=newFile(getWriterPropert</postfix>
+        <severity>Warning</severity>
+        <severitylevel>6</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Equality and Hash Code Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=82</url>
+    </problem>
+    <problem>
+        <problemID>83</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\ThreadedAbstractWriter.java</file>
+        <method>write</method>
+        <line>39</line>
+        <column>16</column>
+        <code>JD.VNU.NULL</code>
+        <message>Variable &apos;AbstractWriterThread&apos; was never read after null being assigned.</message>
+        <anchor>-1123446337</anchor>
+        <prefix>hrowsWriterException{progress=0;</prefix>
+        <postfix>AbstractWriterThread=newThread(t</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=83</url>
+    </problem>
+    <problem>
+        <problemID>84</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\ThreadedAbstractWriter.java</file>
+        <method>isDone</method>
+        <line>55</line>
+        <column>16</column>
+        <code>CMPF.FLOAT</code>
+        <message>Equality checks on floating point types should be avoided</message>
+        <anchor>0</anchor>
+        <prefix>ds.*/publicfinalbooleanisDone(){</prefix>
+        <postfix>}protectedfinalvoidsetProgress(f</postfix>
+        <severity>Warning</severity>
+        <severitylevel>6</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Equality and Hash Code Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=84</url>
+    </problem>
+    <problem>
+        <problemID>85</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\writers\ThreadedStandardOutputWriter.java</file>
+        <method>calculateStopAtProgress</method>
+        <line>35</line>
+        <column>15</column>
+        <code>JD.VNU</code>
+        <message>Variable &apos;stopAt&apos; was never read after being assigned.</message>
+        <anchor>-892069931</anchor>
+        <prefix>patprogress&quot;)==null){return101;}</prefix>
+        <postfix>try{stopAt=Float.parseFloat(getW</postfix>
+        <severity>Style</severity>
+        <severitylevel>8</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Redundant Code</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>Existing</state>
+        <dateOriginated>1292344732000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=85</url>
+    </problem>
+    <problem>
+        <problemID>86</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\JFrameHelp.java</file>
+        <method>JFrameHelp</method>
+        <line>20</line>
+        <column>80</column>
+        <code>RLK.IN</code>
+        <message>Input stream &apos;url.openStream()&apos; is not closed on exit.</message>
+        <anchor>1402661234</anchor>
+        <prefix>ptors/&quot;+demo+&quot;/descriptor.xml&quot;);</prefix>
+        <postfix>StringstrHtmlrow=newString();Str</postfix>
+        <trace>
+            <traceBlock file="D:\csvtosql\src\net\sf\csv2sql\frontends\gui\simple\JFrameHelp.java" method="JFrameHelp"
+                        id="0">
+                <traceLine line="20" text="[source] &apos;url.openStream()&apos;" type="E"/>
+                <traceLine line="20" text="tracking &apos;new InputStreamReader(...)&apos;" type="E"/>
+            </traceBlock>
+        </trace>
+        <severity>Error</severity>
+        <severitylevel>3</severitylevel>
+        <displayAs>Error</displayAs>
+        <category>Java/Resource Leaks</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>New</state>
+        <dateOriginated>1292410296000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=86</url>
+    </problem>
+    <problem>
+        <problemID>87</problemID>
+        <file>D:\csvtosql\src\net\sf\csv2sql\renders\SqlInsertRendererFromExcel.java</file>
+        <method>render</method>
+        <line>177</line>
+        <column>26</column>
+        <code>ESCMP.EMPTYSTR</code>
+        <message>Comparing strings &quot;&quot; and &apos;sheet.getCell(j, i).getContents()&apos; using equals(),
+            instead of length() == 0
+        </message>
+        <anchor>-834287008</anchor>
+        <prefix>cture().getFields().size();j++){</prefix>
+        <postfix>blankLine=false;break;}}if(blank</postfix>
+        <severity>Suggestion</severity>
+        <severitylevel>7</severitylevel>
+        <displayAs>Warning</displayAs>
+        <category>Java/Performance Issues</category>
+        <citingStatus>Analyze</citingStatus>
+        <lastCommit>0</lastCommit>
+        <state>New</state>
+        <dateOriginated>1292410296000</dateOriginated>
+        <url>http://localhost:8074/klocwork/insight-review.html#goto:project=csvtosql,pid=87</url>
+    </problem>
+</errorList>

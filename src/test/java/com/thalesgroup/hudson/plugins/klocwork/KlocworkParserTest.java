@@ -71,10 +71,11 @@ public class KlocworkParserTest {
     //Reminder : in klocwork, the higher the severity is, the less important the error is
     private void analyzeFiles(String file, int nbHighSeverities, int nbLowSeverities) {
         try {
-			Class thisClass = this.getClass();
-			URL url = thisClass.getResource(file); // returns null....
-			URI uri = url.toURI();
-			File reportFile = new File(uri);
+			// Class thisClass = this.getClass();
+			// URL url = thisClass.getResource(file); // returns null....
+			// URI uri = url.toURI();
+			// File reportFile = new File(uri);
+			File reportFile = new File(file);
             KloReport report = kloParser.parse(reportFile);
             List<KloFile> highSeverities = report.getHighSeverities();
             List<KloFile> lowSeverities = report.getLowSeverities();
@@ -89,17 +90,17 @@ public class KlocworkParserTest {
             Assert.assertEquals("Wrong number of low severities", lowSeverities.size(), nbLowSeverities);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        } //catch (URISyntaxException e) {
+            // e.printStackTrace();
+        // }
     }
 
     @Test
     //Warning : the version of Klocwork used was 9.0 and no custom java checker were used in Klocwork
     public void testCsvToSQLProject() {
-        analyzeFiles("report-csvtosql.xml", 66, 18);
-        analyzeFiles("bug-jenkins-10735.xml", 1, 0);
-        analyzeFiles("bug-jenkins-12601-parse-isSystem.xml", 1, 0);
+        analyzeFiles("src/test/resources/com/thalesgroup/hudson/plugins/klocwork/report-csvtosql.xml", 66, 18);
+        analyzeFiles("src/test/resources/com/thalesgroup/hudson/plugins/klocwork/bug-jenkins-10735.xml", 1, 0);
+        analyzeFiles("src/test/resources/com/thalesgroup/hudson/plugins/klocwork/bug-jenkins-12601-parse-isSystem.xml", 1, 0);
     }
     //TO BE COMPLETED (with other files to test)...
 }

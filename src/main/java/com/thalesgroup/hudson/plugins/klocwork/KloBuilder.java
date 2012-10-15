@@ -195,24 +195,6 @@ public class KloBuilder extends Builder {
         String lastBuildNo = "build_ci_" + build.getId();
         lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
 
-        String kloTables = build.getWorkspace().getRemote() + FS + "kloTables" + FS + build.getId();
-        // Add kwbuildproject options provided on the configuration page
-        for (KloOption kloOption : kloOptions) {
-            // If tables directory was specified, set kloTables, as this will be added later
-            if (kloOption.getCmdOption().replace(" ", "").equals("--tables-directory") ||
-                    kloOption.getCmdOption().replace(" ", "").equals("-o")) {
-                kloTables = kloOption.getCmdValue().replace("${BUILD_ID}", build.getId());
-            } else {
-                argsKwbuildproject.add(kloOption.getCmdOption(), kloOption.getCmdValue());
-            }
-        }
-
-        //AM : changing the way to add the arguments
-        argsKwadmin.add(execKwadmin);
-        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load",
-                projectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
-
-
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
 
         String outputFile;
@@ -224,10 +206,34 @@ public class KloBuilder extends Builder {
 
         //AM : changing the way to add the arguments
         argsKwbuildproject.add(execKwbuildproject);
+		// JL : Fix - now kloOptions are added after the kwbuildproject executable.
+		// kloTables is also set before being added
+        String kloTables = build.getWorkspace().getRemote() + FS + "kloTables" + FS + build.getId();
+		String addCompilerOptions = "";
+        // Add kwbuildproject options provided on the configuration page
+        for (KloOption kloOption : kloOptions) {
+            // If tables directory was specified, set kloTables, as this will be added later
+            if (kloOption.getCmdOption().replace(" ", "").equals("--tables-directory") ||
+                    kloOption.getCmdOption().replace(" ", "").equals("-o")) {
+                kloTables = kloOption.getCmdValue().replace("${BUILD_ID}", build.getId());
+            } else {
+				// add compiler options to string addCompilerOptions, plus space to separate
+				// multiple options
+                addCompilerOptions += kloOption.getCmdOption() + " " + kloOption.getCmdValue() + " ";
+            }
+        }
         argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",
                 /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port",
                 currentInstall.getProjectPort(), "--license-host", currentInstall.getLicenseHost(), "--license-port",
                 currentInstall.getLicensePort(), "--force");
+		if (addCompilerOptions != "") {
+			argsKwbuildproject.add("--add-compiler-options", addCompilerOptions);
+		}
+
+        //AM : changing the way to add the arguments
+        argsKwadmin.add(execKwadmin);
+        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load",
+                projectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
         //Building process
         ArgumentListBuilder argsBuild = new ArgumentListBuilder();
