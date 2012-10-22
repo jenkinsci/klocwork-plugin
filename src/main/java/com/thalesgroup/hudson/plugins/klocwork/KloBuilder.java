@@ -141,6 +141,11 @@ public class KloBuilder extends Builder {
         String FS;
         KloInstallation currentInstall = getKlo();
 
+        //AM : for compatibility with old versions
+        if (kloOptions == null){
+        	kloOptions = new KloOption[0];
+        }
+        
         if (!launcher.isUnix()) {
 
             FS = "\\";

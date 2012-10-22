@@ -99,7 +99,11 @@ public class KloBuildAction extends AbstractKloBuildAction {
     }
 	
 	public boolean isSummary() {
-		return !kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated();
+		//AM : for compatibility with old versions
+		if (kloConfig.getNoKwinspectreport() != null){
+			return !kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated();
+		}
+		return true;
 	}
 
     public HealthReport getBuildHealth() {
