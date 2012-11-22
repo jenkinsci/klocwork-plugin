@@ -266,7 +266,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return FreeStyleProject.class.isAssignableFrom(jobType) || MatrixProject.class.isAssignableFrom(jobType);
+            return true;
         }
 
         public KloConfig getConfig() {
