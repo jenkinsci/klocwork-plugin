@@ -71,6 +71,8 @@
         <saxon.version>9.1.0.8</saxon.version>
         <dtkit.model.version>0.16</dtkit.model.version>
         <dtkit.util.version>0.16</dtkit.util.version>
+        <java2html.version>5.0</java2html.version> 
+        <junit.version>4.8.2</junit.version> 
         <mockito.version>1.8.5</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -82,7 +84,7 @@
         <dependency>
             <groupId>de.java2html</groupId>
             <artifactId>java2html</artifactId>
-            <version>5.0</version>
+            <version>${java2html.version}</version>
         </dependency>
 
         <dependency>
@@ -116,7 +118,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.2</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
