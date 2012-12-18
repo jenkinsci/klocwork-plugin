@@ -128,7 +128,11 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>dashboard-view</artifactId>
+            <version>2.4</version>
+        </dependency>
     </dependencies>
 
 

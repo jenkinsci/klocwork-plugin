@@ -33,6 +33,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 
 public class KloProjectAction extends AbstractKloProjectAction {
@@ -46,11 +47,19 @@ public class KloProjectAction extends AbstractKloProjectAction {
 
     private KloConfig kloConfig;
 
+    public static HashMap<String, KloProjectAction> kloProjectActionHashMap;
+
     //public AbstractProject<?,?> project;
 
     public KloProjectAction(final AbstractProject<?, ?> project, KloConfig kloConfig) {
         super(project);
         this.kloConfig = kloConfig;
+        
+        //Store this instance in hashmap to be accessed by dashboard portlet
+        if(kloProjectActionHashMap == null) {
+            kloProjectActionHashMap = new HashMap<String, KloProjectAction>();
+        }
+        kloProjectActionHashMap.put(project.getName(), this);
     }
 
     public String getIconFileName() {
