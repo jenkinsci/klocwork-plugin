@@ -26,6 +26,7 @@ package com.thalesgroup.hudson.plugins.klocwork;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloOption;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildInfo;
+import com.thalesgroup.hudson.plugins.klocwork.util.KloXMLGenerator;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -320,12 +321,19 @@ public class KloBuilder extends Builder {
                 argsKwinspectreport = new ArgumentListBuilder().add("cmd.exe", "/C").addQuoted(argsKwinspectreport.toStringWithQuote());
             }
 
-			int rKwInspectreport = 0;
-			// check whether to run kwinspectreport. Klocwork v9.6 or later does not support xml
-			// report generation through kwinspectreport
+            int rKwInspectreport = 0;
+            // check whether to run kwinspectreport. Klocwork v9.6 or later does not support xml
+            // report generation through kwinspectreport. For v9.6 and later, kwjlib is used
+            // to retrieve list of issues
             if (!kwinspectreportDeprecated) {
-				rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
-			}
+                rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
+            }
+            else {
+                rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(currentInstall.getProjectHost(), 
+                        currentInstall.getProjectPort(), projectName, 
+                        build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
+                        listener);
+            }
 
             // Finally store currentInstall and projectName for publisher to use
             build.addAction(new KloBuildInfo(build, currentInstall, projectName));

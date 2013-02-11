@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2012 Emenda Software Ltd.                                      *
  * Author : Andreas Larfors                                                     *
- *		                                                                *
+ *		                                                                        *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
  * of this software and associated documentation files (the "Software"), to deal*
  * in the Software without restriction, including without limitation the rights *
@@ -42,7 +42,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * dashboard plug-in view.
  */
 public class KloDashboardPortlet extends DashboardPortlet {
-
+    
     /** Name of the project for which graph is drawn. */
     private String projectName;
     private final String jobPrefix = "job/";
@@ -143,10 +143,10 @@ public class KloDashboardPortlet extends DashboardPortlet {
     @Extension
     public static class KloDashboardPortletDescriptor extends Descriptor<DashboardPortlet> {
     	
-        @Override
-            public String getDisplayName() {
+    @Override
+        public String getDisplayName() {
                 return "Klocwork Trend Graph";
-            }
+        }
         
         /**
          * Fills the project selection drop-down list box on the "edit view"
@@ -164,6 +164,6 @@ public class KloDashboardPortlet extends DashboardPortlet {
             }
             return items;
         }
-    }
+}
 }
 

@@ -1,4 +1,10 @@
 /*******************************************************************************
+ * NOTE: Since Feb 2012 this class is completely defunct, as the use of kwjlib
+ * means results are always available, regardless of Klocwork version.
+ * However, the class remains to ensure that projects created with older 
+ * versions of the plugin can still be loaded (serialisation legacy purposes).
+ */
+/*******************************************************************************
  * Copyright (c) 2011 Emenda Software Ltd.                                      *
  * Author : Jacob Larfors                                                       *
  *		                                                                        *

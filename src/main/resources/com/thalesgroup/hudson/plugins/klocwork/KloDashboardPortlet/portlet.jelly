@@ -28,7 +28,7 @@
     xmlns:dp="/hudson/plugins/view/dashboard"
     xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <dp:decorate portlet="${it}" width="1">
-	<div align="center">
+    <div align="center">
 		<tr>
 			<!--if we can display the graph-->
 			<j:if test="${from.isDisplayGraph()}">
@@ -41,9 +41,6 @@
 				Klocwork trend graph not enabled for project ${from.projectName}. Please enable the trend graph in project settings to view in dashboard portlet.
 			</j:if>
 		</tr>
-	</div>
+    </div>
   </dp:decorate>
 </j:jelly>
-
-
-

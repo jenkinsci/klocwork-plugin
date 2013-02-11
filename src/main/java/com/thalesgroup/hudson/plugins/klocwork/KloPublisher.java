@@ -25,7 +25,6 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigNoKwinspectreport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
@@ -97,38 +96,34 @@ public class KloPublisher extends Recorder implements Serializable {
             KloReport kloReport = null;
             KloSourceContainer kloSourceContainer = null;
 
-            KloConfigNoKwinspectreport noKwinspectreport = kloConfig.getNoKwinspectreport();
-            if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
-                KloParserResult parser = new KloParserResult(listener, kloConfig.getKlocworkReportPattern());
-                try {
-                    kloReport = build.getWorkspace().act(parser);
-                } catch (Exception e) {
-                    listener.getLogger().println("Error on klocwork analysis: " + e);
-                    build.setResult(Result.FAILURE);
-                    return false;
-                }
-
-                if (kloReport == null) {
-                    build.setResult(Result.FAILURE);
-                    return false;
-                }
-
-                kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
-
-                result = new KloResult(kloReport, kloSourceContainer, build);
-
-                Result buildResult = new KloBuildResultEvaluator().evaluateBuildResult(
-                        listener, result.getNumberErrorsAccordingConfiguration(kloConfig, false),
-                        result.getNumberErrorsAccordingConfiguration(kloConfig, true),
-                        kloConfig);
-
-                if (buildResult != Result.SUCCESS) {
-                    build.setResult(buildResult);
-                }
-                build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
-            } else {
-                listener.getLogger().println("Version 9.6 or later of Klocwork detected. Only Klocwork review is available. Parse_errors.log and build.log can be accessed on the review");
+            //AL : Results always available due to kwjlib update
+            KloParserResult parser = new KloParserResult(listener, kloConfig.getKlocworkReportPattern());
+            try {
+                kloReport = build.getWorkspace().act(parser);
+            } catch (Exception e) {
+                listener.getLogger().println("Error on klocwork analysis: " + e);
+                build.setResult(Result.FAILURE);
+                return false;
             }
+
+            if (kloReport == null) {
+                build.setResult(Result.FAILURE);
+                return false;
+            }
+
+            kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
+
+            result = new KloResult(kloReport, kloSourceContainer, build);
+
+            Result buildResult = new KloBuildResultEvaluator().evaluateBuildResult(
+                    listener, result.getNumberErrorsAccordingConfiguration(kloConfig, false),
+                    result.getNumberErrorsAccordingConfiguration(kloConfig, true),
+                    kloConfig);
+
+            if (buildResult != Result.SUCCESS) {
+                build.setResult(buildResult);
+            }
+            build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
 
 
             build.addAction(new KloBuildAction(build, result, kloConfig));
@@ -138,25 +133,20 @@ public class KloPublisher extends Recorder implements Serializable {
             // and build.log
             if (kloConfig.getLinkReview()) {
                 String host = null, port = null, project = null;
-                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
-                    if (kloReport.getNumberTotal() != 0) {
-                        if (kloReport.getAllSeverities().get(0) != null) {
-                            String url = kloReport.getAllSeverities().get(0).get("url");
-                            if (url != null) {
-                                Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
-                                Matcher m = p.matcher(url);
-                                if (m.matches()) {
-                                    host = m.group(1);
-                                    port = m.group(2);
-                                    project = m.group(3);
-                                }
+                //AL : Results always available due to kwjlib update
+                if (kloReport.getNumberTotal() != 0) {
+                    if (kloReport.getAllSeverities().get(0) != null) {
+                        String url = kloReport.getAllSeverities().get(0).get("url");
+                        if (url != null) {
+                            Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
+                            Matcher m = p.matcher(url);
+                            if (m.matches()) {
+                                host = m.group(1);
+                                port = m.group(2);
+                                project = m.group(3);
                             }
                         }
                     }
-                } else {
-                    host = kloConfig.getHost();
-                    port = kloConfig.getPort();
-                    project = kloConfig.getProject();
                 }
 
                 build.addAction(new KloBuildReviewLink(build, host, port, project));
@@ -164,18 +154,17 @@ public class KloPublisher extends Recorder implements Serializable {
 
 
             if (kloConfig.getLinkBuildLog()) {
-                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
-                    build.addAction(new KloBuildLog(build));
-                }
+                //AL : Results always available due to kwjlib update
+                build.addAction(new KloBuildLog(build));
             }
 
             if (kloConfig.getLinkParseLog()) {
-                if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated()) {
-                    build.addAction(new KloParseErrorsLog(build));
-                }
+                //AL : Results always available due to kwjlib update
+                build.addAction(new KloParseErrorsLog(build));
             }
 
-            if (noKwinspectreport != null && !noKwinspectreport.getKwinspectreportDeprecated() && build.getWorkspace().isRemote()) {
+            //AL : Results always available due to kwjlib update
+            if (build.getWorkspace().isRemote()) {
                 copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
             }
 

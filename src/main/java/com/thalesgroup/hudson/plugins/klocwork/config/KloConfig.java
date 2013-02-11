@@ -31,8 +31,12 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import java.io.Serializable;
 
 public class KloConfig implements Serializable {
-
-	private KloConfigNoKwinspectreport noKwinspectreport;
+    
+    //The noKwinspectreport is now completely defunct, but remains
+    //for serialisation legacy purposes (so that Jenkins projects
+    //created with earlier versions of the plugin can still be
+    //loaded into the new one.
+    private KloConfigNoKwinspectreport noKwinspectreport;
 
     private KloConfigTrendGraph trendGraph = new KloConfigTrendGraph();
 
@@ -61,87 +65,46 @@ public class KloConfig implements Serializable {
 
        @DataBoundConstructor
         @SuppressWarnings("unused")
-    public KloConfig(// boolean noKwinspectreport, // String klocworkReportPattern,
-    				 KloConfigNoKwinspectreport noKwinspectreport,
-					 // boolean klocworkReportPatternConfig,
-                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
-                     String host, String port,String project
-					 /*,
-                     boolean publishBuildGraph, boolean publishProjectGraph,
-                     String trendNum, String interval,
-                     int trendXSize, int trendYSize,
-                     boolean displayAllError,
-                     boolean displayHighSeverity,
-                     boolean displayLowSeverity,
-                     int buildXSize, int buildYSize, boolean neww,
-                     boolean existing, boolean fixed,
-                     String threshold,
-                     String newThreshold, String failureThreshold,
-                     String newFailureThreshold, String healthy, String unHealthy,
-                     boolean highSeverity, boolean lowSeverity */ ) {
-					 
-		// this.noKwinspectreport = noKwinspectreport;
-                
-		if (noKwinspectreport == null) {
-			if (this.noKwinspectreport == null ) {
-				this.noKwinspectreport = new KloConfigNoKwinspectreport(
-													/* bool noKwinspectreport */true,
-													/* klocworkReportPattern */ "",
-													/* publishBuildGraph */ true,
-													/* publishProjectGraph */ true,
-													/* trendNum */ "0",
-													/* interval */ "1",
-													/* trendXSize */ KloTrendGraph.DEFAULT_CHART_WIDTH,
-													/* trendYSize */KloTrendGraph.DEFAULT_CHART_HEIGHT,
-													/* displayAllError */ true,
-													/* displayHighSeverity */ true,
-													/* displayLowSeverity */ true,
-													/* buildXSize */ KloPieChart.DEFAULT_CHART_WIDTH,
-													/* buildYSize */ KloPieChart.DEFAULT_CHART_HEIGHT,
-													/* neww */ true,
-													/* existing */ true,
-													/* fixed */ true,
-													/* threshold */ "",
-													/* newThreshold */ "",
-													/* failureThreshold */ "",
-													/* newFailureThreshold */ "",
-													/* healthy */ "",
-													/* unHealthy */ "",
-													/* highSeverity */ true,
-													/* lowSeverity */ true
-													);
-                                
-				// klocworkReportPattern = new KloConfigNoKwinspectreport("", true);
-			} else {
-				noKwinspectreport.setKwinspectreportDeprecated(true);
-			}
-		} else {
-                     
-			this.noKwinspectreport = noKwinspectreport;
-                     
-		}
-		
-        this.klocworkReportPattern = this.noKwinspectreport.getKlocworkReportPattern();
+    public KloConfig(
+                    boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
+                    String host, String port,String project,
+                    String klocworkReportPattern,
+                    boolean publishBuildGraph, boolean publishProjectGraph,
+                    String trendNum, String interval,
+                    int trendXSize, int trendYSize,
+                    boolean displayAllError,
+                    boolean displayHighSeverity,
+                    boolean displayLowSeverity,
+                    int buildXSize, int buildYSize, boolean neww,
+                    boolean existing, boolean fixed,
+                    String threshold,
+                    String newThreshold, String failureThreshold,
+                    String newFailureThreshold, String healthy, String unHealthy,
+                    boolean highSeverity, boolean lowSeverity) {
+
+        this.klocworkReportPattern = klocworkReportPattern;
         this.linkReview = linkReview;
         this.linkBuildLog = linkBuildLog;
         this.linkParseLog = linkParseLog;
-        this.publishBuildGraph = this.noKwinspectreport.getPublishBuildGraph();
-        this.publishProjectGraph = this.noKwinspectreport.getPublishProjectGraph();
+        this.publishBuildGraph = publishBuildGraph;
+        this.publishProjectGraph = publishProjectGraph;
 
-        this.trendGraph = this.noKwinspectreport.getTrendGraph();
+        this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
+                displayHighSeverity, displayLowSeverity, interval, trendNum);
 
-        this.buildGraph = this.noKwinspectreport.getBuildGraph();
+        this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
+                existing, fixed);
 
-        this.configSeverityEvaluation = this.noKwinspectreport.getConfigSeverityEvaluation();
+        this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
+                threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
+                unHealthy, highSeverity, lowSeverity);
         
         this.host=host;
         this.port=port;
         this.project=project;
 
-
-    }
-    public KloConfigNoKwinspectreport getNoKwinspectreport() {
-	return noKwinspectreport;
+        //Set noKwinspectreport to null, as it is never used
+        this.noKwinspectreport = null;
     }
 	
     public String getKlocworkReportPattern() {

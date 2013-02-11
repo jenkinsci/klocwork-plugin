@@ -56,17 +56,21 @@ public class KloBuildAction extends AbstractKloBuildAction {
         super(owner);
         this.result = result;
         this.kloConfig = kloConfig;
-		if ((kloConfig != null) && (kloConfig.getNoKwinspectreport() != null)) {
-			// if kwinspectreport has not been used, do not provide
-			// links to results
-			if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
-				iconFileName = null;
-				displayName = null;
-			} else {
-				iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
-				displayName = "Klocwork Results";
-			}
-		}
+        //Date: 2012-11-22 Author: Andreas Larfors
+        //Change: Results now always available due to web API implementation
+//		if ((kloConfig != null) && (kloConfig.getNoKwinspectreport() != null)) {
+//			// if kwinspectreport has not been used, do not provide
+//			// links to results
+//			if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+//				iconFileName = null;
+//				displayName = null;
+//			} else {
+//				iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
+//				displayName = "Klocwork Results";
+//			}
+//		}
+                iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
+                displayName = "Klocwork Results";
 		
     }
 
@@ -100,9 +104,10 @@ public class KloBuildAction extends AbstractKloBuildAction {
 	
 	public boolean isSummary() {
 		//AM : for compatibility with old versions
-		if (kloConfig.getNoKwinspectreport() != null){
-			return !kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated();
-		}
+                //AL : Compatibility no longer required
+//		if (kloConfig.getNoKwinspectreport() != null){
+//			return !kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated();
+//		}
 		return true;
 	}
 

@@ -58,6 +58,8 @@ public class KloResult implements Serializable {
      * The Klocwork container with all source files
      */
     private KloSourceContainer kloSourceContainer;
+    
+    private boolean kwinspectreportDeprecated;
 
     public KloResult(KloReport report, KloSourceContainer kloSourceContainer, AbstractBuild<?, ?> owner) {
         this.report = report;
@@ -221,5 +223,10 @@ public class KloResult implements Serializable {
 
     public KloSourceContainer getKloSourceContainer() {
         return kloSourceContainer;
+    }
+    
+    public boolean isKwinspectreportDeprecated() {
+        // TODO: Improve maintainability of code by removing version-dependency here
+        return report.getKloVersion().startsWith("9.6");
     }
 }

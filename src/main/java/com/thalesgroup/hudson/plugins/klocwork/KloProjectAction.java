@@ -63,19 +63,23 @@ public class KloProjectAction extends AbstractKloProjectAction {
     }
 
     public String getIconFileName() {
-		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
-			return null;
-		} else {
-			return "/plugin/klocwork/icons/klocwork-24.gif";
-		}
+        //AL : Compatibility no longer required
+//		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+//			return null;
+//		} else {
+//			return "/plugin/klocwork/icons/klocwork-24.gif";
+//		}
+        return "/plugin/klocwork/icons/klocwork-24.gif";
     }
 
     public String getDisplayName() {
-		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
-			return null;
-		} else {
-			return "Klocwork Results";
-		}
+        //AL : Compatibility no longer required
+//		if (kloConfig.getNoKwinspectreport().getKwinspectreportDeprecated()) {
+//			return null;
+//		} else {
+//			return "Klocwork Results";
+//		}
+                return "Klocwork Results";
     }
 
     public String getUrlName() {
