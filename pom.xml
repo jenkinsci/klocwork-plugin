@@ -10,7 +10,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.15-SNAPSHOT</version>
+    <version>1.16-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -57,6 +57,13 @@
         </contributor>
         <contributor>
             <name>Jacob Larfors</name>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Project developer</role>
+            </roles>
+        </contributor>
+		<contributor>
+            <name>Andreas Larfors</name>
             <timezone>+1</timezone>
             <roles>
                 <role>Project developer</role>
