@@ -85,7 +85,12 @@ public class KloBuildReviewLink implements Action {
     }
 
     public String getProject() {
-        return project;
+        return getProjectId(project);
+    }
+	
+    public String getProjectId(String project_name) {
+        //Replace hyphens with underscores to convert project name to project id
+        return project_name.replace("-", "_");
     }
 
     public String getReviewHeight() {

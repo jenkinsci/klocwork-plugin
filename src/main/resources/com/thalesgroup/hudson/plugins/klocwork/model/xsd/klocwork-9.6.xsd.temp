@@ -28,7 +28,7 @@
            xmlns:tag="http://www.klocwork.com/inForce/report/1.0">
 
     <!-- Type used for severitylevel tag -->
-    <xs:simpleType name="oneToTen">
+    <xs:simpleType name="oneToTen96">
         <xs:restriction base="xs:int">
             <xs:minInclusive value="1"/>
             <xs:maxInclusive value="10"/>
@@ -36,7 +36,7 @@
     </xs:simpleType>
 
     <!-- Type used for "type" attribute in traceLine tag -->
-    <xs:simpleType name="typeAttributeValue">
+    <xs:simpleType name="typeAttributeValue96">
         <xs:restriction base="xs:string">
             <xs:enumeration value=""/>
             <xs:enumeration value="E"/>
@@ -45,7 +45,7 @@
     </xs:simpleType>
 
     <!-- Type used for citingStatus tag and "status" attribute in statusUpdate tag-->
-    <xs:simpleType name="citingStatusValue">
+    <xs:simpleType name="citingStatusValue96">
         <xs:restriction base="xs:string">
             <xs:enumeration value="Analyze"/>
             <xs:enumeration value="Ignore"/>
@@ -58,7 +58,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="stateValue">
+    <xs:simpleType name="stateValue96">
         <xs:restriction base="xs:string">
             <xs:enumeration value="New"/>
             <xs:enumeration value="Existing"/>
@@ -70,33 +70,24 @@
 
 
     <!-- Mandatory tags -->
-    <xs:element name="problemID" type="xs:int"/>
-    <xs:element name="isSystem" type="xs:string"/>
-    <xs:element name="file" type="xs:string"/>
-    <xs:element name="method" type="xs:string"/>
-    <xs:element name="line" type="xs:int"/>
-    <xs:element name="column" type="xs:int"/>
-    <xs:element name="code" type="xs:string"/>
-    <xs:element name="message" type="xs:string"/>
-    <xs:element name="anchor" type="xs:int"/>
-    <xs:element name="prefix" type="xs:string"/>
-    <xs:element name="postfix" type="xs:string"/>
-    <xs:element name="severity" type="xs:string"/>
-    <xs:element name="severitylevel" type="tag:oneToTen"/>
-    <xs:element name="displayAs" type="xs:string"/>
-    <xs:element name="category" type="xs:string"/>
-    <xs:element name="citingStatus" type="tag:citingStatusValue"/>
-    <xs:element name="lastCommit" type="xs:long"/>
-    <xs:element name="state" type="tag:stateValue"/>
-    <xs:element name="dateOriginated" type="xs:long"/>
-    <xs:element name="url" type="xs:string"/>
+    <xs:element name="problemID96" type="xs:int"/>
+    <xs:element name="file96" type="xs:string"/>
+    <xs:element name="method96" type="xs:string"/>
+    <xs:element name="code96" type="xs:string"/>
+    <xs:element name="message96" type="xs:string"/>
+    <xs:element name="severity96" type="xs:string"/>
+    <xs:element name="severitylevel96" type="tag:oneToTen"/>
+    <xs:element name="displayAs96" type="xs:string"/>
+    <xs:element name="citingStatus96" type="tag:citingStatusValue"/>
+    <xs:element name="state96" type="tag:stateValue"/>
+    <xs:element name="url96" type="xs:string"/>
 
     <!-- Optional tags -->
-    <xs:element name="comment" type="xs:string"/>
+    <xs:element name="comment96" type="xs:string"/>
 
-    <xs:element name="lastCommitter" type="xs:string"/>
+    <xs:element name="lastCommitter96" type="xs:string"/>
 
-    <xs:element name="traceLine">
+    <xs:element name="traceLine96">
         <xs:complexType>
             <xs:attribute name="line" type="xs:int"/>
             <xs:attribute name="text" type="xs:string"/>
@@ -105,10 +96,10 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="traceBlock">
+    <xs:element name="traceBlock96">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
-                <xs:element ref="tag:traceLine"/>
+                <xs:element ref="tag:traceLine96"/>
             </xs:sequence>
             <xs:attribute name="file" type="xs:string"/>
             <xs:attribute name="method" type="xs:string"/>
@@ -117,20 +108,20 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="trace">
+    <xs:element name="trace96">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
-                <xs:element ref="tag:traceBlock"/>
+                <xs:element ref="tag:traceBlock96"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="dateFixed" type="xs:long"/>
+    <xs:element name="dateFixed96" type="xs:long"/>
 
-    <xs:element name="statusUpdate">
+    <xs:element name="statusUpdate96">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="tag:comment" minOccurs="0"/>
+                <xs:element ref="tag:comment96" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="user" type="xs:string"/>
             <xs:attribute name="status" type="tag:citingStatusValue"/>
@@ -138,65 +129,55 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="history">
+    <xs:element name="history96">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
-                <xs:element ref="tag:statusUpdate"/>
+                <xs:element ref="tag:statusUpdate96"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="owner" type="xs:string"/>
+    <xs:element name="owner96" type="xs:string"/>
 
-    <xs:element name="taxonomy">
+    <xs:element name="taxonomy96">
         <xs:complexType>
             <xs:attribute name="name" type="xs:string"/>
             <xs:attribute name="metaInf" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="taxonomies">
+    <xs:element name="taxonomies96">
         <xs:complexType>
             <xs:sequence maxOccurs="unbounded">
-                <xs:element ref="tag:taxonomy"/>
+                <xs:element ref="tag:taxonomy96"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
     <!-- Main tags -->
-    <xs:element name="problem">
+    <xs:element name="problem96">
         <xs:complexType>
             <xs:all>
-                <xs:element ref="tag:problemID"/>
-                <xs:element ref="tag:isSystem" minOccurs="0"/>
-                <xs:element ref="tag:file"/>
-                <xs:element ref="tag:method"/>
-                <xs:element ref="tag:line" minOccurs="0"/>
-                <xs:element ref="tag:column" minOccurs="0"/>
-                <xs:element ref="tag:code"/>
-                <xs:element ref="tag:message"/>
-                <xs:element ref="tag:anchor" minOccurs="0"/>
-                <xs:element ref="tag:prefix" minOccurs="0"/>
-                <xs:element ref="tag:postfix" minOccurs="0"/>
-                <xs:element ref="tag:severity"/>
-                <xs:element ref="tag:severitylevel"/>
-                <xs:element ref="tag:displayAs"/>
-                <xs:element ref="tag:citingStatus"/>
-                <xs:element ref="tag:owner" minOccurs="0"/>
+                <xs:element ref="tag:problemID96"/>
+                <xs:element ref="tag:file96"/>
+                <xs:element ref="tag:method96"/>
+                <xs:element ref="tag:code96"/>
+                <xs:element ref="tag:message96"/>
+                <xs:element ref="tag:severity96"/>
+                <xs:element ref="tag:severitylevel96"/>
+                <xs:element ref="tag:displayAs96"/>
+                <xs:element ref="tag:citingStatus96"/>
+                <xs:element ref="tag:owner96" minOccurs="0"/>
 
-                <xs:element ref="tag:state" minOccurs="0"/>
-                <xs:element ref="tag:dateOriginated" minOccurs="0"/>
-                <xs:element ref="tag:url" minOccurs="0"/>
+                <xs:element ref="tag:state96" minOccurs="0"/>
+                <xs:element ref="tag:url96" minOccurs="0"/>
 
 
-                <xs:element ref="tag:comment" minOccurs="0"/>
-                <xs:element ref="tag:history" minOccurs="0"/>
-                <xs:element ref="tag:trace" minOccurs="0"/>
-                <xs:element ref="tag:lastCommitter" minOccurs="0"/>
-                <xs:element ref="tag:dateFixed" minOccurs="0"/>
-                <xs:element ref="tag:category" minOccurs="0"/>
-                <xs:element ref="tag:lastCommit" minOccurs="0"/>
-                <xs:element ref="tag:taxonomies" minOccurs="0"/>
+                <xs:element ref="tag:comment96" minOccurs="0"/>
+                <xs:element ref="tag:history96" minOccurs="0"/>
+                <xs:element ref="tag:trace96" minOccurs="0"/>
+                <xs:element ref="tag:dateFixed96" minOccurs="0"/>
+                <xs:element ref="tag:taxonomies96" minOccurs="0"/>
 
 
             </xs:all>
@@ -204,10 +185,10 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="errorList">
+    <xs:element name="errorList96">
         <xs:complexType>
             <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                <xs:element ref="tag:problem"/>
+                <xs:element ref="tag:problem96"/>
             </xs:sequence>
             <xs:attribute name="version" type="xs:string"/>
         </xs:complexType>

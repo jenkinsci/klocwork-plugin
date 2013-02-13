@@ -99,7 +99,8 @@ public class KloParser implements Serializable {
 
             int severityDelimiter = 3; // default
             // Version 9.5 Klocwork changed issue severity levels
-            if (kloVersion != null && kloVersion.startsWith("9.5")) {
+            // TODO: Improve maintainability of code by removing version-dependency here
+            if (kloVersion != null && (kloVersion.startsWith("9.5") || kloVersion.startsWith("9.6"))) {
                 severityDelimiter = 2;
             }
 

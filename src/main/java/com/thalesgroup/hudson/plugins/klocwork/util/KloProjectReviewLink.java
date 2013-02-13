@@ -63,7 +63,7 @@ public class KloProjectReviewLink implements ProminentProjectAction {
 		}
 
 		kloInstall = kloInfo.getKloInstall();
-		projectName = kloInfo.getProject();
+		projectName = getProjectId(kloInfo.getProject());
     }
 
     public boolean isDisplayLink() {
@@ -115,5 +115,10 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     public String getProjectName() {
         return projectName;
     }
+	
+	public String getProjectId(String project_name) {
+		//Replace hyphens with underscores to convert project name to project id
+		return project_name.replace('-', '_');
+	}
 
 }

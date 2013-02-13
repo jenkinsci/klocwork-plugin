@@ -5,7 +5,9 @@
 	xmlns:f="/lib/form"
 	xmlns:st="jelly:stapler"
     xmlns:i="jelly:fmt">
+	The summary page
 	<j:if test="${it.graphActive}">
+		Graph is active!
 		<div style="float:right">
 			<st:include page="graph.jelly"/>
 		</div>
