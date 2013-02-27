@@ -207,7 +207,9 @@ public class KloBuilder extends Builder {
         if (buildUsing == 0) {
             outputFile = build.getWorkspace().getRemote() + FS + "kwinject.out";
         } else {
-            outputFile = kwCommand;
+            //New in 1.16: Enables multiple, comma-separated build spec files
+            //Converts commas to " " to split up files in executed command
+            outputFile = kwCommand.replaceAll(",", "\" \"");
         }
 
         //AM : changing the way to add the arguments
