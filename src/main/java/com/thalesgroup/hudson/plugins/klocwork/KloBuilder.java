@@ -176,7 +176,7 @@ public class KloBuilder extends Builder {
         }
         //AM : avoiding having a currentInstall with null value
         else {
-            currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8074", "localhost", "27000");
+            currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8074", false, "localhost", "27000");
         }
 
         /*if (!new File(build.getWorkspace().getRemote() + FS + "kloXML")
@@ -207,7 +207,7 @@ public class KloBuilder extends Builder {
         if (buildUsing == 0) {
             outputFile = build.getWorkspace().getRemote() + FS + "kwinject.out";
         } else {
-            //New in 1.16: Enables multiple, comma-separated build spec files
+            //New in 1.15: Enables multiple, comma-separated build spec files
             //Converts commas to " " to split up files in executed command
             outputFile = kwCommand.replaceAll(",", "\" \"");
         }
@@ -231,8 +231,9 @@ public class KloBuilder extends Builder {
             }
         }
         argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",
-                /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port",
-                currentInstall.getProjectPort(), "--license-host", currentInstall.getLicenseHost(), "--license-port",
+                /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                (currentInstall.getUseSSL() ? "--ssl" : ""), //New in v1.15
+                "--license-host", currentInstall.getLicenseHost(), "--license-port",
                 currentInstall.getLicensePort(), "--force");
 		if (addCompilerOptions != "") {
 			argsKwbuildproject.add("--add-compiler-options", addCompilerOptions);
@@ -240,7 +241,9 @@ public class KloBuilder extends Builder {
 
         //AM : changing the way to add the arguments
         argsKwadmin.add(execKwadmin);
-        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load",
+        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                (currentInstall.getUseSSL() ? "--ssl" : ""), //New in v1.15
+                "load",
                 projectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
         //Building process
@@ -316,6 +319,7 @@ public class KloBuilder extends Builder {
             argsKwinspectreport.add(execKwinspectreport);
             argsKwinspectreport.add("--project", projectName, "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
                     FS +/*"kloXML"+FS+build.getId()+".xml"*/"klocwork_result.xml", "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                    (currentInstall.getUseSSL() ? "--ssl" : ""), //New in v1.15
                     "--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort());
 
             if (!launcher.isUnix()) {
@@ -332,7 +336,9 @@ public class KloBuilder extends Builder {
             }
             else {
                 rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(currentInstall.getProjectHost(), 
-                        currentInstall.getProjectPort(), projectName, 
+                        currentInstall.getProjectPort(), 
+                        currentInstall.getUseSSL(),
+                        projectName, 
                         build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
                         listener);
             }

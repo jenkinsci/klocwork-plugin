@@ -47,7 +47,12 @@
 			<f:entry title="PROJECT_HOST" help="/plugin/klocwork/projectHost.html">
 				<f:textbox name="klocwork.projectHost" value="${inst.projectHost}"/>
 			</f:entry>
-			
+                        
+                        <!--New in 1.15 - SSL support.-->
+                        <f:entry title="" help="/plugin/klocwork/useSSL.html">
+				<f:checkbox name="klocwork.useSSL" checked="${inst.useSSL}" title="USE_SSL"/>
+			</f:entry>
+                        		
 			<f:entry title="PROJECT_PORT" help="/plugin/klocwork/projectPort.html">
 				<f:textbox name="klocwork.projectPort" value="${inst.projectPort}" default="1106" />
 			</f:entry>

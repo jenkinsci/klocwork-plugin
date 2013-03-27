@@ -34,19 +34,22 @@ public class KloInstallation {
     private final String executablePath;
     private final String projectHost;
     private final String projectPort;
+    private final boolean useSSL; //New in v1.15
     private final String licenseHost;
     private final String licensePort;
 
 
     @DataBoundConstructor
     public KloInstallation(String name, String executablePath,
-                           String projectHost, String projectPort, String licenseHost,
-                           String licensePort) {
+                           String projectHost, String projectPort, 
+                           boolean useSSL, //New in v1.15
+                           String licenseHost, String licensePort) {
 
         this.name = name;
         this.executablePath = executablePath;
         this.projectHost = projectHost;
         this.projectPort = projectPort;
+        this.useSSL = useSSL; //New in v1.15
         this.licenseHost = licenseHost;
         this.licensePort = licensePort;
     }
@@ -65,6 +68,10 @@ public class KloInstallation {
 
     public String getProjectPort() {
         return projectPort;
+    }
+    
+    public boolean getUseSSL() {
+        return useSSL;
     }
 
     public String getLicenseHost() {

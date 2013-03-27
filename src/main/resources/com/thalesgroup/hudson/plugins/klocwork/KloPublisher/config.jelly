@@ -107,6 +107,10 @@
             <f:entry title="${%Port}">
                 <f:textbox name="port" value="${config.port}"/>
             </f:entry>
+            
+            <f:entry title="">
+                <f:checkbox name="useSSL" checked="${config.useSSL}" title="${%Use SSL}"/>
+            </f:entry>
 
             <f:entry title="${%Project Name}">
                     <f:textbox name="project" value="${config.project}"/>

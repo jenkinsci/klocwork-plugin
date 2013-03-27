@@ -51,7 +51,7 @@
    </f:entry>
 
    
-   <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant. If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file." field="kwCommand">
+   <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant. If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file. Multiple build specification files can be provided, separated by commas (,)." field="kwCommand">
 		<f:textbox />
 	</f:entry>
 	

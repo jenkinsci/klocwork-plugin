@@ -68,7 +68,7 @@ public class KloBuildReviewLink implements Action {
     private void setKloHostPort() {
         KloBuildInfo kloInfo = owner.getAction(KloBuildInfo.class);
         if (kloInfo == null) {
-            kloInstall = new KloInstallation("No Klocwork Build Step", null, klocworkHost, klocworkPort, null, null);
+            kloInstall = new KloInstallation("No Klocwork Build Step", null, klocworkHost, klocworkPort, false, null, null);
             kloInfo = new KloBuildInfo(owner, kloInstall, klocworkProject);
             owner.addAction(kloInfo);
         }
@@ -82,6 +82,10 @@ public class KloBuildReviewLink implements Action {
 
     public String getKloPort() {
         return kloInstall.getProjectPort();
+    }
+    
+    public boolean getKloUseSSL() {
+        return kloInstall.getUseSSL();
     }
 
     public String getProject() {

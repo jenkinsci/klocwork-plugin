@@ -54,8 +54,9 @@ import org.w3c.dom.Element;
 public class KloXMLGenerator {
     
     public static int GenerateXMLFromIssues(String a_host, String a_port, 
+            boolean useSSL,
             String a_projectname, String a_filename, BuildListener listener) {
-        KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port);
+        KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port, useSSL);
         listener.getLogger().println("Connecting to Klocwork Web API service");
         if(KWservice.connect()) {
             try {

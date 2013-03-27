@@ -54,6 +54,7 @@ public class KloConfig implements Serializable {
     private String numToKeep;
     private String host;
     private String port;
+    private boolean useSSL; //new in v1.15
     private String project;
 
     
@@ -67,7 +68,7 @@ public class KloConfig implements Serializable {
         @SuppressWarnings("unused")
     public KloConfig(
                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
-                    String host, String port,String project,
+                    String host, String port, boolean useSSL, String project,
                     String klocworkReportPattern,
                     boolean publishBuildGraph, boolean publishProjectGraph,
                     String trendNum, String interval,
@@ -101,6 +102,7 @@ public class KloConfig implements Serializable {
         
         this.host=host;
         this.port=port;
+        this.useSSL=useSSL;
         this.project=project;
 
         //Set noKwinspectreport to null, as it is never used
@@ -154,6 +156,10 @@ public class KloConfig implements Serializable {
 
     public String getPort() {
         return port;
+    }
+    
+    public boolean getUseSSL() {
+        return useSSL;
     }
 
     public String getProject() {
