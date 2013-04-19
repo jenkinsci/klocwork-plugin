@@ -23,6 +23,7 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
+import hudson.FilePath;
 import org.emenda.kwjlib.*;
 import hudson.model.BuildListener;
 
@@ -54,9 +55,10 @@ import org.w3c.dom.Element;
 public class KloXMLGenerator {
     
     public static int GenerateXMLFromIssues(String a_host, String a_port, 
-            String a_projectname, String a_filename, BuildListener listener) {
-        KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port);
-        listener.getLogger().println("Connecting to Klocwork Web API service");
+            boolean useSSL,
+            String a_projectname, String a_filename, BuildListener listener, String a_query) {
+        KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port, useSSL);
+        listener.getLogger().println("Connecting to Klocwork Web API service... host: " + a_host + " port: " + a_port + " SSL: " + (useSSL ? "true" : "false"));
         if(KWservice.connect()) {
             try {
                 listener.getLogger().println("Connection successful, creating XML document");
@@ -75,10 +77,10 @@ public class KloXMLGenerator {
                 KWJSONRecord[] issues = null;
                 //Get issues
                 listener.getLogger().println("Retrieving Klocwork issues using kwjlib...");
-                issues = KWservice.search(a_projectname, "");
+                issues = KWservice.search(a_projectname, a_query);
                 listener.getLogger().println("Request sent: " + KWservice.getLastRequest());
                 if(issues != null) {
-                    listener.getLogger().println("Number of issues returned: " + String.valueOf(issues.length));
+                    listener.getLogger().println("Number of issues returned: " + String.valueOf(issues.length - 1));
                     //Iterate through issues
                     for(KWJSONRecord issue : issues) {
                         if(issue != null) {
@@ -198,7 +200,16 @@ public class KloXMLGenerator {
                 return 1;
             }
         }
+        else{
+            listener.getLogger().println("Failed to connect to web API. Error message: " + KWservice.getError());
+            listener.getLogger().println("Failed to connect to web API. Last request: " + KWservice.getLastRequest());
+            return 1;
+        }
+        File outputFile = new File(a_filename);
+        if(outputFile.exists() &&outputFile.length()>0)
         listener.getLogger().println("Creation of XML file complete. Closing connection to Web API.");
+        else
+            listener.getLogger().println("Creation of XML file failed. You may have to run the kwauth command on your machine.");
         return 0;
     }
 }

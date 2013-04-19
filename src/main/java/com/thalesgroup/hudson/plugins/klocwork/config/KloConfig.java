@@ -23,12 +23,8 @@
 
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloPieChart;
-import com.thalesgroup.hudson.plugins.klocwork.graph.KloTrendGraph;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.Serializable;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KloConfig implements Serializable {
     
@@ -37,6 +33,8 @@ public class KloConfig implements Serializable {
     //created with earlier versions of the plugin can still be
     //loaded into the new one.
     private KloConfigNoKwinspectreport noKwinspectreport;
+    
+    private KloConfigWebAPI webAPI;
 
     private KloConfigTrendGraph trendGraph = new KloConfigTrendGraph();
 
@@ -44,17 +42,33 @@ public class KloConfig implements Serializable {
 
     private KloConfigSeverityEvaluation configSeverityEvaluation = new KloConfigSeverityEvaluation();
 
-	private String klocworkReportPattern;
+    private String klocworkReportPattern;
     private boolean linkReview = true;
     private boolean linkBuildLog = true;
     private boolean linkParseLog = true;
     private boolean publishBuildGraph = true;
     private boolean publishProjectGraph = true;
-	
+
     private String numToKeep;
     private String host;
     private String port;
+    private boolean useSSL; //new in v1.15
     private String project;
+    private String hosttLicense;
+    private String build_name;
+
+    public String getBuild() {
+            return build_name;
+    }
+
+    public String getHosttLicense() {
+            return hosttLicense;
+    }
+
+    public String getPortLicense() {
+            return portLicense;
+    }
+    private String portLicense;
 
     
     
@@ -67,7 +81,10 @@ public class KloConfig implements Serializable {
         @SuppressWarnings("unused")
     public KloConfig(
                     boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
-                    String host, String port,String project,
+                    KloConfigWebAPI webAPI, //new in v1.16
+                    String host, String port,
+                    boolean useSSL, //new in v1.16
+                    String project,
                     String klocworkReportPattern,
                     boolean publishBuildGraph, boolean publishProjectGraph,
                     String trendNum, String interval,
@@ -88,7 +105,6 @@ public class KloConfig implements Serializable {
         this.linkParseLog = linkParseLog;
         this.publishBuildGraph = publishBuildGraph;
         this.publishProjectGraph = publishProjectGraph;
-
         this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
                 displayHighSeverity, displayLowSeverity, interval, trendNum);
 
@@ -101,16 +117,29 @@ public class KloConfig implements Serializable {
         
         this.host=host;
         this.port=port;
+        this.useSSL=useSSL;
         this.project=project;
 
         //Set noKwinspectreport to null, as it is never used
         this.noKwinspectreport = null;
+        
+        //AL: v1.16 Set web api config
+        if(webAPI == null) {
+            if(this.webAPI == null) {
+                this.webAPI = new KloConfigWebAPI(true, KloConfigWebAPI.getStaticDefaultString());
+            }
+        }
+        else {
+            this.webAPI = webAPI;
+        }
     }
 	
     public String getKlocworkReportPattern() {
         // return noKwinspectreport.getKlocworkReportPattern();
 		return klocworkReportPattern;
     }
+    
+
 
     public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
         return configSeverityEvaluation;
@@ -143,6 +172,10 @@ public class KloConfig implements Serializable {
     public boolean getLinkParseLog() {
         return linkParseLog;
     }
+    
+    public KloConfigWebAPI getWebAPI(){
+        return webAPI;
+    }
 
     public String getNumToKeep() {
         return numToKeep;
@@ -154,6 +187,10 @@ public class KloConfig implements Serializable {
 
     public String getPort() {
         return port;
+    }
+    
+    public boolean getUseSSL() {
+        return useSSL;
     }
 
     public String getProject() {

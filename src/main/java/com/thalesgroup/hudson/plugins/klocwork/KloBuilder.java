@@ -27,10 +27,13 @@ import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloOption;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildInfo;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloXMLGenerator;
+import com.thalesgroup.hudson.plugins.klocwork.util.UserAxisConverter;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.matrix.Combination;
+import hudson.matrix.MatrixConfiguration;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
@@ -41,7 +44,12 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KloBuilder extends Builder {
 
@@ -50,11 +58,14 @@ public class KloBuilder extends Builder {
 
     private int buildUsing;
 
-	private boolean kwinspectreportDeprecated = false;
+    private boolean kwinspectreportDeprecated = false;
     private boolean compilerBinaryBuild = false;
     private boolean kwBinaryBuild = false;
+    private boolean deleteTable=false;
 
     private KloOption[] kloOptions = new KloOption[0];
+    private KloOption[] compilerOptions = new KloOption[0];
+
 
     private final static String DEFAULT_CONFIGURATION = "Default";
 
@@ -66,10 +77,11 @@ public class KloBuilder extends Builder {
     }
 
     @DataBoundConstructor
-    public KloBuilder(boolean kwinspectreportDeprecated, String projectName, String kloName,
-					  String buildUsing, String kwCommand, boolean compilerBinaryBuild,
-					  boolean kwBinaryBuild) {
-		this.kwinspectreportDeprecated = kwinspectreportDeprecated;
+    public KloBuilder(boolean kwinspectreportDeprecated,boolean deleteTable, String projectName, String kloName,
+                                      String buildUsing, String kwCommand, boolean compilerBinaryBuild,
+                                      boolean kwBinaryBuild) {
+        this.kwinspectreportDeprecated = kwinspectreportDeprecated;
+        this.deleteTable=deleteTable;
         this.projectName = projectName;
         this.kloName = kloName;
         this.kwCommand = kwCommand;
@@ -101,9 +113,9 @@ public class KloBuilder extends Builder {
         return buildUsing;
     }
 
-	public boolean getKwinspectreportDeprecated() {
-		return kwinspectreportDeprecated;
-	}
+    public boolean getKwinspectreportDeprecated() {
+            return kwinspectreportDeprecated;
+    }
 	
     public boolean getCompilerBinaryBuild() {
         return compilerBinaryBuild;
@@ -121,6 +133,11 @@ public class KloBuilder extends Builder {
         return kloOptions;
     }
 
+    public boolean getDeleteTable() {
+            return deleteTable;
+    }
+
+
     public KloInstallation getKlo() {
         for (KloInstallation i : DESCRIPTOR.getInstallations()) {
             if (kloName != null && i.getName().equals(kloName))
@@ -128,6 +145,14 @@ public class KloBuilder extends Builder {
         }
         return null;
     }
+
+    public void setCompilerOptions(KloOption[] compilerOptions) {
+            this.compilerOptions = compilerOptions;
+    }
+    public KloOption[] getCompilerOptions() {
+            return compilerOptions;
+    }
+
 
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
                            BuildListener listener) throws InterruptedException {
@@ -140,22 +165,24 @@ public class KloBuilder extends Builder {
         String execKwbuildproject = "kwbuildproject";
         String execKwinspectreport = "kwinspectreport";
         String FS;
+
         KloInstallation currentInstall = getKlo();
+
 
         //AM : for compatibility with old versions
         if (kloOptions == null){
-        	kloOptions = new KloOption[0];
+            kloOptions = new KloOption[0];
         }
-        
+        if (compilerOptions == null){
+            compilerOptions = new KloOption[0];
+        }
         if (!launcher.isUnix()) {
-
             FS = "\\";
         } else {
             FS = "/";
         }
 
         if (currentInstall != null) {
-
             //File exec = currentInstall.getExecutable();
             FilePath exec = new FilePath(launcher.getChannel(), currentInstall.getExecutablePath());
 
@@ -176,13 +203,8 @@ public class KloBuilder extends Builder {
         }
         //AM : avoiding having a currentInstall with null value
         else {
-            currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8074", "localhost", "27000");
+            currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8074", false, "localhost", "27000");
         }
-
-        /*if (!new File(build.getWorkspace().getRemote() + FS + "kloXML")
-        .exists()) {
-            new File(build.getWorkspace().getRemote() + FS + "kloXML").mkdir();
-        }*/
 
         if (!new File(build.getWorkspace().getRemote() + FS + "kloTables")
                 .exists()) {
@@ -190,56 +212,95 @@ public class KloBuilder extends Builder {
                     .mkdir();
         }
 
-        if (!new File(build.getWorkspace().getRemote() + FS + "kloTables" + FS
-                + build.getId()).exists()) {
-            new File(build.getWorkspace().getRemote() + FS + "kloTables" + FS
-                    + build.getId()).mkdir();
-        }
-
-
         //AM : changing lastBuildNo
         String lastBuildNo = "build_ci_" + build.getId();
         lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
 
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
-
-        String outputFile;
-        if (buildUsing == 0) {
-            outputFile = build.getWorkspace().getRemote() + FS + "kwinject.out";
-        } else {
-            outputFile = kwCommand;
-        }
-
         //AM : changing the way to add the arguments
         argsKwbuildproject.add(execKwbuildproject);
-		// JL : Fix - now kloOptions are added after the kwbuildproject executable.
-		// kloTables is also set before being added
-        String kloTables = build.getWorkspace().getRemote() + FS + "kloTables" + FS + build.getId();
-		String addCompilerOptions = "";
-        // Add kwbuildproject options provided on the configuration page
+        // JL : Fix - now kloOptions are added after the kwbuildproject executable.
+        // kloTables is also set before being added
+        String kloTables = build.getWorkspace().getRemote() + FS + "kloTables";
+
+
+        String outputFile="";
+        if (buildUsing == 0) {
+            outputFile = build.getWorkspace().getRemote() + FS + "kwinject.out";
+	} 
+        else {
+            //New in 1.15: Enables multiple, comma-separated build spec files
+            String[] kwinjectFiles=kwCommand.split(",");
+            //New in 1.15: Enable wildcard managment
+            //User can now give a path with *.out if there is many build specification file in the directory.
+            for(String kwinject: kwinjectFiles) {
+                if(kwinject.endsWith("*.out")){
+                    try {
+                            FilePath file= new FilePath(new File(kwinject.replace(FS+"*.out", FS)));
+                            FilePath [] list =file.list("*.out");
+                            for(FilePath buildspec: list)
+                            {                           
+                                    argsKwbuildproject.add(buildspec);              
+
+                            }
+                    } catch (IOException ex) {
+                            Logger.getLogger(KloBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                else{
+                    argsKwbuildproject.add(kwinject);
+                }
+            }//for
+        }//else
+
+        argsKwbuildproject.add("--project", UserAxisConverter.AxeConverter(build,projectName), "--tables-directory",
+                /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
+                "--license-host", currentInstall.getLicenseHost(), "--license-port",
+				currentInstall.getLicensePort(), "--force");
+
+		List<String> existingBuildOption = new ArrayList<String>();
+		Collections.addAll(existingBuildOption,"--project","-S","--host","-h","--port","-p","--licence-host","-H","--licence-port","-P","--force","-f","--incremental","-I","--help","--version","--add-compiler-options","-a");
+		List<String> buildOptionWithoutValue = new ArrayList<String>();
+		Collections.addAll(buildOptionWithoutValue,"--verbose","-v","--no-lef","-n","--no-link","-N","--remote","--resume","-r","--color","-c","--no-color");
+
         for (KloOption kloOption : kloOptions) {
+            String opt=kloOption.getCmdOption().trim();
             // If tables directory was specified, set kloTables, as this will be added later
-            if (kloOption.getCmdOption().replace(" ", "").equals("--tables-directory") ||
-                    kloOption.getCmdOption().replace(" ", "").equals("-o")) {
+            if (opt.equals("--tables-directory") || opt.equals("-o")) {
                 kloTables = kloOption.getCmdValue().replace("${BUILD_ID}", build.getId());
-            } else {
-				// add compiler options to string addCompilerOptions, plus space to separate
-				// multiple options
-                addCompilerOptions += kloOption.getCmdOption() + " " + kloOption.getCmdValue() + " ";
+            }
+            else if (existingBuildOption.contains(opt)){
+                continue;      
+            }
+            else{    
+                argsKwbuildproject.add(opt);
+                if(buildOptionWithoutValue.contains(opt)) continue;
+                else if(!kloOption.getCmdValue().trim().equals((""))) {
+                        argsKwbuildproject.add(kloOption.getCmdValue());
+                }               
             }
         }
-        argsKwbuildproject.add(/*proj.getModuleRoot()*/outputFile, "--project", projectName, "--tables-directory",
-                /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port",
-                currentInstall.getProjectPort(), "--license-host", currentInstall.getLicenseHost(), "--license-port",
-                currentInstall.getLicensePort(), "--force");
-		if (addCompilerOptions != "") {
-			argsKwbuildproject.add("--add-compiler-options", addCompilerOptions);
-		}
+        argsKwbuildproject.add("--tables-directory",/*proj.getModuleRoot()*/ kloTables);
+
+        String addCompilerOptions = "";
+        //New in 1.15: Separate build options and compiler options.
+        for (KloOption kloOptionaddCompilerOptions : compilerOptions) {
+                addCompilerOptions += kloOptionaddCompilerOptions.getCmdOption();
+                addCompilerOptions+=kloOptionaddCompilerOptions.getCmdValue();
+        }
+
+        if (!addCompilerOptions.equals("")) {
+                argsKwbuildproject.add("--add-compiler-options");
+                argsKwbuildproject.addQuoted(addCompilerOptions);
+        }
 
         //AM : changing the way to add the arguments
         argsKwadmin.add(execKwadmin);
-        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(), "load",
-                projectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
+        argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
+                "load",
+                UserAxisConverter.AxeConverter(build,projectName),/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
         //Building process
         ArgumentListBuilder argsBuild = new ArgumentListBuilder();
@@ -312,8 +373,9 @@ public class KloBuilder extends Builder {
 
             //AM : changing the way to add the arguments
             argsKwinspectreport.add(execKwinspectreport);
-            argsKwinspectreport.add("--project", projectName, "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
+            argsKwinspectreport.add("--project", UserAxisConverter.AxeConverter(build,projectName), "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
                     FS +/*"kloXML"+FS+build.getId()+".xml"*/"klocwork_result.xml", "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
+                    (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
                     "--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort());
 
             if (!launcher.isUnix()) {
@@ -328,16 +390,17 @@ public class KloBuilder extends Builder {
             if (!kwinspectreportDeprecated) {
                 rKwInspectreport = launcher.launch().cmds(argsKwinspectreport).envs(build.getEnvironment(listener)).stdout(listener).pwd(build.getWorkspace()).join();
             }
-            else {
-                rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(currentInstall.getProjectHost(), 
-                        currentInstall.getProjectPort(), projectName, 
-                        build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
-                        listener);
-            }
+
 
             // Finally store currentInstall and projectName for publisher to use
-            build.addAction(new KloBuildInfo(build, currentInstall, projectName));
+            build.addAction(new KloBuildInfo(build, currentInstall, UserAxisConverter.AxeConverter(build,projectName)));
 
+            //New in 1.15: allow user to delete the klotable after all analysis.
+            if(deleteTable && new File(kloTables).exists())
+            {
+                new FilePath(new File(kloTables)).deleteRecursive();
+                listener.getLogger().println("Table directory deleted.");
+            }
             // return (rBuild == 0 && rKwAdmin == 0 && rKwBuildproject == 0 && rKwInspectreport == 0);
             return (rKwAdmin == 0 && rKwInspectreport == 0);
 

@@ -34,13 +34,17 @@
 		</select>
 	</f:entry>
   
-	<f:entry title="Klocwork v9.6 or later">
+	<f:entry title="Klocwork v9.6 or later" help="/plugin/klocwork/kwinspectreport.html">
 		<f:checkbox name="kwinspectreportDeprecated" checked="${instance.kwinspectreportDeprecated}" />
 	</f:entry>
-  
-   <f:entry title="Project Name" field="projectName" description="Specify Klocwork project name (must be an existing project)">
-       <f:textbox  />           		   
-   </f:entry>
+
+	<f:entry title="Delete Table after analysis" help="/plugin/klocwork/deleterTableAfterAnalysis.html" description="Deletes the table generated in your Jenkins workspace after analysis is complete and results have been processed.">
+		<f:checkbox name="deleteTable" checked="${instance.deleteTable}" />
+	</f:entry>
+        
+        <f:entry title="Project Name" field="projectName" description="Specify Klocwork project name (must be an existing project)">
+            <f:textbox  />           		   
+        </f:entry>
 
 	<!-- Allows user to chose to build from command or existing build spec. -->
    <f:entry title="Build Using" description="Build using a build command or build specification" field="buildUsing" help="/plugin/klocwork/help-build.html">
@@ -51,7 +55,7 @@
    </f:entry>
 
    
-   <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant. If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file." field="kwCommand">
+   <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant. If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file. Multiple build specification files can be provided, separated by commas (,)." field="kwCommand">
 		<f:textbox />
 	</f:entry>
 	
@@ -63,7 +67,7 @@
 						<label>${%Option}</label>
 						<f:textbox name="kloOption.cmdOption" value="${option.cmdOption}" />
 					</td>
-					<td width="5%"></td>
+					<td width="5%"/>
 					<td width="60%">
 						<label>${%Value}</label>
 						<f:textbox name="kloOption.cmdValue" value="${option.cmdValue}" />
@@ -78,12 +82,36 @@
 		</f:repeatable>
 	</f:entry>
   
+	<f:entry title="Compiler Options" help="/plugin/klocwork/help-compilerOptions.html">
+		<f:repeatable var="compilerOption" items="${instance.getCompilerOptions()}">
+			<table>
+				<tr>
+					<td width="30%">
+						<label>${%Option}</label>
+						<f:textbox name="compilerOption.cmdOption" value="${compilerOption.cmdOption}" />
+					</td>
+					<td width="5%"/>
+					<td width="60%">
+						<label>${%Value}</label>
+						<f:textbox name="compilerOption.cmdValue" value="${compilerOption.cmdValue}" />
+					</td>
+				</tr>
+				<f:entry title="">
+					<div align="right">
+						<f:repeatableDeleteButton />
+					</div>
+				</f:entry>
+			</table>
+		</f:repeatable>
+	</f:entry>
+
    <!--<f:entry title="file_out" field="fileOut" description="Specify the file .out to use" help="/plugin/klocwork/fileOut.html">
        <f:textbox />
    </f:entry>-->
    <!-- Binary build option. Stop build if build errors exist -->
    <f:entry title="Binary Build" description="Set whether to stop the build process if a build error exists." help="/plugin/klocwork/help-binaryBuild.html">
-		<f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)" checked="${instance.compilerBinaryBuild}" /> <br />
+		<f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)" checked="${instance.compilerBinaryBuild}" />
+		<br />
 		<f:checkbox name="kwBinaryBuild" title="Stop build if a Klocwork build error exists (Less Strict)" checked="${instance.kwBinaryBuild}" />
 	</f:entry>
 

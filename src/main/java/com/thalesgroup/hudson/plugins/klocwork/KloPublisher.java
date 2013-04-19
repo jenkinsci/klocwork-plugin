@@ -25,6 +25,7 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
+import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
@@ -40,6 +41,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
+import hudson.util.ArgumentListBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.*;
@@ -89,6 +91,26 @@ public class KloPublisher extends Recorder implements Serializable {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
 
+
+        int rKwInspectreport = 0;
+        String FS;
+        if (!launcher.isUnix()) {
+            FS = "\\";
+        } else {
+            FS = "/";
+        }
+
+
+        if (kloConfig.getWebAPI().getUseWebAPI()) {
+
+            rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(), 
+                            kloConfig.getPort(),
+                            kloConfig.getUseSSL(),
+                            kloConfig.getProject(), 
+                            build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
+                            listener,
+                            kloConfig.getWebAPI().getwebAPIQuery());
+        }
 
         if (this.canContinue(build.getResult())) {
             listener.getLogger().println("Starting the klocwork analysis.");

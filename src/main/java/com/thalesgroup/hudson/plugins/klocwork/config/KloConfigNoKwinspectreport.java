@@ -36,14 +36,14 @@ public class KloConfigNoKwinspectreport implements Serializable {
 
     private String klocworkReportPattern;
 	
-	private boolean kwinspectreportDeprecated;
+    private boolean kwinspectreportDeprecated;
 	
-	private boolean publishBuildGraph;
+    private boolean publishBuildGraph;
     private boolean publishProjectGraph;
 	
-	private KloConfigSeverityEvaluation configSeverityEvaluation;
-	private KloConfigTrendGraph trendGraph;
-	private KloConfigBuildGraph buildGraph;
+    private KloConfigSeverityEvaluation configSeverityEvaluation;
+    private KloConfigTrendGraph trendGraph;
+    private KloConfigBuildGraph buildGraph;
 
     public KloConfigNoKwinspectreport() {
     }
