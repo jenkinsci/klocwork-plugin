@@ -1,9 +1,0 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:dp="/hudson/plugins/view/dashboard" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <tr><td>
-    <div align="center">
-		Some text above the included page
-  	  <st:include page="..\KloBuildGraph\summary.jelly"/>
-		Some text below the included page
-    </div>
-  </td></tr>
-</j:jelly>
