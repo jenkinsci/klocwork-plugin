@@ -227,6 +227,9 @@ public class KloBuilder extends Builder {
         String outputFile="";
         if (buildUsing == 0) {
             outputFile = build.getWorkspace().getRemote() + FS + "kwinject.out";
+            //v1.16.1 hotfix - adding buildspec back to kwbuildproject command
+            //when using build command (was erroneously removed in v1.16)
+            argsKwbuildproject.add(outputFile);
 	} 
         else {
             //New in 1.15: Enables multiple, comma-separated build spec files
@@ -281,7 +284,6 @@ public class KloBuilder extends Builder {
                 }               
             }
         }
-        argsKwbuildproject.add("--tables-directory",/*proj.getModuleRoot()*/ kloTables);
 
         String addCompilerOptions = "";
         //New in 1.15: Separate build options and compiler options.

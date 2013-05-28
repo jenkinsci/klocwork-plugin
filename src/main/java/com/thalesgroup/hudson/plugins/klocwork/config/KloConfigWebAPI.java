@@ -41,7 +41,7 @@ public class KloConfigWebAPI implements Serializable {
     }
     
     public String getwebAPIQuery() {
-        return webAPIQuery;
+       return webAPIQuery;
     }
     public boolean getUseWebAPI() {
         return useWebAPI;

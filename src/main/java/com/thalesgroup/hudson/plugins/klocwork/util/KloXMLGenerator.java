@@ -165,6 +165,7 @@ public class KloXMLGenerator {
                 }
                 else {
                     listener.getLogger().println("Issues retrieved for project " + a_projectname + " are null.");
+                    listener.getLogger().println("Error returned by kwjlib: " + KWWebAPIService.getError());
                 }
 
                 // write the content into xml file

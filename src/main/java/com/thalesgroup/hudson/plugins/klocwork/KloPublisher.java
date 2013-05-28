@@ -102,14 +102,14 @@ public class KloPublisher extends Recorder implements Serializable {
 
 
         if (kloConfig.getWebAPI().getUseWebAPI()) {
-
+            String queryEncrypted= kloConfig.getWebAPI().getwebAPIQuery();
             rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(), 
                             kloConfig.getPort(),
                             kloConfig.getUseSSL(),
                             kloConfig.getProject(), 
                             build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
                             listener,
-                            kloConfig.getWebAPI().getwebAPIQuery());
+                           queryEncrypted.replace("+","%2B"));
         }
 
         if (this.canContinue(build.getResult())) {
