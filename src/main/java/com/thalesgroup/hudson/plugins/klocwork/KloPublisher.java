@@ -106,7 +106,7 @@ public class KloPublisher extends Recorder implements Serializable {
             rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(), 
                             kloConfig.getPort(),
                             kloConfig.getUseSSL(),
-                            kloConfig.getProject(), 
+                            UserAxisConverter.AxeConverter(build,kloConfig.getProject()), 
                             build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
                             listener,
                            queryEncrypted.replace("+","%2B"));
