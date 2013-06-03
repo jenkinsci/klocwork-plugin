@@ -5,4 +5,7 @@
 	xmlns:f="/lib/form"
 	xmlns:st="jelly:stapler"
     xmlns:i="jelly:fmt">
+	<div style="float:right">
+		<st:include page="graph.jelly"/>
+	</div>
 </j:jelly>
