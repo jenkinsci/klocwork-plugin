@@ -1,8 +1,7 @@
-<!--
 /*******************************************************************************
- * Copyright (c) 2012 Emenda Software Ltd                                       *
- * Author : Andreas Larfors                                                     *
- *                                                                              *
+ * Copyright (c) 2013 Emenda Software Ltd.                                      *
+ * Author : Andreas Larfors                                                       *
+ *		                                                                        *
  * Permission is hereby granted, free of charge, to any person obtaining a copy *
  * of this software and associated documentation files (the "Software"), to deal*
  * in the Software without restriction, including without limitation the rights *
@@ -20,27 +19,36 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
  * THE SOFTWARE.                                                                *
+ *                                                                              *
  *******************************************************************************/
- -->
+package com.thalesgroup.hudson.plugins.klocwork.config;
 
-<?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-    xmlns:dp="/hudson/plugins/view/dashboard"
-    xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <dp:decorate portlet="${it}" width="1">
-    <div align="center">
-		<tr>
-			<!--if we can display the graph-->
-			<j:if test="${from.isDisplayGraph()}">
-				<a href="${from.urlName}/">
-					<img src="${from.urlName}/graph"/>
-				</a>
-			</j:if>
-			<!--else-->
-			<j:if test="${!from.isDisplayGraph()}">
-				Klocwork trend graph not enabled for project ${from.projectName}. Please enable the trend graph in project settings to view in dashboard portlet.
-			</j:if>
-		</tr>
-    </div>
-  </dp:decorate>
-</j:jelly>
+import java.io.Serializable;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+public class KloConfigWebAPI implements Serializable {
+    private String webAPIQuery;
+    private boolean useWebAPI;
+    
+    private static String defaultQuery = "status:Analyze,Fix -status:'Fix in'";
+    
+    @DataBoundConstructor
+    public KloConfigWebAPI(boolean useWebAPI,
+                           String webAPIQuery) {
+        super();
+        this.webAPIQuery = webAPIQuery;
+        this.useWebAPI = !(useWebAPI);
+    }
+    
+    public String getwebAPIQuery() {
+       return webAPIQuery;
+    }
+    public boolean getUseWebAPI() {
+        return useWebAPI;
+    }
+    
+    public static String getStaticDefaultString() {
+        return KloConfigWebAPI.defaultQuery;
+    }
+   
+}

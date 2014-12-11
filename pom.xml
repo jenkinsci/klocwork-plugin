@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.410</version>
+		<version>1.410</version>
     </parent>
 
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.16-SNAPSHOT</version>
+    <version>1.16.1</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -69,6 +69,14 @@
                 <role>Project developer</role>
             </roles>
         </contributor>
+
+		<contributor>
+			<name>Yoan Poigneau</name>
+			<timezone>+1</timezone>
+			<roles>
+				<role>Project developer</role>
+			</roles>
+		</contributor>
     </contributors>
 
     <properties>
@@ -135,18 +143,12 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dashboard-view</artifactId>
-            <version>2.4</version>
-        </dependency>
 		
 	<dependency>
             <groupId>org.emenda</groupId>
             <artifactId>kwjlib</artifactId>
-            <version>1.1</version>
+            <version>1.2</version>
         </dependency>
-
     </dependencies>
 	
     <build>

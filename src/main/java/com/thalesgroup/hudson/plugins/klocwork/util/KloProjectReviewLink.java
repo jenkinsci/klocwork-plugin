@@ -111,6 +111,10 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     public String getKloPort() {
         return kloInstall.getProjectPort();
     }
+    
+    public boolean getKloUseSSL() {
+        return kloInstall.getUseSSL();
+    }
 
     public String getProjectName() {
         return projectName;
