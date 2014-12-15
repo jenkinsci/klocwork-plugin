@@ -1,4 +1,0 @@
-1.16.1
-kwbuildproject command was missing build spec value when using Build Command. Fixed.
-Duplicate --tables-directory entries in kwbuildproject command. Removed one.
-Improved error messages from the kwjlib.
