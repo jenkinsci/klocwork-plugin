@@ -70,16 +70,16 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
 
         KloBuilder builder = req.bindJSON(KloBuilder.class, formData);
         KloOption[] kloOptions = new KloOption[0];
-		KloOption[] compilerOptions = new KloOption[0];
+        KloOption[] compilerOptions = new KloOption[0];
         kloOptions = req.bindParametersToList(KloOption.class,
                 "kloOption.").toArray(new KloOption[0]);
 
         builder.setKloOptions(kloOptions);
 
-		compilerOptions = req.bindParametersToList(KloOption.class,
-				"compilerOption.").toArray(new KloOption[0]);
+        compilerOptions = req.bindParametersToList(KloOption.class,
+                "compilerOption.").toArray(new KloOption[0]);
 
-		builder.setCompilerOptions(compilerOptions);
+        builder.setCompilerOptions(compilerOptions);
 
         return builder;
     }

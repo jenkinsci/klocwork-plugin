@@ -83,7 +83,7 @@ public class KloBuildReviewLink implements Action {
     public String getKloPort() {
         return kloInstall.getProjectPort();
     }
-    
+
     public boolean getKloUseSSL() {
         return kloInstall.getUseSSL();
     }
@@ -91,7 +91,7 @@ public class KloBuildReviewLink implements Action {
     public String getProject() {
         return getProjectId(project);
     }
-	
+
     public String getProjectId(String project_name) {
         //Replace hyphens with underscores to convert project name to project id
         return project_name.replace("-", "_");
@@ -100,11 +100,11 @@ public class KloBuildReviewLink implements Action {
     public String getReviewHeight() {
         return "800px";
     }
-	
-	public boolean isViewable() {
-		return (kloInstall.getProjectHost() != "") &&
-				(kloInstall.getProjectPort() != "") && (project != "");
-	}
+
+    public boolean isViewable() {
+        return (kloInstall.getProjectHost() != "") &&
+                (kloInstall.getProjectPort() != "") && (project != "");
+    }
 
     public String getIconFileName() {
         return "/plugin/klocwork/icons/klocwork-24.gif";

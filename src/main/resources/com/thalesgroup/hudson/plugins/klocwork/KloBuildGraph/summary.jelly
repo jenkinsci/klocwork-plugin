@@ -1,11 +1,7 @@
 <j:jelly xmlns:j="jelly:core"
-	xmlns:d="jelly:define"
-    xmlns:l="/lib/layout"
-    xmlns:t="/lib/hudson"
-	xmlns:f="/lib/form"
-	xmlns:st="jelly:stapler"
-    xmlns:i="jelly:fmt">
-	<div style="float:right">
-		<st:include page="graph.jelly"/>
-	</div>
+         xmlns:st="jelly:stapler"
+        >
+    <div style="float:right">
+        <st:include page="graph.jelly"/>
+    </div>
 </j:jelly>

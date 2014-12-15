@@ -1,10 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-	<version>1.532.3</version>
+        <version>1.532.3</version>
     </parent>
 
     <artifactId>klocwork</artifactId>
@@ -62,7 +63,7 @@
                 <role>Project developer</role>
             </roles>
         </contributor>
-		<contributor>
+        <contributor>
             <name>Andreas Larfors</name>
             <timezone>+1</timezone>
             <roles>
@@ -70,13 +71,13 @@
             </roles>
         </contributor>
 
-		<contributor>
-			<name>Yoan Poigneau</name>
-			<timezone>+1</timezone>
-			<roles>
-				<role>Project developer</role>
-			</roles>
-		</contributor>
+        <contributor>
+            <name>Yoan Poigneau</name>
+            <timezone>+1</timezone>
+            <roles>
+                <role>Project developer</role>
+            </roles>
+        </contributor>
     </contributors>
 
     <properties>
@@ -86,8 +87,8 @@
         <saxon.version>9.1.0.8</saxon.version>
         <dtkit.model.version>0.16</dtkit.model.version>
         <dtkit.util.version>0.16</dtkit.util.version>
-        <java2html.version>5.0</java2html.version> 
-        <junit.version>4.8.2</junit.version> 
+        <java2html.version>5.0</java2html.version>
+        <junit.version>4.8.2</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -143,14 +144,14 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-		
-	<dependency>
+
+        <dependency>
             <groupId>org.emenda</groupId>
             <artifactId>kwjlib</artifactId>
             <version>1.2</version>
         </dependency>
     </dependencies>
-	
+
     <build>
         <plugins>
             <plugin>
@@ -229,14 +230,14 @@
 
     <repositories>
         <repository>
-           <id>kwjlib-mvn-repo</id>
-           <url>https://raw.github.com/Emenda/kwjlib/mvn-repo/</url>
-           <snapshots>
-               <enabled>true</enabled>
-               <updatePolicy>always</updatePolicy>
-           </snapshots>
+            <id>kwjlib-mvn-repo</id>
+            <url>https://raw.github.com/Emenda/kwjlib/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
         </repository>
-    
+
         <repository>
             <id>repo.jenkins-ci.org</id>
             <url>http://repo.jenkins-ci.org/public/</url>

@@ -134,7 +134,8 @@ public class KloParser implements Serializable {
 
                                     kloFile.addTraceBlock(tracelt.getFile(),
                                             tracelt.getMethod(), tracelt
-                                            .getName(), tracelt.getId());
+                                                    .getName(), tracelt.getId()
+                                    );
 
 
                                     for (TraceLine traceLinelt : tracelt.getTraceLine()) {

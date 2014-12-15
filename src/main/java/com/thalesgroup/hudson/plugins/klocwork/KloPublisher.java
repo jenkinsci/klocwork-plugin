@@ -25,7 +25,6 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.model.KloInstallation;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
@@ -34,14 +33,12 @@ import com.thalesgroup.hudson.plugins.klocwork.util.*;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.matrix.MatrixProject;
 import hudson.model.*;
 import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import hudson.util.ArgumentListBuilder;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.*;
@@ -102,14 +99,14 @@ public class KloPublisher extends Recorder implements Serializable {
 
 
         if (kloConfig.getWebAPI().getUseWebAPI()) {
-            String queryEncrypted= kloConfig.getWebAPI().getwebAPIQuery();
-            rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(), 
-                            kloConfig.getPort(),
-                            kloConfig.getUseSSL(),
-                            UserAxisConverter.AxeConverter(build,kloConfig.getProject()), 
-                            build.getWorkspace().getRemote() + FS + "klocwork_result.xml", 
-                            listener,
-                           queryEncrypted.replace("+","%2B"));
+            String queryEncrypted = kloConfig.getWebAPI().getwebAPIQuery();
+            rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(),
+                    kloConfig.getPort(),
+                    kloConfig.getUseSSL(),
+                    UserAxisConverter.AxeConverter(build, kloConfig.getProject()),
+                    build.getWorkspace().getRemote() + FS + "klocwork_result.xml",
+                    listener,
+                    queryEncrypted.replace("+", "%2B"));
         }
 
         if (this.canContinue(build.getResult())) {

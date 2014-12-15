@@ -48,33 +48,33 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     }
 
     private void setKloHostPort() {
-		if (project == null) {
-			return;
-		}
+        if (project == null) {
+            return;
+        }
 
         AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
-		if (lastSuccessfulBuild == null) {
-			return;
-	   	}
-	
-		KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
-		if (kloInfo == null) {
-				return;
-		}
+        if (lastSuccessfulBuild == null) {
+            return;
+        }
 
-		kloInstall = kloInfo.getKloInstall();
-		projectName = getProjectId(kloInfo.getProject());
+        KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+        if (kloInfo == null) {
+            return;
+        }
+
+        kloInstall = kloInfo.getKloInstall();
+        projectName = getProjectId(kloInfo.getProject());
     }
 
     public boolean isDisplayLink() {
-		AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
+        AbstractBuild<?, ?> lastSuccessfulBuild = project.getLastSuccessfulBuild();
         if (lastSuccessfulBuild != null) {
-	        KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
-			if (kloInfo != null) {
-				return true;											           				
-			}
-		}
-		return false;
+            KloBuildInfo kloInfo = lastSuccessfulBuild.getAction(KloBuildInfo.class);
+            if (kloInfo != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public AbstractProject<?, ?> getProject() {
@@ -111,7 +111,7 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     public String getKloPort() {
         return kloInstall.getProjectPort();
     }
-    
+
     public boolean getKloUseSSL() {
         return kloInstall.getUseSSL();
     }
@@ -119,10 +119,10 @@ public class KloProjectReviewLink implements ProminentProjectAction {
     public String getProjectName() {
         return projectName;
     }
-	
-	public String getProjectId(String project_name) {
-		//Replace hyphens with underscores to convert project name to project id
-		return project_name.replace('-', '_');
-	}
+
+    public String getProjectId(String project_name) {
+        //Replace hyphens with underscores to convert project name to project id
+        return project_name.replace('-', '_');
+    }
 
 }

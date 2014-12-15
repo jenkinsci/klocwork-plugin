@@ -1,9 +1,14 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
-        xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<div>
-		<h3>Klocwork Review could not be found.</h3>
-		<p>Klocwork 9.5 and before: To construct a link to Klocwork Review, the plugin requires the Klocwork xml report to be generated, or the Klocwork build-step to be invoked. The Klocwork host, port and project can be obtained from either of these.</p>
-                <p>Klocwork 9.6 abd later: To construct a link to Klocwork Review, the plugin requires the host name, the port and the project name of the project. </p>
-        
-        </div>
+<j:jelly xmlns:j="jelly:core"
+        >
+    <div>
+        <h3>Klocwork Review could not be found.</h3>
+        <p>Klocwork 9.5 and before: To construct a link to Klocwork Review, the plugin requires the Klocwork xml report
+            to be generated, or the Klocwork build-step to be invoked. The Klocwork host, port and project can be
+            obtained from either of these.
+        </p>
+        <p>Klocwork 9.6 abd later: To construct a link to Klocwork Review, the plugin requires the host name, the port
+            and the project name of the project.
+        </p>
+
+    </div>
 </j:jelly>

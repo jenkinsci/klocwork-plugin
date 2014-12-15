@@ -23,15 +23,16 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import java.io.Serializable;
 import org.kohsuke.stapler.DataBoundConstructor;
+
+import java.io.Serializable;
 
 public class KloConfigWebAPI implements Serializable {
     private String webAPIQuery;
     private boolean useWebAPI;
-    
+
     private static String defaultQuery = "status:Analyze,Fix -status:'Fix in'";
-    
+
     @DataBoundConstructor
     public KloConfigWebAPI(boolean useWebAPI,
                            String webAPIQuery) {
@@ -39,16 +40,17 @@ public class KloConfigWebAPI implements Serializable {
         this.webAPIQuery = webAPIQuery;
         this.useWebAPI = !(useWebAPI);
     }
-    
+
     public String getwebAPIQuery() {
-       return webAPIQuery;
+        return webAPIQuery;
     }
+
     public boolean getUseWebAPI() {
         return useWebAPI;
     }
-    
+
     public static String getStaticDefaultString() {
         return KloConfigWebAPI.defaultQuery;
     }
-   
+
 }

@@ -1,6 +1,5 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
-xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
-xmlns:f="/lib/form" xmlns:u="/util">
+         xmlns:f="/lib/form">
 
     <j:set var="config" value="${instance.kloConfig}"/>
     <j:if test="${config == null}">
@@ -12,133 +11,94 @@ xmlns:f="/lib/form" xmlns:u="/util">
             <tr>
                 <td>
                     <label for="trendGraph.trendXSize">${%Trend Chart Width}</label>
-                    <f:textbox name="${id}.config.trendGraph.trendXSize" value="${config.trendGraph.xSize}" id="trendGraph.trendXSize"/>
+                    <f:textbox name="${id}.config.trendGraph.trendXSize" value="${config.trendGraph.xSize}"
+                               id="trendGraph.trendXSize"/>
                 </td>
                 <td>
                     <label for="trendGraph.trendYSize">${%Trend Chart Height}</label>
-                    <f:textbox name="${id}.config.trendGraph.trendYSize" value="${config.trendGraph.ySize}" id="trendGraph.trendYSize"/>
+                    <f:textbox name="${id}.config.trendGraph.trendYSize" value="${config.trendGraph.ySize}"
+                               id="trendGraph.trendYSize"/>
                 </td>
                 <td colspan="3">
-                <st:nbsp />
+                    <st:nbsp/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <f:checkbox name="${id}.config.trendGraph.displayAllError" checked="${config.trendGraph.displayAllError}" id="trendGraph.displayAllError"/>
+                    <f:checkbox name="${id}.config.trendGraph.displayAllError"
+                                checked="${config.trendGraph.displayAllError}" id="trendGraph.displayAllError"/>
                     <st:nbsp/>
                     <label for="trendGraph.displayAllError">${%Display All issues}</label>
-                    <st:nbsp />
+                    <st:nbsp/>
                 </td>
                 <td>
-                    <f:checkbox name="${id}.config.trendGraph.displayHighSeverity" checked="${config.trendGraph.displayHighSeverity}" id="trendGraph.displayHighSeverity"/>
+                    <f:checkbox name="${id}.config.trendGraph.displayHighSeverity"
+                                checked="${config.trendGraph.displayHighSeverity}" id="trendGraph.displayHighSeverity"/>
                     <st:nbsp/>
                     <label for="trendGraph.displayHighSeverity">${%Display less severe issues}</label>
-                    <st:nbsp />
+                    <st:nbsp/>
                 </td>
                 <td>
-                    <f:checkbox name="${id}.config.trendGraph.displayMedSeverity" checked="${config.trendGraph.displayMedSeverity}" id="trendGraph.displayMedSeverity"/>
+                    <f:checkbox name="${id}.config.trendGraph.displayMedSeverity"
+                                checked="${config.trendGraph.displayMedSeverity}" id="trendGraph.displayMedSeverity"/>
                     <st:nbsp/>
                     <label for="trendGraph.displayMedSeverity">${%Display Warnings and Suggestions}</label>
-                    <st:nbsp />
+                    <st:nbsp/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <f:checkbox name="${id}.config.trendGraph.displayLowSeverity" checked="${config.trendGraph.displayLowSeverity}" id="trendGraph.displayLowSeverity"/>
+                    <f:checkbox name="${id}.config.trendGraph.displayLowSeverity"
+                                checked="${config.trendGraph.displayLowSeverity}" id="trendGraph.displayLowSeverity"/>
                     <st:nbsp/>
                     <label for="trendGraph.displayLowSeverity">${%Display Critical issues}</label>
-                    <st:nbsp />
+                    <st:nbsp/>
                 </td>
             </tr>
         </table>
     </f:entry>
-
-<!--
-    <f:entry title="${%graph.config.trend}" description="${%graph.description.trend}">
-        <table>
-            <tr>
-                <td>
-                    <label for="trendGraph.trendXSize">${%Trend Chart Width}</label>
-                    <f:textbox name="${id}.config.trendGraph.trendXSize" value="${config.trendGraph.xSize}" id="trendGraph.trendXSize"/>
-                </td>
-                <td>
-                    <label for="trendGraph.trendYSize">${%Trend Chart Height}</label>
-                    <f:textbox name="${id}.config.trendGraph.trendYSize" value="${config.trendGraph.ySize}" id="trendGraph.trendYSize"/>
-                </td>
-                <td colspan="3">
-                    <st:nbsp />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <f:checkbox name="${id}.config.trendGraph.critical" checked="${config.trendGraph.critical}" id="trendGraph.critical"/>
-                    <st:nbsp/>
-                    <label for="trendGraph.critical">${%Critical Errors}</label>
-                    <st:nbsp />
-                </td>
-                <td>
-                    <f:checkbox name="${id}.config.trendGraph.severeError" checked="${config.trendGraph.severeError}" id="trendGraph.severeError"/>
-                    <st:nbsp/>
-                    <label for="trendGraph.severeError">${%Severe/Error Errors}</label>
-                    <st:nbsp />
-                </td>
-
-                <td>
-                    <f:checkbox name="${id}.config.trendGraph.unexpectedInvestigate" checked="${config.trendGraph.unexpectedInvestigate}" id="trendGraph.unexpectedInvestigate"/>
-                    <st:nbsp/>
-                    <label for="trendGraph.unexpectedInvestigate">${%Unexpected/Investigate Errors}</label>
-                    <st:nbsp />
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <f:checkbox name="${id}.config.trendGraph.warningSuggestion" checked="${config.trendGraph.warningSuggestion}" id="trendGraph.warningSuggestion"/>
-                    <st:nbsp/>
-                    <label for="trendGraph.warningSuggestion">${%Warning and Suggestions}</label>
-                    <st:nbsp />
-                </td>
-            </tr> 
-         </table>
-    </f:entry>
--->
-
     <f:advanced>
         <f:entry title="${%graph.config.build}" description="${%graph.description.build}">
             <table>
                 <tr>
                     <td>
                         <label for="buildGraph.xSize">${%Build Chart Width}</label>
-                        <f:textbox name="${id}.config.buildGraph.buildXSize" value="${config.buildGraph.xSize}" id="buildGraph.xSize"/>
+                        <f:textbox name="${id}.config.buildGraph.buildXSize" value="${config.buildGraph.xSize}"
+                                   id="buildGraph.xSize"/>
                     </td>
                     <td>
                         <label for="buildGraph.ySize">${%Build Chart Height}</label>
-                        <f:textbox name="${id}.config.buildGraph.buildYSize" value="${config.buildGraph.ySize}" id="buildGraph.ySize"/>
+                        <f:textbox name="${id}.config.buildGraph.buildYSize" value="${config.buildGraph.ySize}"
+                                   id="buildGraph.ySize"/>
                     </td>
                     <td colspan="3">
-                        <st:nbsp />
+                        <st:nbsp/>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <f:checkbox name="${id}.config.buildGraph.neww" checked="${config.buildGraph.neww}" id="buildGraph.neww"/>
+                        <f:checkbox name="${id}.config.buildGraph.neww" checked="${config.buildGraph.neww}"
+                                    id="buildGraph.neww"/>
                         <st:nbsp/>
                         <label for="buildGraph.neww">${%New Errors}</label>
-                        <st:nbsp />
+                        <st:nbsp/>
                     </td>
                     <td>
-                        <f:checkbox name="${id}.config.buildGraph.existing" checked="${config.buildGraph.existing}" id="buildGraph.existing"/>
+                        <f:checkbox name="${id}.config.buildGraph.existing" checked="${config.buildGraph.existing}"
+                                    id="buildGraph.existing"/>
                         <st:nbsp/>
                         <label for="buildGraph.existing">${%Existing Errors}</label>
-                        <st:nbsp />
+                        <st:nbsp/>
                     </td>
                     <td>
-                        <f:checkbox name="${id}.config.buildGraph.fixed" checked="${config.buildGraph.fixed}" id="buildGraph.fixed"/>
+                        <f:checkbox name="${id}.config.buildGraph.fixed" checked="${config.buildGraph.fixed}"
+                                    id="buildGraph.fixed"/>
                         <st:nbsp/>
                         <label for="buildGraph.fixed">${%Fixed Errors}</label>
-                        <st:nbsp />
+                        <st:nbsp/>
                     </td>
                 </tr>
-            </table> 
+            </table>
         </f:entry>
     </f:advanced>
 </j:jelly>

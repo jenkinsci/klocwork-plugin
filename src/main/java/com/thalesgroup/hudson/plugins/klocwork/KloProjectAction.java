@@ -54,9 +54,9 @@ public class KloProjectAction extends AbstractKloProjectAction {
     public KloProjectAction(final AbstractProject<?, ?> project, KloConfig kloConfig) {
         super(project);
         this.kloConfig = kloConfig;
-        
+
         //Store this instance in hashmap to be accessed by dashboard portlet
-        if(kloProjectActionHashMap == null) {
+        if (kloProjectActionHashMap == null) {
             kloProjectActionHashMap = new HashMap<String, KloProjectAction>();
         }
         kloProjectActionHashMap.put(project.getName(), this);
@@ -79,11 +79,11 @@ public class KloProjectAction extends AbstractKloProjectAction {
 //		} else {
 //			return "Klocwork Results";
 //		}
-                return "Klocwork Results";
+        return "Klocwork Results";
     }
 
     public String getUrlName() {
-		return URL_NAME;
+        return URL_NAME;
     }
 
     public boolean getPublishProjectGraph() {
@@ -145,7 +145,7 @@ public class KloProjectAction extends AbstractKloProjectAction {
      * Returns the last finished build.
      *
      * @return the last finished build or <code>null</code> if there is no
-     *         such build
+     * such build
      */
     public AbstractBuild<?, ?> getLastFinishedBuild() {
         AbstractBuild<?, ?> lastBuild = project.getLastBuild();
@@ -291,8 +291,8 @@ public class KloProjectAction extends AbstractKloProjectAction {
                 continue;
             KloBuildAction r = b.getAction(KloBuildAction.class);
             if (r != null)
-				if (r.getResult() != null)
-					return b.getNumber();
+                if (r.getResult() != null)
+                    return b.getNumber();
         }
         return null;
     }

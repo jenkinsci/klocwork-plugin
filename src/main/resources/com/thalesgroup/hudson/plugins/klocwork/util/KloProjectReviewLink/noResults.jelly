@@ -1,4 +1,6 @@
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
-        xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<div><h4>No results available yet. Complete at least one successful build.</h4></div>
+<j:jelly xmlns:j="jelly:core"
+        >
+    <div>
+        <h4>No results available yet. Complete at least one successful build.</h4>
+    </div>
 </j:jelly>

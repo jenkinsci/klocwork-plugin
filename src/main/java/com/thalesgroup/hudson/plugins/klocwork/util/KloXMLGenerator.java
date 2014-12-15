@@ -23,27 +23,23 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
-import hudson.FilePath;
-import org.emenda.kwjlib.*;
 import hudson.model.BuildListener;
+import org.emenda.kwjlib.KWJSONRecord;
+import org.emenda.kwjlib.KWWebAPIService;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
- 
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * KloXMLGenerator uses the kwjlib library to connect to the Klocwork server
@@ -53,13 +49,13 @@ import org.w3c.dom.Element;
  * v9.6 or later.
  */
 public class KloXMLGenerator {
-    
-    public static int GenerateXMLFromIssues(String a_host, String a_port, 
-            boolean useSSL,
-            String a_projectname, String a_filename, BuildListener listener, String a_query) {
+
+    public static int GenerateXMLFromIssues(String a_host, String a_port,
+                                            boolean useSSL,
+                                            String a_projectname, String a_filename, BuildListener listener, String a_query) {
         KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port, useSSL);
         listener.getLogger().println("Connecting to Klocwork Web API service... host: " + a_host + " port: " + a_port + " SSL: " + (useSSL ? "true" : "false"));
-        if(KWservice.connect()) {
+        if (KWservice.connect()) {
             try {
                 listener.getLogger().println("Connection successful, creating XML document");
                 DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -79,43 +75,43 @@ public class KloXMLGenerator {
                 listener.getLogger().println("Retrieving Klocwork issues using kwjlib...");
                 issues = KWservice.search(a_projectname, a_query);
                 listener.getLogger().println("Request sent: " + KWservice.getLastRequest());
-                if(issues != null) {
+                if (issues != null) {
                     listener.getLogger().println("Number of issues returned: " + String.valueOf(issues.length - 1));
                     //Iterate through issues
-                    for(KWJSONRecord issue : issues) {
-                        if(issue != null) {
+                    for (KWJSONRecord issue : issues) {
+                        if (issue != null) {
                             // problem element
                             Element eproblem = doc.createElement("problem");
                             rootElement.appendChild(eproblem);
                             // problem element elements
-                            Element eID             = doc.createElement("problemID");
-                            Element efile           = doc.createElement("file");
-                            Element emethod         = doc.createElement("method");
-                            Element ecode           = doc.createElement("code");
-                            Element emessage        = doc.createElement("message");
-                            Element ecitingStatus   = doc.createElement("citingStatus");
-                            Element estate          = doc.createElement("state");
-                            Element eowner          = doc.createElement("owner");
-                            Element eseverity       = doc.createElement("severity");
-                            Element eseveritylevel  = doc.createElement("severitylevel");
-                            Element edisplayAs      = doc.createElement("displayAs");
-                            Element etaxonomies     = doc.createElement("taxonomies");
-                            Element etaxonomy       = doc.createElement("taxonomy");
-                            Element eurl            = doc.createElement("url");
-                            
-                            org.w3c.dom.Text tID             = doc.createTextNode("problemID");
-                            org.w3c.dom.Text tfile           = doc.createTextNode("file");
-                            org.w3c.dom.Text tmethod         = doc.createTextNode("method");
-                            org.w3c.dom.Text tcode           = doc.createTextNode("code");
-                            org.w3c.dom.Text tmessage        = doc.createTextNode("message");
-                            org.w3c.dom.Text tcitingStatus   = doc.createTextNode("citingStatus");
-                            org.w3c.dom.Text tstate          = doc.createTextNode("state");
-                            org.w3c.dom.Text towner          = doc.createTextNode("owner");
-                            org.w3c.dom.Text tseverity       = doc.createTextNode("severity");
-                            org.w3c.dom.Text tseveritylevel  = doc.createTextNode("severitylevel");
-                            org.w3c.dom.Text tdisplayAs      = doc.createTextNode("displayAs");
-                            org.w3c.dom.Text turl            = doc.createTextNode("url");
-                            
+                            Element eID = doc.createElement("problemID");
+                            Element efile = doc.createElement("file");
+                            Element emethod = doc.createElement("method");
+                            Element ecode = doc.createElement("code");
+                            Element emessage = doc.createElement("message");
+                            Element ecitingStatus = doc.createElement("citingStatus");
+                            Element estate = doc.createElement("state");
+                            Element eowner = doc.createElement("owner");
+                            Element eseverity = doc.createElement("severity");
+                            Element eseveritylevel = doc.createElement("severitylevel");
+                            Element edisplayAs = doc.createElement("displayAs");
+                            Element etaxonomies = doc.createElement("taxonomies");
+                            Element etaxonomy = doc.createElement("taxonomy");
+                            Element eurl = doc.createElement("url");
+
+                            org.w3c.dom.Text tID = doc.createTextNode("problemID");
+                            org.w3c.dom.Text tfile = doc.createTextNode("file");
+                            org.w3c.dom.Text tmethod = doc.createTextNode("method");
+                            org.w3c.dom.Text tcode = doc.createTextNode("code");
+                            org.w3c.dom.Text tmessage = doc.createTextNode("message");
+                            org.w3c.dom.Text tcitingStatus = doc.createTextNode("citingStatus");
+                            org.w3c.dom.Text tstate = doc.createTextNode("state");
+                            org.w3c.dom.Text towner = doc.createTextNode("owner");
+                            org.w3c.dom.Text tseverity = doc.createTextNode("severity");
+                            org.w3c.dom.Text tseveritylevel = doc.createTextNode("severitylevel");
+                            org.w3c.dom.Text tdisplayAs = doc.createTextNode("displayAs");
+                            org.w3c.dom.Text turl = doc.createTextNode("url");
+
                             //set values
                             tID.setNodeValue(issue.getValue("id"));
                             tfile.setNodeValue(issue.getValue("file"));
@@ -132,7 +128,7 @@ public class KloXMLGenerator {
                             etaxonomy.setAttribute("name", issue.getValue("taxonomyName"));
                             etaxonomy.setAttribute("metaInf", "");
                             turl.setNodeValue(issue.getValue("url"));
-                            
+
                             //append all elements
                             eproblem.appendChild(eID);
                             eproblem.appendChild(efile);
@@ -147,7 +143,7 @@ public class KloXMLGenerator {
                             eproblem.appendChild(edisplayAs);
                             eproblem.appendChild(etaxonomies);
                             eproblem.appendChild(eurl);
-                            
+
                             eID.appendChild(tID);
                             efile.appendChild(tfile);
                             emethod.appendChild(tmethod);
@@ -162,8 +158,7 @@ public class KloXMLGenerator {
                             eurl.appendChild(turl);
                         }
                     }
-                }
-                else {
+                } else {
                     listener.getLogger().println("Issues retrieved for project " + a_projectname + " are null.");
                     listener.getLogger().println("Error returned by kwjlib: " + KWWebAPIService.getError());
                 }
@@ -175,40 +170,35 @@ public class KloXMLGenerator {
                 //Check that we can create the file, then output the xml to it
                 File outputFile = new File(a_filename);
                 boolean success = outputFile.exists() ? true : outputFile.createNewFile();
-                if(success && outputFile.canWrite()) {
+                if (success && outputFile.canWrite()) {
                     FileOutputStream filestream = new FileOutputStream(outputFile);
                     StreamResult result = new StreamResult(filestream);
                     transformer.transform(source, result);
-                }
-                else {
+                } else {
                     listener.getLogger().println("ERROR while generating XML. Could not open file for writing: " + a_filename);
                 }
 
-            }
-            catch (ParserConfigurationException pce) {
+            } catch (ParserConfigurationException pce) {
                 listener.getLogger().println("ERROR while generating XML - ParserConfigurationException: " +
                         pce.getMessage());
                 return 1;
-            }
-            catch (TransformerException tfe) {
+            } catch (TransformerException tfe) {
                 listener.getLogger().println("ERROR while generating XML - TransformerException:"
                         + tfe.getMessage() + "      stack:          " + tfe.getStackTrace().toString());
                 return 1;
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 listener.getLogger().println("ERROR while generating XML - IOException:"
                         + ioe.getMessage());
                 return 1;
             }
-        }
-        else{
+        } else {
             listener.getLogger().println("Failed to connect to web API. Error message: " + KWservice.getError());
             listener.getLogger().println("Failed to connect to web API. Last request: " + KWservice.getLastRequest());
             return 1;
         }
         File outputFile = new File(a_filename);
-        if(outputFile.exists() &&outputFile.length()>0)
-        listener.getLogger().println("Creation of XML file complete. Closing connection to Web API.");
+        if (outputFile.exists() && outputFile.length() > 0)
+            listener.getLogger().println("Creation of XML file complete. Closing connection to Web API.");
         else
             listener.getLogger().println("Creation of XML file failed. You may have to run the kwauth command on your machine.");
         return 0;

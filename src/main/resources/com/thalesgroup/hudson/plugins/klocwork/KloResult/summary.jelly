@@ -23,72 +23,69 @@
  *******************************************************************************/
  -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-  xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-  xmlns:i="jelly:fmt" xmlns:g="/jelly/klocwork" xmlns:local="local">
-  <st:header name="Content-Type" value="text/html;charset=UTF-8" />
-  <table class="pane sortable" id="files">
-    <tr>
-      <td class="pane-header">Filename</td>
-	  <j:if test="${!it.isKwinspectreportDeprecated()}">
-	    <td class="pane-header" style="width:2em">LineNumber</td>
-	  </j:if>
-      <td class="pane-header" style="width:2em">ProblemId</td>
-      <td class="pane-header" style="width:2em">Severity</td>
-      <td class="pane-header" style="width:50%">Message</td>
-	  <j:if test="${!it.isKwinspectreportDeprecated()}">
-	    <td class="pane-header" style="width:2em">Category</td>
-	  </j:if>
-	  <td class="pane-header" style="width:2em">Code</td>
-	  <!--<td class="pane-header" style="width:2em">Date originated</td>-->
-	  <!--<td class="pane-header" style="width:2em">Date fixed</td>-->
-	  <td class="pane-header" style="width:2em">Method</td>
-	  <j:if test="${!it.isKwinspectreportDeprecated()}">
-		<td class="pane-header" style="width:50%">Last comment</td>
-	  </j:if>
-	  <td class="pane-header" style="width:2em">State</td>
-	  <td class="pane-header" style="width:2em">Status</td>
-    </tr>
-    <tbody>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:g="/jelly/klocwork">
+    <st:header name="Content-Type" value="text/html;charset=UTF-8"/>
+    <table class="pane sortable" id="files">
+        <tr>
+            <td class="pane-header">Filename</td>
+            <j:if test="${!it.isKwinspectreportDeprecated()}">
+                <td class="pane-header" style="width:2em">LineNumber</td>
+            </j:if>
+            <td class="pane-header" style="width:2em">ProblemId</td>
+            <td class="pane-header" style="width:2em">Severity</td>
+            <td class="pane-header" style="width:50%">Message</td>
+            <j:if test="${!it.isKwinspectreportDeprecated()}">
+                <td class="pane-header" style="width:2em">Category</td>
+            </j:if>
+            <td class="pane-header" style="width:2em">Code</td>
+            <!--<td class="pane-header" style="width:2em">Date originated</td>-->
+            <!--<td class="pane-header" style="width:2em">Date fixed</td>-->
+            <td class="pane-header" style="width:2em">Method</td>
+            <j:if test="${!it.isKwinspectreportDeprecated()}">
+                <td class="pane-header" style="width:50%">Last comment</td>
+            </j:if>
+            <td class="pane-header" style="width:2em">State</td>
+            <td class="pane-header" style="width:2em">Status</td>
+        </tr>
+        <tbody>
 
-        <j:forEach var="elt" items="${it.kloSourceContainer.internalMap.values()}">    
-            <j:set var="kloFile" value="${elt.kloFile}"/>
-            <tr>
-              <td class="pane">
-                <j:if test="${elt.isSourceIgnored() || it.isKwinspectreportDeprecated()}">
-                     ${kloFile.fileNameOnly}
-                </j:if>
-                <j:if test="${not elt.isSourceIgnored()}">
-				  <j:if test="${!it.isKwinspectreportDeprecated()}">
-                      <a href="source.${kloFile.key}?#${kloFile.line}">${kloFile.fileNameOnly}</a>
-				  </j:if>
-                </j:if>
-
-
-              </td>
-			  <j:if test="${!it.isKwinspectreportDeprecated()}">
-                <g:format value="${kloFile.line}" />
-			  </j:if>
-	          <g:format value="${kloFile.problemID}" />
-	          <g:format value="${kloFile.severity}" />
-			  <g:format value="${kloFile.message}"/>
-			  <j:if test="${!it.isKwinspectreportDeprecated()}">
-			    <g:format value="${kloFile.category}" />
-			  </j:if>
-			  <g:format value="${kloFile.code}" />
-			  <!--<g:format value="${kloFile.dateOriginated}" />-->
-			  <!--<g:format value="${kloFile.dateFixed}" />-->
-			  <g:format value="${kloFile.method}" />
-			  <j:if test="${!it.isKwinspectreportDeprecated()}">
-			    <g:format value="${kloFile.comment}"/>
-			  </j:if>
-			  <g:format value="${kloFile.state}"/>
-			  <g:format value="${kloFile.citingStatus}" />
-            </tr>
-        </j:forEach>
+            <j:forEach var="elt" items="${it.kloSourceContainer.internalMap.values()}">
+                <j:set var="kloFile" value="${elt.kloFile}"/>
+                <tr>
+                    <td class="pane">
+                        <j:if test="${elt.isSourceIgnored() || it.isKwinspectreportDeprecated()}">
+                            ${kloFile.fileNameOnly}
+                        </j:if>
+                        <j:if test="${not elt.isSourceIgnored()}">
+                            <j:if test="${!it.isKwinspectreportDeprecated()}">
+                                <a href="source.${kloFile.key}?#${kloFile.line}">${kloFile.fileNameOnly}</a>
+                            </j:if>
+                        </j:if>
 
 
+                    </td>
+                    <j:if test="${!it.isKwinspectreportDeprecated()}">
+                        <g:format value="${kloFile.line}"/>
+                    </j:if>
+                    <g:format value="${kloFile.problemID}"/>
+                    <g:format value="${kloFile.severity}"/>
+                    <g:format value="${kloFile.message}"/>
+                    <j:if test="${!it.isKwinspectreportDeprecated()}">
+                        <g:format value="${kloFile.category}"/>
+                    </j:if>
+                    <g:format value="${kloFile.code}"/>
+                    <!--<g:format value="${kloFile.dateOriginated}" />-->
+                    <!--<g:format value="${kloFile.dateFixed}" />-->
+                    <g:format value="${kloFile.method}"/>
+                    <j:if test="${!it.isKwinspectreportDeprecated()}">
+                        <g:format value="${kloFile.comment}"/>
+                    </j:if>
+                    <g:format value="${kloFile.state}"/>
+                    <g:format value="${kloFile.citingStatus}"/>
+                </tr>
+            </j:forEach>
 
-    </tbody>    
-  </table>
+        </tbody>
+    </table>
 </j:jelly>

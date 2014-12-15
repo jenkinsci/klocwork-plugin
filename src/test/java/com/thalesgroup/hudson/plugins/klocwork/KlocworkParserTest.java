@@ -33,9 +33,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 
 public class KlocworkParserTest {
@@ -71,11 +68,11 @@ public class KlocworkParserTest {
     //Reminder : in klocwork, the higher the severity is, the less important the error is
     private void analyzeFiles(String file, int nbHighSeverities, int nbLowSeverities) {
         try {
-			// Class thisClass = this.getClass();
-			// URL url = thisClass.getResource(file); // returns null....
-			// URI uri = url.toURI();
-			// File reportFile = new File(uri);
-			File reportFile = new File(file);
+            // Class thisClass = this.getClass();
+            // URL url = thisClass.getResource(file); // returns null....
+            // URI uri = url.toURI();
+            // File reportFile = new File(uri);
+            File reportFile = new File(file);
             KloReport report = kloParser.parse(reportFile);
             List<KloFile> highSeverities = report.getHighSeverities();
             List<KloFile> lowSeverities = report.getLowSeverities();
@@ -91,7 +88,7 @@ public class KlocworkParserTest {
         } catch (IOException e) {
             e.printStackTrace();
         } //catch (URISyntaxException e) {
-            // e.printStackTrace();
+        // e.printStackTrace();
         // }
     }
 
