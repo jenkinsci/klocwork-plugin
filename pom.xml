@@ -10,7 +10,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.16.2</version>
+    <version>1.16.3-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -225,7 +225,7 @@
     <scm>
         <connection>scm:git:git@github.com:cittools/klocwork-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:cittools/klocwork-plugin.git</developerConnection>
-      <tag>klocwork-1.16.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <repositories>
