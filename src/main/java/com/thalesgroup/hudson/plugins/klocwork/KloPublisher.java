@@ -98,7 +98,7 @@ public class KloPublisher extends Recorder implements Serializable {
         }
 
 
-        if (kloConfig.getWebAPI().getUseWebAPI()) {
+        if (kloConfig.getWebAPI()!=null && kloConfig.getWebAPI().getUseWebAPI()) {
             String queryEncrypted = kloConfig.getWebAPI().getwebAPIQuery();
             rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(kloConfig.getHost(),
                     kloConfig.getPort(),
