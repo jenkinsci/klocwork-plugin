@@ -38,7 +38,7 @@ public class KloParseErrorsLog implements Action {
 
     private AbstractBuild<?, ?> owner;
 
-    private FilePath kloTables;
+    private transient FilePath kloTables;
 
     public KloParseErrorsLog(AbstractBuild<?, ?> owner) {
         this.owner = owner;
