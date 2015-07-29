@@ -23,7 +23,9 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
+import hudson.FilePath;
 import hudson.model.BuildListener;
+import hudson.remoting.VirtualChannel;
 import org.emenda.kwjlib.KWJSONRecord;
 import org.emenda.kwjlib.KWWebAPIService;
 import org.w3c.dom.Document;
@@ -32,14 +34,13 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * KloXMLGenerator uses the kwjlib library to connect to the Klocwork server
@@ -50,7 +51,7 @@ import java.io.IOException;
  */
 public class KloXMLGenerator {
 
-    public static int GenerateXMLFromIssues(String a_host, String a_port,
+    public static int GenerateXMLFromIssues(VirtualChannel channel, String a_host, String a_port,
                                             boolean useSSL,
                                             String a_projectname, String a_filename, BuildListener listener, String a_query) {
         KWWebAPIService KWservice = new KWWebAPIService(a_host, a_port, useSSL);
@@ -163,21 +164,14 @@ public class KloXMLGenerator {
                     listener.getLogger().println("Error returned by kwjlib: " + KWWebAPIService.getError());
                 }
 
-                // write the content into xml file
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer();
-                DOMSource source = new DOMSource(doc);
-                //Check that we can create the file, then output the xml to it
-                File outputFile = new File(a_filename);
-                boolean success = outputFile.exists() ? true : outputFile.createNewFile();
-                if (success && outputFile.canWrite()) {
-                    FileOutputStream filestream = new FileOutputStream(outputFile);
-                    StreamResult result = new StreamResult(filestream);
-                    transformer.transform(source, result);
-                } else {
-                    listener.getLogger().println("ERROR while generating XML. Could not open file for writing: " + a_filename);
-                }
-
+                // write the content into xml file (possibly on remote host)
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                Source xmlSource = new DOMSource(doc);
+                Result outputTarget = new StreamResult(outputStream);
+                TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+                InputStream is = new ByteArrayInputStream(outputStream.toByteArray());
+                FilePath outputFile = new FilePath(channel, a_filename);
+                outputFile.copyFrom(is);
             } catch (ParserConfigurationException pce) {
                 listener.getLogger().println("ERROR while generating XML - ParserConfigurationException: " +
                         pce.getMessage());
@@ -190,17 +184,31 @@ public class KloXMLGenerator {
                 listener.getLogger().println("ERROR while generating XML - IOException:"
                         + ioe.getMessage());
                 return 1;
+            } catch (InterruptedException ie) {
+                listener.getLogger().println("ERROR while generating XML - InterruptedException:"
+                        + ie.getMessage());
+                return 1;
             }
         } else {
             listener.getLogger().println("Failed to connect to web API. Error message: " + KWservice.getError());
             listener.getLogger().println("Failed to connect to web API. Last request: " + KWservice.getLastRequest());
             return 1;
         }
-        File outputFile = new File(a_filename);
-        if (outputFile.exists() && outputFile.length() > 0)
-            listener.getLogger().println("Creation of XML file complete. Closing connection to Web API.");
-        else
-            listener.getLogger().println("Creation of XML file failed. You may have to run the kwauth command on your machine.");
+        FilePath outputFile = new FilePath(channel, a_filename);
+        try {
+            if (outputFile.exists() && outputFile.length() > 0)
+                listener.getLogger().println("Creation of XML file complete. Closing connection to Web API.");
+            else
+                listener.getLogger().println("Creation of XML file failed. You may have to run the kwauth command on your machine (slave host in a master/slave configuration).");
+        } catch (IOException ioe) {
+            listener.getLogger().println("ERROR while generating XML - IOException:"
+                    + ioe.getMessage());
+            return 1;
+        } catch (InterruptedException ie) {
+            listener.getLogger().println("ERROR while generating XML - InterruptedException:"
+                    + ie.getMessage());
+            return 1;
+        }
         return 0;
     }
 }
