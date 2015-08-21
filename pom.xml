@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>klocwork</artifactId>
-    <packaging>hpi</packaging>
+    <packaging>jar</packaging>
     <name>Jenkins Klocwork Plug-in</name>
     <version>1.16.4-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
@@ -226,7 +226,7 @@
         <connection>scm:git:git@github.com:cittools/klocwork-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:cittools/klocwork-plugin.git</developerConnection>
         <tag>HEAD</tag>
-  </scm>
+    </scm>
 
     <repositories>
         <repository>
