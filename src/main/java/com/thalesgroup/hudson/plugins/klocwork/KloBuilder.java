@@ -31,6 +31,8 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.matrix.Combination;
+import hudson.matrix.MatrixConfiguration;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
@@ -209,7 +211,10 @@ public class KloBuilder extends Builder {
         }
 
         //AM : changing lastBuildNo
-        String lastBuildNo = "build_ci_" + build.getId();
+		//AS : Support for DynamicAxis Plugin
+		MatrixConfiguration matrix = (MatrixConfiguration) build.getProject();
+        Combination currentAxes = matrix.getCombination();
+        String lastBuildNo = "build_ci_" + build.getId() + "_" + currentAxes.digest();
         lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
 
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
