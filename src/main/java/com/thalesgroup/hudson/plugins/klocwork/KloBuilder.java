@@ -211,10 +211,14 @@ public class KloBuilder extends Builder {
         }
 
         //AM : changing lastBuildNo
-		//AS : Support for DynamicAxis Plugin
-		MatrixConfiguration matrix = (MatrixConfiguration) build.getProject();
-        Combination currentAxes = matrix.getCombination();
-        String lastBuildNo = "build_ci_" + build.getId() + "_" + currentAxes.digest();
+        //AS : Support for DynamicAxis Plugin
+		String suffix = "";
+        if (build.getProject().getClass().getName().equals(MatrixConfiguration.class.getName())) {
+            MatrixConfiguration matrix = (MatrixConfiguration) build.getProject();
+            Combination currentAxes = matrix.getCombination();
+            suffix = "_" + currentAxes.digest();
+        }
+        String lastBuildNo = "build_ci_" + build.getId() + suffix;
         lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
 
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
