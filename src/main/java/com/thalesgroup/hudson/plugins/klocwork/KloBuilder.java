@@ -51,6 +51,7 @@ import java.util.logging.Logger;
 public class KloBuilder extends Builder {
 
     private String projectName;
+    private String convertedProjectName;
     private String kloName;
 
     private int buildUsing;
@@ -212,7 +213,7 @@ public class KloBuilder extends Builder {
 
         //AM : changing lastBuildNo
         //AS : Support for DynamicAxis Plugin
-		String suffix = "";
+        String suffix = "";
         if (build.getProject().getClass().getName().equals(MatrixConfiguration.class.getName())) {
             MatrixConfiguration matrix = (MatrixConfiguration) build.getProject();
             Combination currentAxes = matrix.getCombination();
@@ -258,7 +259,10 @@ public class KloBuilder extends Builder {
             }//for
         }//else
 
-        argsKwbuildproject.add("--project", UserAxisConverter.AxeConverter(build, projectName), "--tables-directory",
+        // AS : Enforce 64 byte limit for project name.
+        convertedProjectName = UserAxisConverter.AxeConverter(build, projectName);
+        convertedProjectName = convertedProjectName.substring(0, Math.min(convertedProjectName.length(), 64));
+        argsKwbuildproject.add("--project", convertedProjectName, "--tables-directory",
                 /*proj.getModuleRoot()*/ kloTables, "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                 (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
                 "--license-host", currentInstall.getLicenseHost(), "--license-port",
@@ -302,7 +306,8 @@ public class KloBuilder extends Builder {
         argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                 (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
                 "load",
-                UserAxisConverter.AxeConverter(build, projectName),/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
+                // AS : Enforce 64 byte limit for project name.
+                convertedProjectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
         //Building process
         ArgumentListBuilder argsBuild = new ArgumentListBuilder();
@@ -375,7 +380,8 @@ public class KloBuilder extends Builder {
 
             //AM : changing the way to add the arguments
             argsKwinspectreport.add(execKwinspectreport);
-            argsKwinspectreport.add("--project", UserAxisConverter.AxeConverter(build, projectName), "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
+            // AS : Enforce 64 byte limit for project name.
+            argsKwinspectreport.add("--project", convertedProjectName, "--build", lastBuildNo, "--xml",/*proj.getModuleRoot()*/build.getWorkspace().getRemote() +
                             FS +/*"kloXML"+FS+build.getId()+".xml"*/"klocwork_result.xml", "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                     (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
                     "--license-host", currentInstall.getLicenseHost(), "--license-port", currentInstall.getLicensePort()
@@ -396,7 +402,8 @@ public class KloBuilder extends Builder {
 
 
             // Finally store currentInstall and projectName for publisher to use
-            build.addAction(new KloBuildInfo(build, currentInstall, UserAxisConverter.AxeConverter(build, projectName)));
+            // AS : Enforce 64 byte limit for project name.
+            build.addAction(new KloBuildInfo(build, currentInstall, convertedProjectName));
 
             //New in 1.15: allow user to delete the klotable after all analysis.
             if (deleteTable && new File(kloTables).exists()) {
