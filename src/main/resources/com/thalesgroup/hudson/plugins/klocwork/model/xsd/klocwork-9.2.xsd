@@ -55,6 +55,7 @@
             <xs:enumeration value="Fix in Later Release"/>
             <xs:enumeration value="Defer"/>
             <xs:enumeration value="Filter"/>
+			<xs:enumeration value="Multiple"/>
         </xs:restriction>
     </xs:simpleType>
 
