@@ -1,27 +1,23 @@
-/*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Aravindan Mahendran                                                 *
- *                                                                              *
- * Permission is hereby granted, free of charge, to any person obtaining a copy *
- * of this software and associated documentation files (the "Software"), to deal*
- * in the Software without restriction, including without limitation the rights *
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
- * copies of the Software, and to permit persons to whom the Software is        *
- * furnished to do so, subject to the following conditions:                     *
- *                                                                              *
- * The above copyright notice and this permission notice shall be included in   *
- * all copies or substantial portions of the Software.                          *
- *                                                                              *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
- * THE SOFTWARE.                                                                *
- *******************************************************************************/
-
-
+/**
+ * *****************************************************************************
+ * Copyright (c) 2011 Thales Corporate Services SAS * Author : Aravindan
+ * Mahendran * * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy * of this software and associated documentation files (the
+ * "Software"), to deal* in the Software without restriction, including without
+ * limitation the rights * to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell * copies of the Software, and to permit persons to
+ * whom the Software is * furnished to do so, subject to the following
+ * conditions: * * The above copyright notice and this permission notice shall
+ * be included in * all copies or substantial portions of the Software. * * THE
+ * SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, *
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE *
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER *
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM,* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN * THE SOFTWARE. *
+ * *****************************************************************************
+ */
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
@@ -30,6 +26,7 @@ import com.thalesgroup.hudson.plugins.klocwork.model.KloSourceContainer;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloWorkspaceFile;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
 import com.thalesgroup.hudson.plugins.klocwork.util.*;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -39,32 +36,22 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
 import hudson.tasks.Recorder;
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.kohsuke.stapler.DataBoundConstructor;
 
 //AM : KloPublisher now extends Recorder instead of Publisher
 //public class KloPublisher extends Publisher implements Serializable {
 public class KloPublisher extends Recorder implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-
     private KloConfig kloConfig;
-
-
-    /*
-    @Override
-    public Action getProjectAction(AbstractProject<?, ?> project)
-    {
-        return new KloProjectAction(project, kloConfig);
-    }*/
 
     @Override
     public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
@@ -88,6 +75,118 @@ public class KloPublisher extends Recorder implements Serializable {
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException, IOException {
 
+        String localHost = kloConfig.getHost();
+        String localPort = kloConfig.getPort();
+        String localProject = kloConfig.getProject();
+        String localUser = kloConfig.getUser();
+        if (localHost == null) {
+            localHost = "";
+        }
+        if (localPort == null) {
+            localPort = "";
+        }
+        if (localProject == null) {
+            localProject = "";
+        }
+        if (localUser == null) {
+            localUser = "";
+        }
+
+        EnvVars env = build.getEnvironment(listener);
+        if (env != null) {
+            Iterator it = env.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                //listener.getLogger().println(pairs.getKey() + " = " + pairs.getValue());
+                if (localHost.contains("%" + pairs.getKey().toString() + "%")) {
+                    localHost = localHost.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localPort.contains("%" + pairs.getKey().toString() + "%")) {
+                    localPort = localPort.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localProject.contains("%" + pairs.getKey().toString() + "%")) {
+                    localProject = localProject.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localUser.contains("%" + pairs.getKey().toString() + "%")) {
+                    localUser = localUser.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+
+                if (localHost.contains("${" + pairs.getKey().toString() + "}")) {
+                    localHost = localHost.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localPort.contains("${" + pairs.getKey().toString() + "}")) {
+                    localPort = localPort.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localProject.contains("${" + pairs.getKey().toString() + "}")) {
+                    localProject = localProject.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localUser.contains("${" + pairs.getKey().toString() + "}")) {
+                    localUser = localUser.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+
+                if (localHost.contains("$" + pairs.getKey().toString())) {
+                    localHost = localHost.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localPort.contains("$" + pairs.getKey().toString())) {
+                    localPort = localPort.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localProject.contains("$" + pairs.getKey().toString())) {
+                    localProject = localProject.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localUser.contains("$" + pairs.getKey().toString())) {
+                    localUser = localUser.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+        }
+
+        Map<String, String> matrixBuildVars = build.getBuildVariables();
+        if (matrixBuildVars != null) {
+            Iterator it = matrixBuildVars.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                //listener.getLogger().println(pairs.getKey() + " = " + pairs.getValue());
+                if (localHost.contains("%" + pairs.getKey().toString() + "%")) {
+                    localHost = localHost.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localPort.contains("%" + pairs.getKey().toString() + "%")) {
+                    localPort = localPort.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localProject.contains("%" + pairs.getKey().toString() + "%")) {
+                    localProject = localProject.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (localUser.contains("%" + pairs.getKey().toString() + "%")) {
+                    localUser = localUser.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+
+                if (localHost.contains("${" + pairs.getKey().toString() + "}")) {
+                    localHost = localHost.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localPort.contains("${" + pairs.getKey().toString() + "}")) {
+                    localPort = localPort.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localProject.contains("${" + pairs.getKey().toString() + "}")) {
+                    localProject = localProject.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (localUser.contains("${" + pairs.getKey().toString() + "}")) {
+                    localUser = localUser.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+
+                if (localHost.contains("$" + pairs.getKey().toString())) {
+                    localHost = localHost.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localPort.contains("$" + pairs.getKey().toString())) {
+                    localPort = localPort.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localProject.contains("$" + pairs.getKey().toString())) {
+                    localProject = localProject.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                if (localUser.contains("$" + pairs.getKey().toString())) {
+                    localUser = localUser.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+        }
 
         int rKwInspectreport = 0;
         String FS;
@@ -97,17 +196,51 @@ public class KloPublisher extends Recorder implements Serializable {
             FS = "/";
         }
 
-
-        if (kloConfig.getWebAPI()!=null && kloConfig.getWebAPI().getUseWebAPI()) {
+        if (kloConfig.getWebAPI().getUseWebAPI()) {
             String queryEncrypted = kloConfig.getWebAPI().getwebAPIQuery();
-			rKwInspectreport = KloXMLGenerator.GenerateXMLFromIssues(launcher.getChannel(),
-					kloConfig.getHost(),
-                    kloConfig.getPort(),
-                    kloConfig.getUseSSL(),
-                    UserAxisConverter.AxeConverter(build, kloConfig.getProject()),
-                    build.getWorkspace().getRemote() + FS + "klocwork_result.xml",
-                    listener,
-                    queryEncrypted.replace("+", "%2B"));
+            matrixBuildVars = build.getBuildVariables();
+            if (matrixBuildVars != null) {
+                Iterator it = matrixBuildVars.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pairs = (Map.Entry) it.next();
+                    if (queryEncrypted.contains("%" + pairs.getKey().toString() + "%")) {
+                        queryEncrypted = queryEncrypted.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (queryEncrypted.contains("${" + pairs.getKey().toString() + "}")) {
+                        queryEncrypted = queryEncrypted.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (queryEncrypted.contains("$" + pairs.getKey().toString())) {
+                        queryEncrypted = queryEncrypted.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
+            }
+            if (env != null) {
+                Iterator it = env.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry pairs = (Map.Entry) it.next();
+                    if (queryEncrypted.contains("%" + pairs.getKey().toString() + "%")) {
+                        queryEncrypted = queryEncrypted.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (queryEncrypted.contains("${" + pairs.getKey().toString() + "}")) {
+                        queryEncrypted = queryEncrypted.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (queryEncrypted.contains("$" + pairs.getKey().toString())) {
+                        queryEncrypted = queryEncrypted.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
+                    it.remove(); // avoids a ConcurrentModificationException
+                }
+            }
+            // IPXX: Use new callable class instance to run on agent
+            String rtnGenerateXMLFromIssues = launcher.getChannel().call(
+                    new KloXMLGenerator.callGenerateXMLFromIssues(localHost,
+                            localPort,
+                            kloConfig.getUseSSL(),
+                            UserAxisConverter.AxeConverter(build, localProject),
+                            build.getWorkspace().getRemote() + FS + "klocwork_result.xml",
+                            listener,
+                            queryEncrypted,
+                            localUser));
         }
 
         if (this.canContinue(build.getResult())) {
@@ -117,11 +250,12 @@ public class KloPublisher extends Recorder implements Serializable {
             KloSourceContainer kloSourceContainer = null;
 
             //AL : Results always available due to kwjlib update
-            KloParserResult parser = new KloParserResult(listener, kloConfig.getKlocworkReportPattern());
+            KloParserResult parser = new KloParserResult(listener, kloConfig);
             try {
                 kloReport = build.getWorkspace().act(parser);
             } catch (Exception e) {
                 listener.getLogger().println("Error on klocwork analysis: " + e);
+                e.printStackTrace(listener.getLogger());
                 build.setResult(Result.FAILURE);
                 return false;
             }
@@ -131,7 +265,7 @@ public class KloPublisher extends Recorder implements Serializable {
                 return false;
             }
 
-            kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
+//            kloSourceContainer = new KloSourceContainer(listener, build.getWorkspace(), kloReport.getAllSeverities());
 
             result = new KloResult(kloReport, kloSourceContainer, build);
 
@@ -143,70 +277,86 @@ public class KloPublisher extends Recorder implements Serializable {
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
             }
+
             build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
 
-
             build.addAction(new KloBuildAction(build, result, kloConfig));
-
 
             // Check config whether to create links for Klocwork Review, parse_errors.log
             // and build.log
             if (kloConfig.getLinkReview()) {
-                String host = null, port = null, project = null;
+                boolean ssl = kloConfig.getUseSSL();
                 //AL : Results always available due to kwjlib update
-                if (kloReport.getNumberTotal() != 0) {
-                    if (kloReport.getAllSeverities().get(0) != null) {
-                        String url = kloReport.getAllSeverities().get(0).get("url");
-                        if (url != null) {
-                            Pattern p = Pattern.compile("^http://(.*?):(\\d*?)/.*?=(.*?),.*$");
-                            Matcher m = p.matcher(url);
-                            if (m.matches()) {
-                                host = m.group(1);
-                                port = m.group(2);
-                                project = m.group(3);
-                            }
-                        }
-                    }
-                }
-
-                build.addAction(new KloBuildReviewLink(build, host, port, project));
+                build.addAction(new KloBuildReviewLink(build, localHost, localPort, localProject, ssl));
             }
 
-
-            if (kloConfig.getLinkBuildLog()) {
-                //AL : Results always available due to kwjlib update
-                build.addAction(new KloBuildLog(build));
-            }
-
-            if (kloConfig.getLinkParseLog()) {
-                //AL : Results always available due to kwjlib update
-                build.addAction(new KloParseErrorsLog(build));
-            }
-
+//            if (kloConfig.getLinkBuildLog()) {
+//                //AL : Results always available due to kwjlib update
+//                build.addAction(new KloBuildLog(build));
+//            }
+//
+//            if (kloConfig.getLinkParseLog()) {
+//                //AL : Results always available due to kwjlib update
+//                build.addAction(new KloParseErrorsLog(build));
+//            }
             //AL : Results always available due to kwjlib update
-            if (build.getWorkspace().isRemote()) {
-                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
-            }
+//            if (build.getWorkspace().isRemote()) {
+//                copyFilesFromSlaveToMaster(build.getRootDir(), launcher.getChannel(), kloSourceContainer.getInternalMap().values());
+//            }
 
             listener.getLogger().println("End of the klocwork analysis.");
 
+            if (kloConfig.getFailNew() != null && kloConfig.getFailNew().getUseFailNew() && kloReport.getNeww() > 0) {
+                if (kloConfig.getFailNew().getCritical() && kloReport.getNumCrit() > 0) {
+                    listener.getLogger().println("[Error]: Klocwork build contains New issues of severity 'Critical', failed build");
+                    listener.getLogger().println("\tNew Critical issues: " + kloReport.getNumCrit());
+                    listener.getLogger().println("\tNew Error issues: " + kloReport.getNumErr());
+                    listener.getLogger().println("\tNew Warning issues: " + kloReport.getNumWarn());
+                    listener.getLogger().println("\tNew Review issues: " + kloReport.getNumRev());
+                    build.setResult(Result.FAILURE);
+                    return false;
+                } else if (kloConfig.getFailNew().getError() && kloReport.getNumErr() > 0) {
+                    listener.getLogger().println("[Error]: Klocwork build contains New issues of severity 'Error', failed build");
+                    listener.getLogger().println("\tNew Critical issues: " + kloReport.getNumCrit());
+                    listener.getLogger().println("\tNew Error issues: " + kloReport.getNumErr());
+                    listener.getLogger().println("\tNew Warning issues: " + kloReport.getNumWarn());
+                    listener.getLogger().println("\tNew Review issues: " + kloReport.getNumRev());
+                    build.setResult(Result.FAILURE);
+                    return false;
+                } else if (kloConfig.getFailNew().getWarning() && kloReport.getNumWarn() > 0) {
+                    listener.getLogger().println("[Error]: Klocwork build contains New issues of severity 'Warning', failed build");
+                    listener.getLogger().println("\tNew Critical issues: " + kloReport.getNumCrit());
+                    listener.getLogger().println("\tNew Error issues: " + kloReport.getNumErr());
+                    listener.getLogger().println("\tNew Warning issues: " + kloReport.getNumWarn());
+                    listener.getLogger().println("\tNew Review issues: " + kloReport.getNumRev());
+                    build.setResult(Result.FAILURE);
+                    return false;
+                } else if (kloConfig.getFailNew().getReview() && kloReport.getNumRev() > 0) {
+                    listener.getLogger().println("[Error]: Klocwork build contains New issues of severity 'Review', failed build");
+                    listener.getLogger().println("\tNew Critical issues: " + kloReport.getNumCrit());
+                    listener.getLogger().println("\tNew Error issues: " + kloReport.getNumErr());
+                    listener.getLogger().println("\tNew Warning issues: " + kloReport.getNumWarn());
+                    listener.getLogger().println("\tNew Review issues: " + kloReport.getNumRev());
+                    build.setResult(Result.FAILURE);
+                    return false;
+                }
+            }
         }
         return true;
     }
 
-
     /**
      * Copies all the source files from slave to master for a remote build.
      *
-     * @param rootDir      directory to store the copied files in
-     * @param channel      channel to get the files from
+     * @param rootDir directory to store the copied files in
+     * @param channel channel to get the files from
      * @param sourcesFiles the sources files to be copied
-     * @throws IOException           if the files could not be written
+     * @throws IOException if the files could not be written
      * @throws FileNotFoundException if the files could not be written
-     * @throws InterruptedException  if the user cancels the processing
+     * @throws InterruptedException if the user cancels the processing
      */
     private void copyFilesFromSlaveToMaster(final File rootDir,
-                                            final VirtualChannel channel, final Collection<KloWorkspaceFile> sourcesFiles)
+            final VirtualChannel channel, final Collection<KloWorkspaceFile> sourcesFiles)
             throws IOException, InterruptedException {
 
         File directory = new File(rootDir, KloWorkspaceFile.WORKSPACE_FILES);
@@ -232,7 +382,6 @@ public class KloPublisher extends Recorder implements Serializable {
         }
     }
 
-
     @Override
     public KloPublisher.KloDescriptor getDescriptor() {
         return DESCRIPTOR;
@@ -252,7 +401,6 @@ public class KloPublisher extends Recorder implements Serializable {
             super(KloPublisher.class);
             load();
         }
-
 
         @Override
         public String getDisplayName() {
@@ -290,6 +438,5 @@ public class KloPublisher extends Recorder implements Serializable {
     public void setKloConfig(KloConfig kloConfig) {
         this.kloConfig = kloConfig;
     }
-
 
 }

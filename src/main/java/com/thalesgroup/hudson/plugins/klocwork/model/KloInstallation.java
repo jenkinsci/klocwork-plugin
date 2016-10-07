@@ -41,7 +41,7 @@ public class KloInstallation {
 
     @DataBoundConstructor
     public KloInstallation(String name, String executablePath,
-                           String projectHost, String projectPort,
+                           String projectHost, String projectPort, 
                            boolean useSSL, //New in v1.15
                            String licenseHost, String licensePort) {
 
@@ -69,7 +69,7 @@ public class KloInstallation {
     public String getProjectPort() {
         return projectPort;
     }
-
+    
     public boolean getUseSSL() {
         return useSSL;
     }

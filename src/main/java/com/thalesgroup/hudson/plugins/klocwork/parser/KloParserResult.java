@@ -23,6 +23,7 @@
 
 package com.thalesgroup.hudson.plugins.klocwork.parser;
 
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import hudson.FilePath;
 import hudson.Util;
@@ -41,21 +42,34 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
     private final BuildListener listener;
 
     private final String klocworkReportPattern;
+    private double newIssues;
+    private int numCrit = 0;
+    private int numErr = 0;
+    private int numWarn = 0;
+    private int numRev = 0;
+    private int totalNumCrit = 0;
+    private int totalNumErr = 0;
+    private int totalNumWarn = 0;
+    private int totalNumRev = 0;
+    private boolean kw96up = true;
 
     public static final String DELAULT_REPORT_MAVEN = "klocwork_result.xml";
 
-    public KloParserResult(final BuildListener listener, String klocworkReportPattern) {
+    public KloParserResult(final BuildListener listener, KloConfig kloConfig) {
 
-        if (klocworkReportPattern == null) {
-            klocworkReportPattern = DELAULT_REPORT_MAVEN;
+        String kwRepPattern = kloConfig.getKlocworkReportPattern();
+        
+        if (kwRepPattern == null) {
+            kwRepPattern = DELAULT_REPORT_MAVEN;
         }
 
-        if (klocworkReportPattern.trim().length() == 0) {
-            klocworkReportPattern = DELAULT_REPORT_MAVEN;
+        if (kwRepPattern.trim().length() == 0) {
+            kwRepPattern = DELAULT_REPORT_MAVEN;
         }
 
+        this.kw96up = kloConfig.getWebAPI().getUseWebAPI();
         this.listener = listener;
-        this.klocworkReportPattern = klocworkReportPattern;
+        this.klocworkReportPattern = kwRepPattern;
     }
 
     public KloReport invoke(java.io.File basedir, VirtualChannel channel) throws IOException {
@@ -75,27 +89,45 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
             listener.getLogger().println("Processing " + kloReportFiles.length + " files with the pattern '" + klocworkReportPattern + "'.");
 
             for (String kloReportFileName : kloReportFiles) {
-                KloReport kloReport = new KloParser().parse(new File(basedir, kloReportFileName));
-
+                KloReport kloReport = new KloParser().parse(new File(basedir, kloReportFileName), listener, kw96up);
                 mergeReport(kloReportResult, kloReport);
             }
+            
         } catch (Exception e) {
             listener.getLogger().println("Parsing has been canceled. " + e.getMessage() + " " + e.getLocalizedMessage());
             return null;
         }
+        newIssues = kloReportResult.getNeww();
+        numCrit = kloReportResult.getNumCrit();
+        numErr = kloReportResult.getNumErr();
+        numWarn = kloReportResult.getNumWarn();
+        numRev = kloReportResult.getNumRev();
+        
+        totalNumCrit = kloReportResult.getTotalNumCrit();
+        totalNumErr = kloReportResult.getTotalNumErr();
+        totalNumWarn = kloReportResult.getTotalNumWarn();
+        totalNumRev = kloReportResult.getTotalNumRev();
+        
         return kloReportResult;
     }
 
 
     private static void mergeReport(KloReport kloReportResult, KloReport kloReport) {
-
-        kloReportResult.getHighSeverities().addAll(kloReport.getHighSeverities());
-        kloReportResult.getLowSeverities().addAll(kloReport.getLowSeverities());
-        kloReportResult.getAllSeverities().addAll(kloReport.getAllSeverities());
+        kloReportResult.setHighSeverities(kloReport.getHighSeverities()+kloReportResult.getHighSeverities());
+        kloReportResult.setLowSeverities(kloReport.getLowSeverities()+kloReportResult.getLowSeverities());
+        kloReportResult.setErrors(kloReport.getAllSeverities() + kloReportResult.getAllSeverities());
         kloReportResult.setNeww(kloReportResult.getNeww() + kloReport.getNeww());
+        kloReportResult.setNumCrit(kloReportResult.getNumCrit() + kloReport.getNumCrit());
+        kloReportResult.setNumErr(kloReportResult.getNumErr() + kloReport.getNumErr());
+        kloReportResult.setNumWarn(kloReportResult.getNumWarn() + kloReport.getNumWarn());
+        kloReportResult.setNumRev(kloReportResult.getNumRev() + kloReport.getNumRev());
         kloReportResult.setFixed(kloReportResult.getFixed() + kloReport.getFixed());
         kloReportResult.setExisting(kloReportResult.getExisting() + kloReport.getExisting());
         kloReportResult.setKloVersion(kloReport.getKloVersion());
+        kloReportResult.setTotalNumCrit(kloReportResult.getTotalNumCrit() + kloReport.getTotalNumCrit());
+        kloReportResult.setTotalNumErr(kloReportResult.getTotalNumErr() + kloReport.getTotalNumErr());
+        kloReportResult.setTotalNumWarn(kloReportResult.getTotalNumWarn() + kloReport.getTotalNumWarn());
+        kloReportResult.setTotalNumRev(kloReportResult.getTotalNumRev() + kloReport.getTotalNumRev());
     }
 
     /**
@@ -111,8 +143,22 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         return kloFiles;
     }
 
+    public double getNewIssues() {
+        return newIssues;
+    }
     public String getKlocworkReportPattern() {
         return klocworkReportPattern;
     }
-
+    public int getNumCrit() {
+        return numCrit;
+    }
+    public int getNumErr() {
+        return numErr;
+    }
+    public int getNumWarn() {
+        return numWarn;
+    }
+    public int getNumRev() {
+        return numRev;
+    }
 }

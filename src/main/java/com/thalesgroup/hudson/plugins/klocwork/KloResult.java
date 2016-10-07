@@ -58,7 +58,7 @@ public class KloResult implements Serializable {
      * The Klocwork container with all source files
      */
     private KloSourceContainer kloSourceContainer;
-
+    
     private boolean kwinspectreportDeprecated;
 
     public KloResult(KloReport report, KloSourceContainer kloSourceContainer, AbstractBuild<?, ?> owner) {
@@ -141,12 +141,12 @@ public class KloResult implements Serializable {
      * @return the number of new errors
      */
     public int getNumberNewErrorsFromPreviousBuild() {
-        KloResult previousKloResult = getPreviousResult();
-        if (previousKloResult == null) {
+        if(this.report != null){
+            Double d = this.report.getNeww();
+            return d.intValue();
+        }
+        else{
             return 0;
-        } else {
-            int diff = this.report.getNumberTotal() - previousKloResult.getReport().getNumberTotal();
-            return (diff > 0) ? diff : 0;
         }
     }
 
@@ -169,25 +169,25 @@ public class KloResult implements Serializable {
         KloResult previousResult = this.getPreviousResult();
 
         if (kloConfig.getConfigSeverityEvaluation().isHighSeverity()) {
-            nbErrors = this.getReport().getHighSeverities().size();
+            nbErrors = this.getReport().getHighSeverities();
             if (previousResult != null) {
-                nbPreviousError = previousResult.getReport().getHighSeverities().size();
+                nbPreviousError = previousResult.getReport().getHighSeverities();
             }
         }
 
         if (kloConfig.getConfigSeverityEvaluation().isLowSeverity()) {
-            nbErrors = nbErrors + this.getReport().getLowSeverities().size();
+            nbErrors = nbErrors + this.getReport().getLowSeverities();
             if (previousResult != null) {
-                nbPreviousError = nbPreviousError + previousResult.getReport().getLowSeverities().size();
+                nbPreviousError = nbPreviousError + previousResult.getReport().getLowSeverities();
             }
         }
 
         if (checkNewError) {
-            if (previousResult != null) {
+            //if (previousResult != null) {
                 return nbErrors - nbPreviousError;
-            } else {
-                return 0;
-            }
+            //} else {
+            //    return 0;
+            //}
         } else {
             return nbErrors;
         }
@@ -224,7 +224,7 @@ public class KloResult implements Serializable {
     public KloSourceContainer getKloSourceContainer() {
         return kloSourceContainer;
     }
-
+    
     public boolean isKwinspectreportDeprecated() {
         // TODO: Improve maintainability of code by removing version-dependency here
         return report.getKloVersion().startsWith("9.6");

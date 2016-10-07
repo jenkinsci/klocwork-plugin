@@ -23,39 +23,33 @@
  *******************************************************************************/
  -->
 
-<j:jelly xmlns:j="jelly:core"
-         xmlns:f="/lib/form" xmlns:u="/util">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
 
     <j:set var="config" value="${instance.kloConfig}"/>
     <j:if test="${config == null}">
         <j:set var="config" value="${descriptor.config}"/>
-    </j:if>
-
+    </j:if>    
+	
     <f:rowSet name="config">
         <f:block>
             <table>
                 <tr>
                     <f:optionalBlock title="Klocwork v9.6 and later" name="webAPI"
-                                     field="webAPI" checked="${config.webAPI.useWebAPI}" default="true"
-                                     help="/plugin/klocwork/webAPI.html">
-                        <f:entry title="Query" help="/plugin/klocwork/webAPIQuery.html">
-                            <f:textbox name="webAPIQuery" value="${config.webAPI.webAPIQuery}"
-                                       default="status:Analyze,Fix -status:'Fix in'"/>
+                        field="webAPI" checked="${config.webAPI.useWebAPI}" default="true" help="/plugin/klocwork/webAPI.html">
+                        <f:entry title="Query" help="/plugin/klocwork/webAPIQuery.html" >
+                            <f:textbox name="webAPIQuery" value="${config.webAPI.webAPIQuery}" default="status:Analyze,Fix -status:'Fix in'"/>
                         </f:entry>
                     </f:optionalBlock>
-                </tr>
+                </tr>   
             </table>
         </f:block>
         <f:block>
-            <table>
-                <f:entry title="${%Klocwork report XMLs}"
-                         description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}"
-                         help="/plugin/klocwork/reportXML.html">
-                    <f:textbox name="klocworkReportPattern" value="${config.klocworkReportPattern}"/>
-                </f:entry>
-                <f:entry title="${%Publish Graphs}"
-                         description="Enter the number of Klocwork builds to report on the project trend graph and the interval."
-                         help="/plugin/klocwork/trendConfig.html">
+            <table>                            
+                <f:entry title="${%Klocwork report XMLs}"						description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}" help="/plugin/klocwork/reportXML.html" >
+                        <f:textbox name="klocworkReportPattern" value="${config.klocworkReportPattern}"/>
+                </f:entry>			
+                <f:entry title="${%Publish Graphs}" description="Enter the number of Klocwork builds to report on the project trend graph and the interval." help="/plugin/klocwork/trendConfig.html">
                     <table>
                         <tr>
                             <td>No. of Builds :</td>
@@ -91,48 +85,69 @@
                     </table>
                 </f:entry>
 
-                <f:entry help="/plugin/klocwork/graphs.html">
+                <f:entry help="/plugin/klocwork/graphs.html" >
                     <table>
                         <tr>
                             <td style="width:200px">
-                                <f:checkbox name="publishBuildGraph" checked="${config.publishBuildGraph}"
-                                            title="${%Publish Pie Chart}"/>
+                                    <f:checkbox name="publishBuildGraph" checked="${config.publishBuildGraph}" title="${%Publish Pie Chart}" />
                             </td>
                             <td style="width:200px">
-                                <f:checkbox name="publishProjectGraph" checked="${config.publishProjectGraph}"
-                                            title="${%Publish Trend Graph}"/>
+                                    <f:checkbox name="publishProjectGraph" checked="${config.publishProjectGraph}"
+                                                            title="${%Publish Trend Graph}" />
                             </td>
                         </tr>
                     </table>
                 </f:entry>
 
-                <f:advanced>
+            <f:advanced>
                     <u:thresholds id="klocwork"/>
-                </f:advanced>
+            </f:advanced>
 
-                <f:advanced>
+            <f:advanced>
                     <u:graphs id="klocwork"/>
-                </f:advanced>
+            </f:advanced>
 
 
-                <f:entry title="${%Host Name}" help="/plugin/klocwork/buildLink9.html">
+
+
+            <f:entry title="${%Host Name}" help="/plugin/klocwork/buildLink9.html">
                     <f:textbox name="host" value="${config.host}"/>
-                </f:entry>
+            </f:entry>
+				
+            <f:entry title="${%Port}">
+                <f:textbox name="port" value="${config.port}"/>
+            </f:entry>
+            
+            <f:entry title="">
+                <f:checkbox name="useSSL" checked="${config.useSSL}" title="${%Use SSL}"/>
+            </f:entry>
 
-                <f:entry title="${%Port}">
-                    <f:textbox name="port" value="${config.port}"/>
-                </f:entry>
-
-                <f:entry title="">
-                    <f:checkbox name="useSSL" checked="${config.useSSL}" title="${%Use SSL}"/>
-                </f:entry>
-
-                <f:entry title="${%Project Name}">
+            <f:entry title="${%Project Name}">
                     <f:textbox name="project" value="${config.project}"/>
-                </f:entry>
-            </table>
-        </f:block>
+            </f:entry>
 
+            <f:entry title="${%User}" help="/plugin/klocwork/help-username.html">
+                <f:textbox name="user" value="${config.user}"/>
+            </f:entry>
+
+            <f:optionalBlock title="Fail Jenkins job if new Klocwork issues exist of severity:" name="failNew"
+                        field="failNew" checked="${config.failNew.useFailNew}">
+                        <f:entry title="">
+                            <f:checkbox name="critical" checked="${config.failNew.critical}" title="${%Critical}"/>
+                        </f:entry>
+                        <f:entry title="">
+                            <f:checkbox name="error" checked="${config.failNew.error}" title="${%Error}"/>
+                        </f:entry>
+                        <f:entry title="">
+                            <f:checkbox name="warning" checked="${config.failNew.warning}" title="${%Warning}"/>
+                        </f:entry>
+                        <f:entry title="">
+                            <f:checkbox name="review" checked="${config.failNew.review}" title="${%Review}"/>
+                        </f:entry>
+            </f:optionalBlock>
+        </table>
+    </f:block>
+		
         <!--
         <f:entry title="${%Publish Klocwork Results}" help="/plugin/klocwork/resultsLink.html" >
             <table>
@@ -145,23 +160,36 @@
             </table>
         </f:entry>
         -->
-
-
-        <f:entry title="${%Create Links for}" help="/plugin/klocwork/buildLinks.html">
+  
+             
+     
+   
+        <f:entry title="${%Create Links for}" help="/plugin/klocwork/buildLinks.html" >
             <table>
                 <tr>
                     <td style="width:200px">
-                        <f:checkbox name="linkReview" checked="${config.linkReview}" title="${%Klocwork Review}"/>
+                        <f:checkbox name="linkReview" checked="${config.linkReview}" title="${%Klocwork Review}" />     
+                    </td>
+<!--                    <td style="width:200px">
+                        <f:checkbox name="linkBuildLog" checked="${config.linkBuildLog}" title="${%Build Log}" />     
                     </td>
                     <td style="width:200px">
-                        <f:checkbox name="linkBuildLog" checked="${config.linkBuildLog}" title="${%Build Log}"/>
-                    </td>
+                        <f:checkbox name="linkParseLog" checked="${config.linkParseLog}" title="${%Parse Log}" />     
+                    </td>-->
+                </tr>
+            </table>
+        </f:entry>
+        <!--
+        <f:entry title="${%Publish Graphs}" help="/plugin/klocwork/trend.html" >
+            <table>
+                <tr>
                     <td style="width:200px">
-                        <f:checkbox name="linkParseLog" checked="${config.linkParseLog}" title="${%Parse Log}"/>
+                        <f:checkbox name="publishTrendGraph" checked="${config.publishTrendGraph}"  title="Trend Graph" />
                     </td>
                 </tr>
             </table>
         </f:entry>
-
+        -->
+        
     </f:rowSet>
 </j:jelly>

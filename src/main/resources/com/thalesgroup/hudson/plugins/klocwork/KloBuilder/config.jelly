@@ -1,31 +1,30 @@
 <!--
 /*******************************************************************************
- * Copyright (c) 2011 Thales Corporate Services SAS                             *
- * Author : Aravindan Mahendran                                                 *
- *                                                                              *
- * Permission is hereby granted, free of charge, to any person obtaining a copy *
- * of this software and associated documentation files (the "Software"), to deal*
- * in the Software without restriction, including without limitation the rights *
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
- * copies of the Software, and to permit persons to whom the Software is        *
- * furnished to do so, subject to the following conditions:                     *
- *                                                                              *
- * The above copyright notice and this permission notice shall be included in   *
- * all copies or substantial portions of the Software.                          *
- *                                                                              *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
- * THE SOFTWARE.                                                                *
- *******************************************************************************/
- -->
+* Copyright (c) 2011 Thales Corporate Services SAS                             *
+* Author : Aravindan Mahendran                                                 *
+*                                                                              *
+* Permission is hereby granted, free of charge, to any person obtaining a copy *
+* of this software and associated documentation files (the "Software"), to deal*
+* in the Software without restriction, including without limitation the rights *
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell    *
+* copies of the Software, and to permit persons to whom the Software is        *
+* furnished to do so, subject to the following conditions:                     *
+*                                                                              *
+* The above copyright notice and this permission notice shall be included in   *
+* all copies or substantial portions of the Software.                          *
+*                                                                              *
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER       *
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
+* THE SOFTWARE.                                                                *
+*******************************************************************************/
+-->
 
-<j:jelly xmlns:j="jelly:core"
-         xmlns:f="/lib/form">
-
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" >
+  
     <f:entry title="Klocwork Version" help="/plugin/klocwork/instName.html">
         <select class="setting-input" name="klocwork.kloName">
             <option>(Default)</option>
@@ -34,91 +33,52 @@
             </j:forEach>
         </select>
     </f:entry>
-
+  
     <f:entry title="Klocwork v9.6 or later" help="/plugin/klocwork/kwinspectreport.html">
-        <f:checkbox name="kwinspectreportDeprecated" checked="${instance.kwinspectreportDeprecated}"/>
+        <f:checkbox name="kwinspectreportDeprecated" checked="${instance.kwinspectreportDeprecated}" />
     </f:entry>
 
-    <f:entry title="Delete Table after analysis" help="/plugin/klocwork/deleterTableAfterAnalysis.html"
-             description="Deletes the table generated in your Jenkins workspace after analysis is complete and results have been processed.">
-        <f:checkbox name="deleteTable" checked="${instance.deleteTable}"/>
+    <f:entry title="Delete Table after analysis" help="/plugin/klocwork/deleterTableAfterAnalysis.html" description="Deletes the table generated in your Jenkins workspace after analysis is complete and results have been processed.">
+        <f:checkbox name="deleteTable" checked="${instance.deleteTable}" />
     </f:entry>
-
-    <f:entry title="Project Name" field="projectName"
-             description="Specify Klocwork project name (must be an existing project)">
-        <f:textbox/>
+        
+    <f:entry title="Project Name" field="projectName" description="Specify Klocwork project name (must be an existing project)">
+        <f:textbox  />           		   
+    </f:entry>
+		
+    <f:entry title="Build Name" help="/plugin/klocwork/help-buildName.html" field="buildName" description="(Optional) Specify a particular build name.">
+        <f:textbox />
     </f:entry>
 
     <!-- Allows user to chose to build from command or existing build spec. -->
-    <f:entry title="Build Using" description="Build using a build command or build specification" field="buildUsing"
-             help="/plugin/klocwork/help-build.html">
+    <f:entry title="Build Using" description="Build using a build command or build specification" field="buildUsing" help="/plugin/klocwork/help-build.html">
         <select name="buildUsing">
             <f:option selected="${instance.getBuildUsing()==0}" value="0">Build Command</f:option>
             <f:option selected="${instance.getBuildUsing()==1}" value="1">Build Specification</f:option>
         </select>
     </f:entry>
 
-
-    <f:entry title="Build value"
-             description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant. If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file. Multiple build specification files can be provided, separated by commas (,)."
-             field="kwCommand">
-        <f:textbox/>
+   
+    <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant (note if you use the -o option the buildspec file must end in .out). If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file. Multiple build specification files can be provided, separated by commas (,)." field="kwCommand">
+        <f:textbox />
     </f:entry>
 
-    <f:entry title="Klocwork Build Options" help="/plugin/klocwork/help-buildOptions.html">
-        <f:repeatable var="option" items="${instance.getKloOptions()}">
-            <table>
-                <tr>
-                    <td width="30%">
-                        <label>${%Option}</label>
-                        <f:textbox name="kloOption.cmdOption" value="${option.cmdOption}"/>
-                    </td>
-                    <td width="5%"/>
-                    <td width="60%">
-                        <label>${%Value}</label>
-                        <f:textbox name="kloOption.cmdValue" value="${option.cmdValue}"/>
-                    </td>
-                </tr>
-                <f:entry title="">
-                    <div align="right">
-                        <f:repeatableDeleteButton/>
-                    </div>
-                </f:entry>
-            </table>
-        </f:repeatable>
+    <f:entry title="Klocwork Build Options" description="" field="kwbuildprojectOptions">
+        <f:textbox />
     </f:entry>
-
-    <f:entry title="Compiler Options" help="/plugin/klocwork/help-compilerOptions.html">
-        <f:repeatable var="compilerOption" items="${instance.getCompilerOptions()}">
-            <table>
-                <tr>
-                    <td width="30%">
-                        <label>${%Option}</label>
-                        <f:textbox name="compilerOption.cmdOption" value="${compilerOption.cmdOption}"/>
-                    </td>
-                    <td width="5%"/>
-                    <td width="60%">
-                        <label>${%Value}</label>
-                        <f:textbox name="compilerOption.cmdValue" value="${compilerOption.cmdValue}"/>
-                    </td>
-                </tr>
-                <f:entry title="">
-                    <div align="right">
-                        <f:repeatableDeleteButton/>
-                    </div>
-                </f:entry>
-            </table>
-        </f:repeatable>
-    </f:entry>
-
+  
     <!-- Binary build option. Stop build if build errors exist -->
-    <f:entry title="Binary Build" description="Set whether to stop the build process if a build error exists."
-             help="/plugin/klocwork/help-binaryBuild.html">
-        <f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)"
-                    checked="${instance.compilerBinaryBuild}"/>
-        <br/>
-        <f:checkbox name="kwBinaryBuild" title="Stop build if a Klocwork build error exists (Less Strict)"
-                    checked="${instance.kwBinaryBuild}"/>
+    <f:entry title="Binary Build" description="Set whether to stop the build process if a build error exists." help="/plugin/klocwork/help-binaryBuild.html">
+        <f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)" checked="${instance.compilerBinaryBuild}" />
+        <br />
+        <f:checkbox name="kwBinaryBuild" title="Stop build if a Klocwork build error exists (Less Strict)" checked="${instance.kwBinaryBuild}" />
     </f:entry>
-
+    
+    <f:entry title="Save build.log" help="/plugin/klocwork/buildLog.html">
+        <f:checkbox name="buildLog" checked="${instance.buildLog}" default="true"/>
+    </f:entry>
+    <f:entry title="Save parse_errors.log" help="/plugin/klocwork/parseLog.html">
+        <f:checkbox name="parseLog" checked="${instance.parseLog}" default="true"/>
+    </f:entry>
+    
 </j:jelly>
