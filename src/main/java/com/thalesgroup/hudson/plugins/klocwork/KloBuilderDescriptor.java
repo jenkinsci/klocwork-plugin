@@ -35,6 +35,9 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
 
 
@@ -69,17 +72,17 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
             throws hudson.model.Descriptor.FormException {
 
         KloBuilder builder = req.bindJSON(KloBuilder.class, formData);
-        KloOption[] kloOptions = new KloOption[0];
-        KloOption[] compilerOptions = new KloOption[0];
-        kloOptions = req.bindParametersToList(KloOption.class,
-                "kloOption.").toArray(new KloOption[0]);
+        // KloOption[] kloOptions = new KloOption[0];
+		// KloOption[] compilerOptions = new KloOption[0];
+        // kloOptions = req.bindParametersToList(KloOption.class,
+        //        "kloOption.").toArray(new KloOption[0]);
 
-        builder.setKloOptions(kloOptions);
+        // builder.setKloOptions(kloOptions);
 
-        compilerOptions = req.bindParametersToList(KloOption.class,
-                "compilerOption.").toArray(new KloOption[0]);
+		// compilerOptions = req.bindParametersToList(KloOption.class,
+		//		"compilerOption.").toArray(new KloOption[0]);
 
-        builder.setCompilerOptions(compilerOptions);
+		// builder.setCompilerOptions(compilerOptions);
 
         return builder;
     }
@@ -97,6 +100,21 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
             return FormValidation.error("command is mandatory");
         } else {
             return FormValidation.ok();
+        }
+    }
+	
+	public FormValidation doCheckBuildName(@QueryParameter String value) {
+        String buildName = Util.fixEmptyAndTrim(value);
+        if (buildName == null || buildName.isEmpty()) {
+            return FormValidation.ok();
+        } else {
+			Pattern pattern = Pattern.compile("\\$\\{([A-Za-z0-9._-]+)\\}");
+			Matcher matcher = pattern.matcher(value);
+			while (matcher.find()) {
+				return FormValidation.ok();
+				
+			}
+            return FormValidation.warning("Warning: Cannot overwrite Klocwork build names on server. Please use environment variable such as ${BUILD_NUMBER} to ensure different name across different builds.");
         }
     }
 }

@@ -24,6 +24,7 @@
 
 package com.thalesgroup.hudson.plugins.klocwork;
 
+import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
 import hudson.model.BuildListener;
@@ -42,12 +43,14 @@ import static org.mockito.Mockito.when;
 public class KlocworkParserResultTest extends AbstractWorkspaceTest {
     private BuildListener listener;
     private VirtualChannel channel;
+    private KloConfig config;
 
     @Before
     public void setUp() throws Exception {
         listener = mock(BuildListener.class);
         when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream()));
         channel = mock(VirtualChannel.class);
+        config = mock(KloConfig.class);
         super.createWorkspace();
     }
 
@@ -65,7 +68,7 @@ public class KlocworkParserResultTest extends AbstractWorkspaceTest {
 
     @Test
     public void testNoMatch() throws Exception {
-        KloParserResult parserResult = new KloParserResult(listener, "*.xml");
+        KloParserResult parserResult = new KloParserResult(listener, config);
         KloReport report = parserResult.invoke(new File(workspace.toURI()), channel);
         Assert.assertEquals("A pattern with no match files is not allowed.", null, report);
     }

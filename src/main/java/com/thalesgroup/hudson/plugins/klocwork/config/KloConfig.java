@@ -23,19 +23,19 @@
 
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
+import java.io.Serializable;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-import java.io.Serializable;
-
 public class KloConfig implements Serializable {
-
+    
     //The noKwinspectreport is now completely defunct, but remains
     //for serialisation legacy purposes (so that Jenkins projects
     //created with earlier versions of the plugin can still be
     //loaded into the new one.
     private KloConfigNoKwinspectreport noKwinspectreport;
-
+    
     private KloConfigWebAPI webAPI;
+    private KloConfigFailNew failNew; //new in v1.17.7 (fail build if new issues introduced)
 
     private KloConfigTrendGraph trendGraph = new KloConfigTrendGraph();
 
@@ -55,49 +55,51 @@ public class KloConfig implements Serializable {
     private String port;
     private boolean useSSL; //new in v1.15
     private String project;
+    private String user;
     private String hosttLicense;
     private String build_name;
 
     public String getBuild() {
-        return build_name;
+            return build_name;
     }
 
     public String getHosttLicense() {
-        return hosttLicense;
+            return hosttLicense;
     }
 
     public String getPortLicense() {
-        return portLicense;
+            return portLicense;
     }
-
     private String portLicense;
 
+    
+    
 
     public KloConfig() {
-
+        
     }
 
-    @DataBoundConstructor
-    @SuppressWarnings("unused")
+       @DataBoundConstructor
+        @SuppressWarnings("unused")
     public KloConfig(
-            boolean linkReview, boolean linkBuildLog, boolean linkParseLog,
-            KloConfigWebAPI webAPI, //new in v1.16
-            String host, String port,
-            boolean useSSL, //new in v1.16
-            String project,
-            String klocworkReportPattern,
-            boolean publishBuildGraph, boolean publishProjectGraph,
-            String trendNum, String interval,
-            int trendXSize, int trendYSize,
-            boolean displayAllError,
-            boolean displayHighSeverity,
-            boolean displayLowSeverity,
-            int buildXSize, int buildYSize, boolean neww,
-            boolean existing, boolean fixed,
-            String threshold,
-            String newThreshold, String failureThreshold,
-            String newFailureThreshold, String healthy, String unHealthy,
-            boolean highSeverity, boolean lowSeverity) {
+                    boolean linkReview, boolean linkBuildLog, boolean linkParseLog, 
+                    KloConfigWebAPI webAPI, //new in v1.16
+                    String host, String port,
+                    boolean useSSL, //new in v1.16
+                    String project,
+                    String klocworkReportPattern,
+                    boolean publishBuildGraph, boolean publishProjectGraph,
+                    String trendNum, String interval,
+                    int trendXSize, int trendYSize,
+                    boolean displayAllError,
+                    boolean displayHighSeverity,
+                    boolean displayLowSeverity,
+                    int buildXSize, int buildYSize, boolean neww,
+                    boolean existing, boolean fixed,
+                    String threshold,
+                    String newThreshold, String failureThreshold,
+                    String newFailureThreshold, String healthy, String unHealthy,
+                    boolean highSeverity, boolean lowSeverity, String user, KloConfigFailNew failNew) {
 
         this.klocworkReportPattern = klocworkReportPattern;
         this.linkReview = linkReview;
@@ -114,29 +116,41 @@ public class KloConfig implements Serializable {
         this.configSeverityEvaluation = new KloConfigSeverityEvaluation(
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, highSeverity, lowSeverity);
-
-        this.host = host;
-        this.port = port;
-        this.useSSL = useSSL;
-        this.project = project;
+        
+        this.host=host;
+        this.port=port;
+        this.useSSL=useSSL;
+        this.project=project;
+        this.user=user;
 
         //Set noKwinspectreport to null, as it is never used
         this.noKwinspectreport = null;
-
+        
         //AL: v1.16 Set web api config
-        if (webAPI == null) {
-            if (this.webAPI == null) {
+        if(webAPI == null) {
+            if(this.webAPI == null) {
                 this.webAPI = new KloConfigWebAPI(true, KloConfigWebAPI.getStaticDefaultString());
             }
-        } else {
+        }
+        else {
             this.webAPI = webAPI;
         }
-    }
 
+        if(failNew == null) {
+            if(this.failNew == null) {
+                this.failNew = new KloConfigFailNew(false,false,false,false,false);
+            }
+        }
+        else {
+            this.failNew=failNew;
+        }
+    }
+	
     public String getKlocworkReportPattern() {
         // return noKwinspectreport.getKlocworkReportPattern();
-        return klocworkReportPattern;
+		return klocworkReportPattern;
     }
+    
 
 
     public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
@@ -170,8 +184,8 @@ public class KloConfig implements Serializable {
     public boolean getLinkParseLog() {
         return linkParseLog;
     }
-
-    public KloConfigWebAPI getWebAPI() {
+    
+    public KloConfigWebAPI getWebAPI(){
         return webAPI;
     }
 
@@ -181,19 +195,25 @@ public class KloConfig implements Serializable {
 
     public String getHost() {
         return host;
-    }
+    }   
 
     public String getPort() {
         return port;
     }
-
+    
     public boolean getUseSSL() {
         return useSSL;
+    }
+    
+    public KloConfigFailNew getFailNew() {
+        return failNew;
     }
 
     public String getProject() {
         return project;
     }
 
-
+    public String getUser() {
+        return user;
+    }    
 }

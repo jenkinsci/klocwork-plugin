@@ -1,0 +1,82 @@
+<j:jelly xmlns:j="jelly:core" 
+         xmlns:st="jelly:stapler" 
+         xmlns:l="/lib/layout" 
+         xmlns:t="/lib/hudson" 
+         xmlns:dp="/hudson/plugins/view/dashboard"> 
+
+
+    <style type="text/css"> 
+        .kloPortlet .number { text-align: right; } 
+    </style> 
+
+
+    <table class="pane sortable kloPortlet"> 
+        <j:set var="numberTotal" value="${0}"/> 
+        <j:set var="existingInt" value="${0}"/> 
+        <j:set var="newwInt" value="${0}"/> 
+        <j:set var="fixedInt" value="${0}"/> 
+        <j:set var="totalNumCrit" value="${0}"/> 
+        <j:set var="totalNumErr" value="${0}"/> 
+        <j:set var="totalNumWarn" value="${0}"/> 
+        <j:set var="totalNumRev" value="${0}"/> 
+
+
+        <thead> 
+            <tr> 
+                <td class="pane-header">${%Job}</td> 
+                <td class="pane-header">${%Total}</td> 
+                <td class="pane-header">${%Existing}</td> 
+                <td class="pane-header">${%New}</td> 
+                <td class="pane-header">${%Fixed}</td> 
+                <td class="pane-header">${%Critical}</td> 
+                <td class="pane-header">${%Error}</td> 
+                <td class="pane-header">${%Warning}</td> 
+                <td class="pane-header">${%Review}</td> 
+            </tr> 
+        </thead> 
+        <tbody> 
+            <j:forEach var="job" items="${jobs}"> 
+                <tr> 
+                    <j:set var="stats" value="${it.getStatistics(job)}" /> 
+
+
+                    <td class="pane">
+                        <dp:jobLink job="${job}" />
+                    </td> 
+                    <td class="pane number">${stats.numberTotal}</td> 
+                    <td class="pane number">${stats.existingInt}</td> 
+                    <td class="pane number">${stats.newwInt}</td> 
+                    <td class="pane number">${stats.fixedInt}</td> 
+                    <td class="pane number">${stats.totalNumCrit}</td> 
+                    <td class="pane number">${stats.totalNumErr}</td> 
+                    <td class="pane number">${stats.totalNumWarn}</td> 
+                    <td class="pane number">${stats.totalNumRev}</td> 
+
+
+                    <j:set var="numberTotal" value="${numberTotal + stats.numberTotal}"/> 
+                    <j:set var="existingInt" value="${existingInt + stats.existingInt}"/> 
+                    <j:set var="newwInt" value="${newwInt + stats.newwInt}"/> 
+                    <j:set var="fixedInt" value="${fixedInt + stats.fixedInt}"/> 
+                    <j:set var="totalNumCrit" value="${totalNumCrit + stats.totalNumCrit}"/> 
+                    <j:set var="totalNumErr" value="${totalNumErr + stats.totalNumErr}"/> 
+                    <j:set var="totalNumWarn" value="${totalNumWarn + stats.totalNumWarn}"/> 
+                    <j:set var="totalNumRev" value="${totalNumRev + stats.totalNumRev}"/> 
+                </tr> 
+            </j:forEach> 
+        </tbody> 
+        <tfoot> 
+            <tr class="sortbottom"> 
+                <td class="pane-header">${%Total}</td> 
+                <td class="pane-header number">${numberTotal}</td> 
+                <td class="pane-header number">${existingInt}</td> 
+                <td class="pane-header number">${newwInt}</td> 
+                <td class="pane-header number">${fixedInt}</td> 
+                <td class="pane-header number">${totalNumCrit}</td> 
+                <td class="pane-header number">${totalNumErr}</td> 
+                <td class="pane-header number">${totalNumWarn}</td> 
+                <td class="pane-header number">${totalNumRev}</td> 
+            </tr> 
+        </tfoot> 
+    </table> 
+</j:jelly> 
+

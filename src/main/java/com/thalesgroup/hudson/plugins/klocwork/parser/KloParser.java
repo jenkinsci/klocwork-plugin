@@ -11,7 +11,8 @@
  *                                                                              *
  * The above copyright notice and this permission notice shall be included in   *
  * all copies or substantial portions of the Software.                          *
- *                                                                              *
+ *                
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR   *
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,     *
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  *
@@ -26,6 +27,7 @@ package com.thalesgroup.hudson.plugins.klocwork.parser;
 import com.thalesgroup.dtkit.util.validator.ValidationError;
 import com.thalesgroup.hudson.plugins.klocwork.model.*;
 import hudson.FilePath;
+import hudson.model.BuildListener;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -57,7 +59,7 @@ public class KloParser implements Serializable {
         return resultFilePath;
     }
 
-    public KloReport parse(final File file) throws IOException {
+    public KloReport parse(final File file, final BuildListener listener, boolean use96up) throws IOException {
 
         if (file == null) {
             throw new IllegalArgumentException("File input is mandatory.");
@@ -89,6 +91,14 @@ public class KloParser implements Serializable {
             double numFixed = 0.0;
             double numExisting = 0.0;
             double numNew = 0.0;
+            int numCrit = 0;
+            int numErr = 0;
+            int numWarn = 0;
+            int numRev = 0;
+            int totalNumCrit = 0;
+            int totalNumErr = 0;
+            int totalNumWarn = 0;
+            int totalNumRev = 0;
 
             String kloVersion = null;
             try {
@@ -96,20 +106,22 @@ public class KloParser implements Serializable {
             } catch (Exception e) {
 
             }
-
+            
             int severityDelimiter = 3; // default
             // Version 9.5 Klocwork changed issue severity levels
             // TODO: Improve maintainability of code by removing version-dependency here
-            if (kloVersion != null && (kloVersion.startsWith("9.5") || kloVersion.startsWith("9.6"))) {
+            if (
+                    (kloVersion != null && (kloVersion.startsWith("9.5") || kloVersion.startsWith("9.6")|| kloVersion.startsWith("10.0")|| kloVersion.startsWith("10.1")))
+                    || use96up
+                    ) {
                 severityDelimiter = 2;
             }
-
+           
             int i = 0;
             for (Problem problem : errList.getProblem()) {
                 KloFile kloFile;
                 kloFile = new KloFile();
                 kloFile.setKey(i + 1);
-
                 /**
                  * Using reflection to get the tags' name and value and to put them in kloFile map
                  */
@@ -134,8 +146,7 @@ public class KloParser implements Serializable {
 
                                     kloFile.addTraceBlock(tracelt.getFile(),
                                             tracelt.getMethod(), tracelt
-                                                    .getName(), tracelt.getId()
-                                    );
+                                            .getName(), tracelt.getId());
 
 
                                     for (TraceLine traceLinelt : tracelt.getTraceLine()) {
@@ -178,6 +189,20 @@ public class KloParser implements Serializable {
                     fileNameWithoutPath = extractFileName(fileName, "/");
                 }
                 kloFile.store("fileNameOnly", fileNameWithoutPath);
+                
+                if (kloFile.get("severitylevel") != null) {
+                    if (!kloFile.get("state").equalsIgnoreCase("Fixed")) {
+                        if (kloFile.get("severitylevel").equals("1")) {
+                            totalNumCrit++;
+                        } else if (kloFile.get("severitylevel").equals("2")) {
+                            totalNumErr++;
+                        } else if (kloFile.get("severitylevel").equals("3")) {
+                            totalNumWarn++;
+                        } else if (kloFile.get("severitylevel").equals("4")) {
+                            totalNumRev++;
+                        }
+                    }
+                }
 
                 if (Integer.parseInt((String) kloFile.get("severitylevel")) > severityDelimiter) {
                     highSeverities.add(kloFile);
@@ -189,6 +214,18 @@ public class KloParser implements Serializable {
                     String state = kloFile.get("state");
                     if (state.equalsIgnoreCase("New") || state.equalsIgnoreCase("Recurred")) {
                         numNew++;
+                        if(kloFile.get("severitylevel").equals("1")){
+                            numCrit++;
+                        }
+                        else if(kloFile.get("severitylevel").equals("2")){
+                            numErr++;
+                        }
+                        else if(kloFile.get("severitylevel").equals("3")){
+                            numWarn++;
+                        }
+                        else if(kloFile.get("severitylevel").equals("4")){
+                            numRev++;
+                        }
                     } else if (state.equalsIgnoreCase("Existing")) {
                         numExisting++;
                     } else if (state.equalsIgnoreCase("Fixed") || state.equalsIgnoreCase("Obsolete") ||
@@ -207,25 +244,33 @@ public class KloParser implements Serializable {
             }
 
             if (!lowSeverities.isEmpty()) {
-                report.setLowSeverities(lowSeverities);
+                report.setLowSeverities(lowSeverities.size());
             }
 
             if (!highSeverities.isEmpty()) {
-                report.setHighSeverities(highSeverities);
+                report.setHighSeverities(highSeverities.size());
             }
-
-            report.setErrors(errors);
-
+            
+            report.setErrors(errors.size());
+            
             report.setFixed(numFixed);
             report.setExisting(numExisting);
             report.setNeww(numNew);
             report.setKloVersion(kloVersion);
+            
+            report.setNumCrit(numCrit);
+            report.setNumErr(numErr);
+            report.setNumWarn(numWarn);
+            report.setNumRev(numRev);
+            
+            report.setTotalNumCrit(totalNumCrit);
+            report.setTotalNumErr(totalNumErr);
+            report.setTotalNumWarn(totalNumWarn);
+            report.setTotalNumRev(totalNumRev);
 
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-
-
         return report;
     }
 
