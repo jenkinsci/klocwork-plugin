@@ -51,13 +51,16 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
     private int totalNumErr = 0;
     private int totalNumWarn = 0;
     private int totalNumRev = 0;
-    private boolean kw96up = true;
+    private boolean kw96up = false; // default false, unless specified
 
     public static final String DELAULT_REPORT_MAVEN = "klocwork_result.xml";
 
     public KloParserResult(final BuildListener listener, KloConfig kloConfig) {
+        String kwRepPattern = null;
+        if (kloConfig != null) {
+            kwRepPattern = kloConfig.getKlocworkReportPattern();
+        }
 
-        String kwRepPattern = kloConfig.getKlocworkReportPattern();
         
         if (kwRepPattern == null) {
             kwRepPattern = DELAULT_REPORT_MAVEN;
@@ -67,7 +70,9 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
             kwRepPattern = DELAULT_REPORT_MAVEN;
         }
 
-        this.kw96up = kloConfig.getWebAPI().getUseWebAPI();
+        if (kloConfig != null && kloConfig.getWebAPI() != null) {
+            this.kw96up = kloConfig.getWebAPI().getUseWebAPI();
+        }
         this.listener = listener;
         this.klocworkReportPattern = kwRepPattern;
     }
