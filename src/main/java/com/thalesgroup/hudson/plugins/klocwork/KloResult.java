@@ -167,7 +167,7 @@ public class KloResult implements Serializable {
         int nbErrors = 0;
         int nbPreviousError = 0;
         KloResult previousResult = this.getPreviousResult();
-
+        
         if (kloConfig.getConfigSeverityEvaluation().isHighSeverity()) {
             nbErrors = this.getReport().getHighSeverities();
             if (previousResult != null) {

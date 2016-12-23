@@ -26,6 +26,8 @@ package com.thalesgroup.hudson.plugins.klocwork.util;
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import hudson.model.BuildListener;
 import hudson.model.Result;
+import java.util.Iterator;
+import java.util.Map;
 
 public class KloBuildResultEvaluator {
 
@@ -40,30 +42,83 @@ public class KloBuildResultEvaluator {
             final BuildListener listener,
             int errorsCount,
             int newErrorsCount,
-            KloConfig kloConfig) {
+            KloConfig kloConfig,
+            Map<String, String> matrixBuildVars) {
+        
+        String failureThreshold = kloConfig.getConfigSeverityEvaluation().getFailureThreshold();
+        String newFailureThreshold = kloConfig.getConfigSeverityEvaluation().getNewFailureThreshold();
+        String unstableThreshold = kloConfig.getConfigSeverityEvaluation().getThreshold();
+        String newUnstableThreshold = kloConfig.getConfigSeverityEvaluation().getNewThreshold();
+        
+        if (matrixBuildVars != null) {
+            Iterator it = matrixBuildVars.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                if (failureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                    failureThreshold = failureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (failureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                    failureThreshold = failureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (failureThreshold.contains("$" + pairs.getKey().toString())) {
+                    failureThreshold = failureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                
+                if (newFailureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                    newFailureThreshold = newFailureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (newFailureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                    newFailureThreshold = newFailureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (newFailureThreshold.contains("$" + pairs.getKey().toString())) {
+                    newFailureThreshold = newFailureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                
+                if (unstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                    unstableThreshold = unstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (unstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                    unstableThreshold = unstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (unstableThreshold.contains("$" + pairs.getKey().toString())) {
+                    unstableThreshold = unstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                
+                if (newUnstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                    newUnstableThreshold = newUnstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (newUnstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                    newUnstableThreshold = newUnstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (newUnstableThreshold.contains("$" + pairs.getKey().toString())) {
+                    newUnstableThreshold = newUnstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+        }
 
-        if (isErrorCountExceeded(errorsCount, kloConfig.getConfigSeverityEvaluation().getFailureThreshold())) {
+        if (isErrorCountExceeded(errorsCount, failureThreshold)) {
             listener.getLogger().println("Setting build status to FAILURE since total number of errors ("
                     + KloMetricUtil.getMessageSelectedSeverties(kloConfig)
-                    + ") exceeds the threshold value ;" + kloConfig.getConfigSeverityEvaluation().getFailureThreshold() + "'.");
+                    + ") exceeds the threshold value ;" + failureThreshold + "'.");
             return Result.FAILURE;
         }
-        if (isErrorCountExceeded(newErrorsCount, kloConfig.getConfigSeverityEvaluation().getNewFailureThreshold())) {
+        if (isErrorCountExceeded(newErrorsCount, newFailureThreshold)) {
             listener.getLogger().println("Setting build status to FAILURE since total number of new errors ("
                     + KloMetricUtil.getMessageSelectedSeverties(kloConfig)
-                    + ") exceeds the threshold value '" + kloConfig.getConfigSeverityEvaluation().getNewFailureThreshold() + "'.");
+                    + ") exceeds the threshold value '" + newFailureThreshold + "'.");
             return Result.FAILURE;
         }
-        if (isErrorCountExceeded(errorsCount, kloConfig.getConfigSeverityEvaluation().getThreshold())) {
+        if (isErrorCountExceeded(errorsCount, unstableThreshold)) {
             listener.getLogger().println("Setting build status to UNSTABLE since total number of errors ("
                     + KloMetricUtil.getMessageSelectedSeverties(kloConfig)
-                    + ") exceeds the threshold value '" + kloConfig.getConfigSeverityEvaluation().getThreshold() + "'.");
+                    + ") exceeds the threshold value '" + unstableThreshold + "'.");
             return Result.UNSTABLE;
         }
-        if (isErrorCountExceeded(newErrorsCount, kloConfig.getConfigSeverityEvaluation().getNewThreshold())) {
+        if (isErrorCountExceeded(newErrorsCount, newUnstableThreshold)) {
             listener.getLogger().println("Setting build status to UNSTABLE since total number of new errors ("
                     + KloMetricUtil.getMessageSelectedSeverties(kloConfig)
-                    + ") exceeds the threshold value '" + kloConfig.getConfigSeverityEvaluation().getNewThreshold() + "'.");
+                    + ") exceeds the threshold value '" + newUnstableThreshold + "'.");
             return Result.UNSTABLE;
         }
 

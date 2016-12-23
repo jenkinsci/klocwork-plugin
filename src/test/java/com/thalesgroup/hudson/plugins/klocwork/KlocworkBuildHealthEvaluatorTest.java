@@ -28,6 +28,8 @@ import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigSeverityEvaluation;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildHealthEvaluator;
 import hudson.model.HealthReport;
+import java.util.HashMap;
+import java.util.Map;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,11 +48,12 @@ public class KlocworkBuildHealthEvaluatorTest {
     }
 
     private int processSetThreshold(int healthy, int unHealthy, int errorsForSevrity) {
+        Map<String, String> matrixVars = new HashMap<String, String>();
         KloConfigSeverityEvaluation configSeverityEvaluation = mock(KloConfigSeverityEvaluation.class);
         when(klocworkConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(klocworkConfig.getConfigSeverityEvaluation().getHealthy()).thenReturn(String.valueOf(healthy));
         when(klocworkConfig.getConfigSeverityEvaluation().getUnHealthy()).thenReturn(String.valueOf(unHealthy));
-        HealthReport healthReport = klocworkBuildHealthEvaluator.evaluatBuildHealth(klocworkConfig, errorsForSevrity);
+        HealthReport healthReport = klocworkBuildHealthEvaluator.evaluatBuildHealth(klocworkConfig, errorsForSevrity, matrixVars);
         return healthReport.getScore();
     }
 

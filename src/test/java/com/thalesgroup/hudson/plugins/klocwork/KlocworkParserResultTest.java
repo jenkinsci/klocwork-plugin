@@ -25,7 +25,6 @@
 package com.thalesgroup.hudson.plugins.klocwork;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
-import com.thalesgroup.hudson.plugins.klocwork.config.KloConfigWebAPI;
 import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.parser.KloParserResult;
 import hudson.model.BuildListener;
@@ -45,22 +44,19 @@ public class KlocworkParserResultTest extends AbstractWorkspaceTest {
     private BuildListener listener;
     private VirtualChannel channel;
     private KloConfig config;
-    private KloConfigWebAPI configWebApi;
 
     @Before
     public void setUp() throws Exception {
         listener = mock(BuildListener.class);
         when(listener.getLogger()).thenReturn(new PrintStream(new ByteArrayOutputStream()));
         channel = mock(VirtualChannel.class);
-        configWebApi = mock(KloConfigWebAPI.class);
         config = mock(KloConfig.class);
-
         super.createWorkspace();
     }
 
     @Test
     public void testNullPattern() {
-        KloParserResult parserResult = new KloParserResult(listener, config);
+        KloParserResult parserResult = new KloParserResult(listener, null);
         Assert.assertEquals("With none pattern, the default pattern must be " + KloParserResult.DELAULT_REPORT_MAVEN, KloParserResult.DELAULT_REPORT_MAVEN, parserResult.getKlocworkReportPattern());
     }
 

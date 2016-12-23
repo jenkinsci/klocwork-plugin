@@ -34,6 +34,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -42,6 +44,7 @@ public class KlocworkResultTest {
     private BuildListener listener;
     private AbstractBuild owner;
     private KloReport report;
+    private Map<String, String> matrixVars = new HashMap<String, String>();
 
     @Before
     public void setUp() throws Exception {
@@ -69,7 +72,7 @@ public class KlocworkResultTest {
 
             //Previous build and bind with the current build
             AbstractBuild previousBuild = mock(AbstractBuild.class);
-            KloBuildAction buildAction = new KloBuildAction(previousBuild, previousCppcheckResult, mock(KloConfig.class));
+            KloBuildAction buildAction = new KloBuildAction(previousBuild, previousCppcheckResult, mock(KloConfig.class), matrixVars);
             when(previousBuild.getAction(KloBuildAction.class)).thenReturn(buildAction);
             when(owner.getPreviousBuild()).thenReturn(previousBuild);
         } else {
@@ -107,24 +110,24 @@ public class KlocworkResultTest {
     @Test
     public void testNumberNewErrorsFromPreviousBuildSecondBuild1() {
 
-//        processSecondBuild(0, 0, 0);
-//        processSecondBuild(0, 1, 1);
-//        processSecondBuild(0, 2, 2);
-//        processSecondBuild(0, 3, 3);
-//
-//        processSecondBuild(1, 0, 0);
-//        processSecondBuild(1, 1, 0);
-//        processSecondBuild(1, 2, 1);
-//        processSecondBuild(1, 3, 2);
-//
-//        processSecondBuild(2, 0, 0);
-//        processSecondBuild(2, 1, 0);
-//        processSecondBuild(2, 2, 0);
-//        processSecondBuild(2, 3, 1);
-//
-//        processSecondBuild(3, 0, 0);
-//        processSecondBuild(3, 1, 0);
-//        processSecondBuild(3, 2, 0);
-//        processSecondBuild(3, 3, 0);
+        processSecondBuild(0, 0, 0);
+        processSecondBuild(0, 1, 1);
+        processSecondBuild(0, 2, 2);
+        processSecondBuild(0, 3, 3);
+
+        processSecondBuild(1, 0, 0);
+        processSecondBuild(1, 1, 0);
+        processSecondBuild(1, 2, 1);
+        processSecondBuild(1, 3, 2);
+
+        processSecondBuild(2, 0, 0);
+        processSecondBuild(2, 1, 0);
+        processSecondBuild(2, 2, 0);
+        processSecondBuild(2, 3, 1);
+
+        processSecondBuild(3, 0, 0);
+        processSecondBuild(3, 1, 0);
+        processSecondBuild(3, 2, 0);
+        processSecondBuild(3, 3, 0);
     }
 }

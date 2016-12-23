@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.642.3</version>
+        <version>1.557</version>
     </parent>
 
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.19.8</version>
+    <version>1.20.1</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -86,8 +86,8 @@
         <saxon.version>9.1.0.8</saxon.version>
         <dtkit.model.version>0.16</dtkit.model.version>
         <dtkit.util.version>0.16</dtkit.util.version>
-        <java2html.version>5.0</java2html.version> 
-        <junit.version>4.8.2</junit.version>
+        <java2html.version>5.0</java2html.version>
+        <junit.version>4.11</junit.version>
         <mockito.version>1.8.5</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -155,8 +155,8 @@
             <artifactId>dashboard-view</artifactId> 
             <version>2.0</version> 
             <optional>true</optional> 
-        </dependency>
-
+        </dependency> 
+        
 <!--        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -179,7 +179,7 @@
             <version>1.5</version>
             <optional>true</optional>
         </dependency>
-
+        
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>matrix-project</artifactId>
@@ -281,6 +281,7 @@
     <scm>
         <connection>scm:git:git@github.com:cittools/klocwork-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:cittools/klocwork-plugin.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
 </project>

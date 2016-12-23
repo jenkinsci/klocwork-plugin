@@ -40,6 +40,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Map;
 
 
 public class KloBuildAction extends AbstractKloBuildAction {
@@ -51,11 +52,13 @@ public class KloBuildAction extends AbstractKloBuildAction {
 	
     private KloResult result;
     private KloConfig kloConfig;
+    private Map<String, String> matrixBuildVars;
 
-    public KloBuildAction(AbstractBuild<?, ?> owner, KloResult result, KloConfig kloConfig) {
+    public KloBuildAction(AbstractBuild<?, ?> owner, KloResult result, KloConfig kloConfig, Map<String, String> matrixBuildVars) {
         super(owner);
         this.result = result;
         this.kloConfig = kloConfig;
+        this.matrixBuildVars = matrixBuildVars;
         //Date: 2012-11-22 Author: Andreas Larfors
         //Change: Results now always available due to web API implementation
 //		if ((kloConfig != null) && (kloConfig.getNoKwinspectreport() != null)) {
@@ -116,7 +119,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 			return new HealthReport();
 		} else {
 			try {
-				return new KloBuildHealthEvaluator().evaluatBuildHealth(kloConfig, result.getNumberErrorsAccordingConfiguration(kloConfig, false));
+				return new KloBuildHealthEvaluator().evaluatBuildHealth(kloConfig, result.getNumberErrorsAccordingConfiguration(kloConfig, false), matrixBuildVars);
 			} catch (IOException ioe) {
 				return new HealthReport();
 			}

@@ -27,6 +27,8 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.matrix.Combination;
+import hudson.matrix.MatrixConfiguration;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.Descriptor;
@@ -51,6 +53,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class KloBuilder extends Builder {
 
     private String projectName;
+    private String convertedProjectName;
     private String buildName;
     private String kloName;
     private String kwbuildprojectOptions;
@@ -209,7 +212,7 @@ public class KloBuilder extends Builder {
         EnvVars envVars = null;
         try {
             envVars = build.getEnvironment(listener);
-                        if (envVars != null) {
+            if (envVars != null) {
                 Iterator it = envVars.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry pairs = (Map.Entry) it.next();
@@ -251,6 +254,9 @@ public class KloBuilder extends Builder {
             listener.getLogger().println("Warning: Could not retrieve list of environment variables. Any use of these may not get resolved.");
         }
 
+        localProjectName = UserAxisConverter.AxeConverter(build, localProjectName);
+        localProjectName = localProjectName.substring(0, Math.min(localProjectName.length(), 64));
+
         if (!launcher.isUnix()) {
             FS = "\\";
         } else {
@@ -270,35 +276,32 @@ public class KloBuilder extends Builder {
                 listener.fatalError(e.getMessage());
                 return false;
             }
-            if(exec.getRemote() != null && !exec.getRemote().equals(".")){
+            if (exec.getRemote() != null && !exec.getRemote().equals(".")) {
                 execKwadmin = exec.getRemote() + FS + "bin" + FS + execKwadmin;
                 execKwbuildproject = exec.getRemote() + FS + "bin" + FS
                         + execKwbuildproject;
                 execKwinspectreport = exec.getRemote() + FS + "bin" + FS
                         + execKwinspectreport;
             }
-            
+
         } //AM : avoiding having a currentInstall with null value
         //JL : Update default values
         else {
             currentInstall = new KloInstallation(DEFAULT_CONFIGURATION, "", "localhost", "8080", false, "localhost", "27000");
         }
 
-        // JL : Changing to more suitable variable name
-        String lastBuildName;
-        if (buildName != null && !buildName.trim().isEmpty()
-                && envVars != null) {
-            lastBuildName = envVars.expand(buildName);
-        } else {
-            lastBuildName = "build_ci_" + build.getId();
+        //AM : changing lastBuildNo
+        //AS : Support for DynamicAxis Plugin
+        String suffix = "";
+        if (build.getProject().getClass().getName().equals(MatrixConfiguration.class.getName())) {
+            MatrixConfiguration matrix = (MatrixConfiguration) build.getProject();
+            Combination currentAxes = matrix.getCombination();
+            suffix = "_" + currentAxes.digest();
         }
-        // for backwards compatiblity - earlier versions could not handle
-        // build names with "-"s in them
-        if (!kwinspectreportDeprecated) {
-            lastBuildName = lastBuildName.replaceAll("[^a-zA-Z0-9_]", "");
-        }
+        String lastBuildNo = "build_ci_" + build.getId() + suffix;
+        lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
         listener.getLogger().println("buildName = \"" + buildName + "\"");
-        listener.getLogger().println("lastBuildName = \"" + lastBuildName + "\"");
+        listener.getLogger().println("lastBuildName = \"" + lastBuildNo + "\"");
 
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
         //AM : changing the way to add the arguments
@@ -338,14 +341,12 @@ public class KloBuilder extends Builder {
                     localKwbuildprojectOptions += "--tables-directory "
                             + kloTables;
                 }
+            } else if (kloTables.contains(" ")) {
+                localKwbuildprojectOptions += " --tables-directory "
+                        + "\"" + kloTables + "\"";
             } else {
-                if (kloTables.contains(" ")) {
-                    localKwbuildprojectOptions += " --tables-directory "
-                            + "\"" + kloTables + "\"";
-                } else {
-                    localKwbuildprojectOptions += " --tables-directory "
-                            + kloTables;
-                }
+                localKwbuildprojectOptions += " --tables-directory "
+                        + kloTables;
             }
         }
 
@@ -453,7 +454,7 @@ public class KloBuilder extends Builder {
             localKwbuildprojectOptions += " --force";
         }
 
-        argsKwbuildproject.add("--project", UserAxisConverter.AxeConverter(build, localProjectName),
+        argsKwbuildproject.add("--project", localProjectName,
                 /* "--tables-directory", kloTables, */
                 "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                 (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
@@ -470,7 +471,7 @@ public class KloBuilder extends Builder {
         argsKwadmin.add("--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                 (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
                 "load",
-                UserAxisConverter.AxeConverter(build, localProjectName),/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildName);
+                localProjectName,/*proj.getModuleRoot()*/ kloTables, "--name", lastBuildNo);
 
         //Building process
         ArgumentListBuilder argsBuild = new ArgumentListBuilder();
@@ -489,13 +490,12 @@ public class KloBuilder extends Builder {
                 listener.fatalError(e.getMessage());
                 return false;
             }
-            if(exec.getRemote() != null && !exec.getRemote().equals(".")){
+            if (exec.getRemote() != null && !exec.getRemote().equals(".")) {
                 execCmd = exec.getRemote() + FS + "bin" + FS;
-            }
-            else{
+            } else {
                 execCmd = "";
             }
-            
+
         }
 
         // If buildUsing build command
@@ -593,8 +593,8 @@ public class KloBuilder extends Builder {
 
             //AM : changing the way to add the arguments
             argsKwinspectreport.add(execKwinspectreport);
-            argsKwinspectreport.add("--project", UserAxisConverter.AxeConverter(build, localProjectName),
-                    "--build", lastBuildName, "--xml",
+            argsKwinspectreport.add("--project", localProjectName,
+                    "--build", lastBuildNo, "--xml",
                     build.getWorkspace().getRemote() + FS + "klocwork_result.xml",
                     "--host", currentInstall.getProjectHost(), "--port", currentInstall.getProjectPort(),
                     (currentInstall.getUseSSL() ? "--ssl" : null), //New in v1.15
@@ -615,10 +615,9 @@ public class KloBuilder extends Builder {
             }
 
             // Finally store currentInstall and projectName for publisher to use
-            build.addAction(new KloBuildInfo(build, currentInstall, UserAxisConverter.AxeConverter(build, localProjectName)));
+            build.addAction(new KloBuildInfo(build, currentInstall, localProjectName));
 
             //save logs
-            ArtifactManager am = build.getArtifactManager();
             HashMap<String, String> artifact_list = new HashMap<String, String>();
             if (buildLog) {
                 artifact_list.put("kloTables/build.log", "kloTables/build.log");
@@ -627,6 +626,7 @@ public class KloBuilder extends Builder {
                 artifact_list.put("kloTables/parse_errors.log", "kloTables/parse_errors.log");
             }
             if (buildLog || parseLog) {
+                ArtifactManager am = build.getArtifactManager();
                 am.archive(build.getWorkspace(), launcher, listener, artifact_list);
             }
 

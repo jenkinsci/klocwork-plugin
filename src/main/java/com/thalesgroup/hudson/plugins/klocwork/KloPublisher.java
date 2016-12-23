@@ -272,7 +272,7 @@ public class KloPublisher extends Recorder implements Serializable {
             Result buildResult = new KloBuildResultEvaluator().evaluateBuildResult(
                     listener, result.getNumberErrorsAccordingConfiguration(kloConfig, false),
                     result.getNumberErrorsAccordingConfiguration(kloConfig, true),
-                    kloConfig);
+                    kloConfig, build.getBuildVariables());
 
             if (buildResult != Result.SUCCESS) {
                 build.setResult(buildResult);
@@ -280,7 +280,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
             build.addAction(new KloBuildGraph(build, kloConfig, result.getReport()));
 
-            build.addAction(new KloBuildAction(build, result, kloConfig));
+            build.addAction(new KloBuildAction(build, result, kloConfig, build.getBuildVariables()));
 
             // Check config whether to create links for Klocwork Review, parse_errors.log
             // and build.log

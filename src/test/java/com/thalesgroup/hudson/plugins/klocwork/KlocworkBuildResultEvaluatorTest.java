@@ -35,6 +35,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,6 +45,7 @@ public class KlocworkBuildResultEvaluatorTest {
     private KloBuildResultEvaluator kloBuildResultEvaluator;
     private KloConfig kloConfig;
     private BuildListener listener;
+    private Map<String, String> matrixVars = new HashMap<String, String>();
 
     @Before
     public void setUp() {
@@ -56,28 +59,28 @@ public class KlocworkBuildResultEvaluatorTest {
         KloConfigSeverityEvaluation configSeverityEvaluation = mock(KloConfigSeverityEvaluation.class);
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
     private Result processNewFailurThreshold(int newfailureThreshold, int errorsCount, int newErrors) {
         KloConfigSeverityEvaluation configSeverityEvaluation = mock(KloConfigSeverityEvaluation.class);
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newfailureThreshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
     private Result processNewThreshold(int newThreshold, int errorsCount, int newErrors) {
         KloConfigSeverityEvaluation configSeverityEvaluation = mock(KloConfigSeverityEvaluation.class);
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
     private Result processThreshold(int threshold, int errorsCount, int newErrors) {
         KloConfigSeverityEvaluation configSeverityEvaluation = mock(KloConfigSeverityEvaluation.class);
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
 
@@ -174,7 +177,7 @@ public class KlocworkBuildResultEvaluatorTest {
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getNewFailureThreshold()).thenReturn(String.valueOf(newFailureThreshold));
         when(kloConfig.getConfigSeverityEvaluation().getNewThreshold()).thenReturn(String.valueOf(newThreshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
     private Result processTestCaseLimit2(int failureThreshold, int threshold, int errorsCount, int newErrors) {
@@ -182,7 +185,7 @@ public class KlocworkBuildResultEvaluatorTest {
         when(kloConfig.getConfigSeverityEvaluation()).thenReturn(configSeverityEvaluation);
         when(kloConfig.getConfigSeverityEvaluation().getFailureThreshold()).thenReturn(String.valueOf(failureThreshold));
         when(kloConfig.getConfigSeverityEvaluation().getThreshold()).thenReturn(String.valueOf(threshold));
-        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig);
+        return kloBuildResultEvaluator.evaluateBuildResult(listener, errorsCount, newErrors, kloConfig, matrixVars);
     }
 
 

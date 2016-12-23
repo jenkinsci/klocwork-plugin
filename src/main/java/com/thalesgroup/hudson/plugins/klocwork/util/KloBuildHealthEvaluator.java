@@ -1,4 +1,5 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * Copyright (c) 2011 Thales Corporate Services SAS                             *
  * Author : Aravindan Mahendran                                                 *
  *                                                                              *
@@ -19,33 +20,65 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN    *
  * THE SOFTWARE.                                                                *
- *******************************************************************************/
-
+ ******************************************************************************
+ */
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
 import com.thalesgroup.hudson.plugins.klocwork.config.KloConfig;
 import hudson.model.HealthReport;
+import java.util.Iterator;
+import java.util.Map;
 
 public class KloBuildHealthEvaluator {
 
-    public HealthReport evaluatBuildHealth(KloConfig kloConfig, int nbErrorForSeverity) {
+    public HealthReport evaluatBuildHealth(KloConfig kloConfig, int nbErrorForSeverity, Map<String, String> matrixBuildVars) {
+
+        String healthy = kloConfig.getConfigSeverityEvaluation().getHealthy();
+        String unhealthy = kloConfig.getConfigSeverityEvaluation().getUnHealthy();
+        
+        if (matrixBuildVars != null) {
+            Iterator it = matrixBuildVars.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry) it.next();
+                if (healthy.contains("%" + pairs.getKey().toString() + "%")) {
+                    healthy = healthy.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (healthy.contains("${" + pairs.getKey().toString() + "}")) {
+                    healthy = healthy.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (healthy.contains("$" + pairs.getKey().toString())) {
+                    healthy = healthy.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                
+                if (unhealthy.contains("%" + pairs.getKey().toString() + "%")) {
+                    unhealthy = unhealthy.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                }
+                if (unhealthy.contains("${" + pairs.getKey().toString() + "}")) {
+                    unhealthy = unhealthy.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                }
+                if (unhealthy.contains("$" + pairs.getKey().toString())) {
+                    unhealthy = unhealthy.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                }
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+        }
 
         if (kloConfig == null) {
             // no thresholds => no report
             return null;
         }
 
-        if (isHealthyReportEnabled(kloConfig)) {
+        if (isHealthyReportEnabled(healthy, unhealthy)) {
             int percentage;
             int counter = nbErrorForSeverity;
 
-            if (counter < KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getHealthy())) {
+            if (counter < KloMetricUtil.convert(healthy)) {
                 percentage = 100;
-            } else if (counter > KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getUnHealthy())) {
+            } else if (counter > KloMetricUtil.convert(unhealthy)) {
                 percentage = 0;
             } else {
-                percentage = 100 - ((counter - KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getHealthy())) * 100
-                        / (KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getUnHealthy()) - KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getHealthy())));
+                percentage = 100 - ((counter - KloMetricUtil.convert(healthy)) * 100
+                        / (KloMetricUtil.convert(unhealthy) - KloMetricUtil.convert(healthy)));
             }
 
             return new HealthReport(percentage, Messages._KlocworkBuildHealthEvaluator_Description(KloMetricUtil.getMessageSelectedSeverties(kloConfig)));
@@ -53,11 +86,10 @@ public class KloBuildHealthEvaluator {
         return null;
     }
 
-
-    private boolean isHealthyReportEnabled(KloConfig kloConfig) {
-        if (KloMetricUtil.isValid(kloConfig.getConfigSeverityEvaluation().getHealthy()) && KloMetricUtil.isValid(kloConfig.getConfigSeverityEvaluation().getUnHealthy())) {
-            int healthyNumber = KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getHealthy());
-            int unHealthyNumber = KloMetricUtil.convert(kloConfig.getConfigSeverityEvaluation().getUnHealthy());
+    private boolean isHealthyReportEnabled(String healthy, String unhealthy) {
+        if (KloMetricUtil.isValid(healthy) && KloMetricUtil.isValid(unhealthy)) {
+            int healthyNumber = KloMetricUtil.convert(healthy);
+            int unHealthyNumber = KloMetricUtil.convert(unhealthy);
             return unHealthyNumber > healthyNumber;
         }
         return false;
