@@ -42,7 +42,8 @@ public class KloSourceContainer {
             FilePath sourceFilePath = new FilePath(basedir, kloFile.get("file"));
 
             if (!sourceFilePath.exists()) {
-                listener.getLogger().println("[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+                //listener.getLogger().println("[WARNING] - The source file '" + sourceFilePath.toURI() + "' doesn't exist on the slave. The ability to display its source code has been removed.");
+                //[MB]: No longer needed as source availble from review link
                 kloWorkspaceFile.setSourceIgnored(true);
                 kloWorkspaceFile.setFileName(null);
             } else if (sourceFilePath.isDirectory()) {

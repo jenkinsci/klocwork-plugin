@@ -29,49 +29,48 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.config;
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import java.io.Serializable;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KloConfigNoKwinspectreport implements Serializable {
 
     private String klocworkReportPattern;
-
+	
     private boolean kwinspectreportDeprecated;
-
+	
     private boolean publishBuildGraph;
     private boolean publishProjectGraph;
-
+	
     private KloConfigSeverityEvaluation configSeverityEvaluation;
     private KloConfigTrendGraph trendGraph;
     private KloConfigBuildGraph buildGraph;
 
     public KloConfigNoKwinspectreport() {
     }
-
-    @DataBoundConstructor
+	
+	@DataBoundConstructor
     public KloConfigNoKwinspectreport(
-            String klocworkReportPattern,
-            boolean publishBuildGraph, boolean publishProjectGraph,
-            String trendNum, String interval,
-            int trendXSize, int trendYSize,
-            boolean displayAllError,
-            boolean displayHighSeverity,
-            boolean displayLowSeverity,
-            int buildXSize, int buildYSize, boolean neww,
-            boolean existing, boolean fixed,
-            String threshold,
-            String newThreshold, String failureThreshold,
-            String newFailureThreshold, String healthy, String unHealthy,
-            boolean highSeverity, boolean lowSeverity
-    ) {
+									String klocworkReportPattern,
+									boolean publishBuildGraph, boolean publishProjectGraph,
+									String trendNum, String interval,
+									int trendXSize, int trendYSize,
+									boolean displayAllError,
+									boolean displayHighSeverity,
+									boolean displayLowSeverity,
+									int buildXSize, int buildYSize, boolean neww,
+									boolean existing, boolean fixed,
+									String threshold,
+									String newThreshold, String failureThreshold,
+									String newFailureThreshold, String healthy, String unHealthy,
+									boolean highSeverity, boolean lowSeverity
+									  ) {
         super();
-        this.kwinspectreportDeprecated = false;
-        this.klocworkReportPattern = klocworkReportPattern;
-        this.publishBuildGraph = publishBuildGraph;
+		this.kwinspectreportDeprecated = false;
+		this.klocworkReportPattern = klocworkReportPattern;
+		this.publishBuildGraph = publishBuildGraph;
         this.publishProjectGraph = publishProjectGraph;
-
-        this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
+		
+		this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
                 displayHighSeverity, displayLowSeverity, interval, trendNum);
 
         this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
@@ -81,30 +80,30 @@ public class KloConfigNoKwinspectreport implements Serializable {
                 threshold, newThreshold, failureThreshold, newFailureThreshold, healthy,
                 unHealthy, highSeverity, lowSeverity);
     }
-
-    public KloConfigNoKwinspectreport(
-            boolean kwinspectreportDeprecated,
-            String klocworkReportPattern,
-            boolean publishBuildGraph, boolean publishProjectGraph,
-            String trendNum, String interval,
-            int trendXSize, int trendYSize,
-            boolean displayAllError,
-            boolean displayHighSeverity,
-            boolean displayLowSeverity,
-            int buildXSize, int buildYSize, boolean neww,
-            boolean existing, boolean fixed,
-            String threshold,
-            String newThreshold, String failureThreshold,
-            String newFailureThreshold, String healthy, String unHealthy,
-            boolean highSeverity, boolean lowSeverity
-    ) {
+	
+	public KloConfigNoKwinspectreport(
+									boolean kwinspectreportDeprecated,
+									String klocworkReportPattern,
+									boolean publishBuildGraph, boolean publishProjectGraph,
+									String trendNum, String interval,
+									int trendXSize, int trendYSize,
+									boolean displayAllError,
+									boolean displayHighSeverity,
+									boolean displayLowSeverity,
+									int buildXSize, int buildYSize, boolean neww,
+									boolean existing, boolean fixed,
+									String threshold,
+									String newThreshold, String failureThreshold,
+									String newFailureThreshold, String healthy, String unHealthy,
+									boolean highSeverity, boolean lowSeverity
+									  ) {
         super();
-        this.kwinspectreportDeprecated = kwinspectreportDeprecated;
-        this.klocworkReportPattern = klocworkReportPattern;
-        this.publishBuildGraph = publishBuildGraph;
+		this.kwinspectreportDeprecated = kwinspectreportDeprecated;
+		this.klocworkReportPattern = klocworkReportPattern;
+		this.publishBuildGraph = publishBuildGraph;
         this.publishProjectGraph = publishProjectGraph;
-
-        this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
+		
+		this.trendGraph = new KloConfigTrendGraph(trendXSize, trendYSize, displayAllError,
                 displayHighSeverity, displayLowSeverity, interval, trendNum);
 
         this.buildGraph = new KloConfigBuildGraph(buildXSize, buildYSize, neww,
@@ -116,35 +115,35 @@ public class KloConfigNoKwinspectreport implements Serializable {
     }
 
     public String getKlocworkReportPattern() {
-        return klocworkReportPattern;
-    }
-
-    public boolean getKwinspectreportDeprecated() {
-        return kwinspectreportDeprecated;
-    }
-
-    public void setKwinspectreportDeprecated(boolean kwinspectreportDeprecated) {
-        this.kwinspectreportDeprecated = kwinspectreportDeprecated;
-    }
-
-    public boolean getPublishProjectGraph() {
-        return publishProjectGraph;
-    }
-
-    public boolean getPublishBuildGraph() {
-        return publishBuildGraph;
-    }
-
-    public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
-        return configSeverityEvaluation;
-    }
-
-    public KloConfigTrendGraph getTrendGraph() {
-        return trendGraph;
-    }
-
-    public KloConfigBuildGraph getBuildGraph() {
-        return buildGraph;
-    }
+		return klocworkReportPattern;
+	}
+	
+	public boolean getKwinspectreportDeprecated() {
+		return kwinspectreportDeprecated;
+	}
+	
+	public void setKwinspectreportDeprecated(boolean kwinspectreportDeprecated) {
+		this.kwinspectreportDeprecated = kwinspectreportDeprecated;
+	}
+	
+	public boolean getPublishProjectGraph() {
+		return publishProjectGraph;
+	}
+	
+	public boolean getPublishBuildGraph() {
+		return publishBuildGraph;
+	}
+	
+	public KloConfigSeverityEvaluation getConfigSeverityEvaluation() {
+		return configSeverityEvaluation;
+	}
+	
+	public KloConfigTrendGraph getTrendGraph() {
+		return trendGraph;
+	}
+	
+	public KloConfigBuildGraph getBuildGraph() {
+		return buildGraph;
+	}
 
 }

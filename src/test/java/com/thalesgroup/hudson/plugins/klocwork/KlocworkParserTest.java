@@ -33,6 +33,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 public class KlocworkParserTest {
@@ -48,7 +51,7 @@ public class KlocworkParserTest {
     @Test
     public void nullFile() throws Exception {
         try {
-            kloParser.parse(null);
+            kloParser.parse(null, null, false);
             Assert.fail("null parameter is not allowed.");
         } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
@@ -58,7 +61,7 @@ public class KlocworkParserTest {
     @Test
     public void nonExistFile() throws Exception {
         try {
-            kloParser.parse(new File("nonExistFile"));
+            kloParser.parse(new File("nonExistFile"), null, false);
             Assert.fail("A valid file is mandatory.");
         } catch (IllegalArgumentException iea) {
             Assert.assertTrue(true);
@@ -68,27 +71,27 @@ public class KlocworkParserTest {
     //Reminder : in klocwork, the higher the severity is, the less important the error is
     private void analyzeFiles(String file, int nbHighSeverities, int nbLowSeverities) {
         try {
-            // Class thisClass = this.getClass();
-            // URL url = thisClass.getResource(file); // returns null....
-            // URI uri = url.toURI();
-            // File reportFile = new File(uri);
-            File reportFile = new File(file);
-            KloReport report = kloParser.parse(reportFile);
-            List<KloFile> highSeverities = report.getHighSeverities();
-            List<KloFile> lowSeverities = report.getLowSeverities();
-            List<KloFile> allSeverities = report.getAllSeverities();
+			// Class thisClass = this.getClass();
+			// URL url = thisClass.getResource(file); // returns null....
+			// URI uri = url.toURI();
+			// File reportFile = new File(uri);
+			File reportFile = new File(file);
+            KloReport report = kloParser.parse(reportFile, null, false);
+            int highSeverities = report.getHighSeverities();
+            int lowSeverities = report.getLowSeverities();
+            int allSeverities = report.getAllSeverities();
 
-            assert highSeverities != null;
-            assert lowSeverities != null;
-            assert allSeverities != null;
+            assert highSeverities != 0;
+            assert lowSeverities != 0;
+            assert allSeverities != 0;
 
-            Assert.assertEquals("Wrong number of total severities", allSeverities.size(), nbHighSeverities + nbLowSeverities);
-            Assert.assertEquals("Wrong number of high severities", highSeverities.size(), nbHighSeverities);
-            Assert.assertEquals("Wrong number of low severities", lowSeverities.size(), nbLowSeverities);
+            Assert.assertEquals("Wrong number of total severities", allSeverities, nbHighSeverities + nbLowSeverities);
+            Assert.assertEquals("Wrong number of high severities", highSeverities, nbHighSeverities);
+            Assert.assertEquals("Wrong number of low severities", lowSeverities, nbLowSeverities);
         } catch (IOException e) {
             e.printStackTrace();
         } //catch (URISyntaxException e) {
-        // e.printStackTrace();
+            // e.printStackTrace();
         // }
     }
 

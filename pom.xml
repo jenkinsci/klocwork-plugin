@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>1.532.3</version>
+        <version>1.557</version>
     </parent>
 
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.20.1</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -95,6 +95,12 @@
     </properties>
 
     <dependencies>
+        
+        <dependency>
+            <groupId>eu.emenda</groupId>
+            <artifactId>kwjlib</artifactId>
+            <version>2.9</version>
+        </dependency>
 
         <dependency>
             <groupId>de.java2html</groupId>
@@ -143,13 +149,54 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.emenda</groupId>
-            <artifactId>kwjlib</artifactId>
-            <version>1.2</version>
+        
+        <dependency> 
+            <groupId>org.jenkins-ci.plugins</groupId> 
+            <artifactId>dashboard-view</artifactId> 
+            <version>2.0</version> 
+            <optional>true</optional> 
+        </dependency> 
+        
+<!--        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.1</version>
         </dependency>
+        <dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpcore</artifactId>
+    <version>4.4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20150729</version>
+        </dependency>-->
+        <!--
+        <dependency>
+            <groupId>org.hudsonci.plugins</groupId>
+            <artifactId>jfreechart-plugin</artifactId>
+            <version>1.5</version>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>matrix-project</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
+        -->
     </dependencies>
+	
+    <repositories>
+        <repository>
+            <id>Emenda</id>
+            <name>java-libs</name>
+            <url>https://gitlab.com/emenda/java-libs/raw/master</url>
+            <layout>default</layout> 
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -194,6 +241,15 @@
                                     </outputDirectory>
                                 </artifactItem>
                                 <artifactItem>
+                                    <groupId>eu.emenda</groupId>
+                                    <artifactId>kwjlib</artifactId>
+                                    <version>2.9</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/klocwork/WEB-INF/lib
+                                    </outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
                                     <groupId>net.sourceforge.saxon</groupId>
                                     <artifactId>saxon</artifactId>
                                     <version>9.1.0.8</version>
@@ -227,22 +283,6 @@
         <developerConnection>scm:git:git@github.com:cittools/klocwork-plugin.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
-    <repositories>
-        <repository>
-            <id>kwjlib-mvn-repo</id>
-            <url>https://raw.github.com/Emenda/kwjlib/mvn-repo/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
 
 </project>
 
