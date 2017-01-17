@@ -10,7 +10,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.20.1</version>
+    <version>1.21-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -95,7 +95,7 @@
     </properties>
 
     <dependencies>
-        
+
         <dependency>
             <groupId>eu.emenda</groupId>
             <artifactId>kwjlib</artifactId>
@@ -149,14 +149,14 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-        
-        <dependency> 
-            <groupId>org.jenkins-ci.plugins</groupId> 
-            <artifactId>dashboard-view</artifactId> 
-            <version>2.0</version> 
-            <optional>true</optional> 
-        </dependency> 
-        
+
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>dashboard-view</artifactId>
+            <version>2.0</version>
+            <optional>true</optional>
+        </dependency>
+
 <!--        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -179,7 +179,7 @@
             <version>1.5</version>
             <optional>true</optional>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>matrix-project</artifactId>
@@ -188,13 +188,13 @@
         </dependency>
         -->
     </dependencies>
-	
+
     <repositories>
         <repository>
             <id>Emenda</id>
             <name>java-libs</name>
             <url>https://gitlab.com/emenda/java-libs/raw/master</url>
-            <layout>default</layout> 
+            <layout>default</layout>
         </repository>
     </repositories>
 
@@ -285,4 +285,3 @@
     </scm>
 
 </project>
-
