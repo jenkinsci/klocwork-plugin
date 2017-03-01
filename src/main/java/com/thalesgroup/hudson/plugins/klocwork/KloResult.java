@@ -86,38 +86,6 @@ public class KloResult implements Serializable {
     }
 
     /**
-     * Returns the dynamic result of the selection element.
-     *
-     * @param link     the link to identify the sub page to show
-     * @param request  Stapler request
-     * @param response Stapler response
-     * @return the dynamic result of the analysis (detail page).
-     * @throws IOException
-     */
-    public Object getDynamic(final String link, final StaplerRequest request, final StaplerResponse response) throws IOException {
-
-        if (link.startsWith("source.")) {
-
-            if (!owner.getProject().getACL().hasPermission(Item.WORKSPACE)) {
-                response.sendRedirect2("nosourcepermission");
-                return null;
-            }
-
-            //Map<Integer, KloFile> agregateMap = report.getInternalMap();
-            Map<Integer, KloWorkspaceFile> agregateMap = kloSourceContainer.getInternalMap();
-            if (agregateMap != null) {
-                KloWorkspaceFile vKloFile = agregateMap.get(Integer.parseInt(StringUtils.substringAfter(link, "source.")));
-                if (vKloFile == null) {
-                    throw new IllegalArgumentException("Error for retrieving the source file with link:" + link);
-                }
-                return new KloSource(owner, vKloFile);
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Renders the summary Klocwork report for the build result.
      *
      * @return the HTML fragment of the summary Klocwork report

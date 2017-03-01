@@ -10,7 +10,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.21-SNAPSHOT</version>
+    <version>1.22</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -19,65 +19,6 @@
             <comments>All source code is under the MIT license.</comments>
         </license>
     </licenses>
-
-    <developers>
-        <developer>
-            <id>Aravindan</id>
-            <name>Aravindan Mahendran</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-                <role>Project maintainer</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>gboissinot</id>
-            <name>Gregory Boissinot</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project maintainer</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>Gregory Boissinot</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project Technical Lead</role>
-            </roles>
-        </contributor>
-        <contributor>
-            <name>Loic Quentin</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-            </roles>
-        </contributor>
-        <contributor>
-            <name>Jacob Larfors</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-            </roles>
-        </contributor>
-        <contributor>
-            <name>Andreas Larfors</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-            </roles>
-        </contributor>
-
-        <contributor>
-            <name>Yoan Poigneau</name>
-            <timezone>+1</timezone>
-            <roles>
-                <role>Project developer</role>
-            </roles>
-        </contributor>
-    </contributors>
 
     <properties>
         <jaxb.api.version>2.2.1</jaxb.api.version>
@@ -103,90 +44,12 @@
         </dependency>
 
         <dependency>
-            <groupId>de.java2html</groupId>
-            <artifactId>java2html</artifactId>
-            <version>${java2html.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.lib.dtkit</groupId>
-            <artifactId>dtkit-metrics-util</artifactId>
-            <version>${dtkit.util.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.saxon</groupId>
-                    <artifactId>saxon</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.lib.dtkit</groupId>
-            <artifactId>dtkit-metrics-model</artifactId>
-            <version>${dtkit.model.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-impl</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>dashboard-view</artifactId>
             <version>2.0</version>
             <optional>true</optional>
         </dependency>
 
-<!--        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-        <dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpcore</artifactId>
-    <version>4.4.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20150729</version>
-        </dependency>-->
-        <!--
-        <dependency>
-            <groupId>org.hudsonci.plugins</groupId>
-            <artifactId>jfreechart-plugin</artifactId>
-            <version>1.5</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>matrix-project</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        -->
     </dependencies>
 
     <repositories>

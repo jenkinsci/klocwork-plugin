@@ -24,7 +24,6 @@
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork.parser;
 
-import com.thalesgroup.dtkit.util.validator.ValidationError;
 import com.thalesgroup.hudson.plugins.klocwork.model.*;
 import hudson.FilePath;
 import hudson.model.BuildListener;
@@ -71,16 +70,6 @@ public class KloParser implements Serializable {
 
         KloReport report = new KloReport();
 
-        List<ValidationError> list = KlocworkModel.OUTPUT_KLOCWORK_9_2.validate(file);
-        if (!list.isEmpty()) {
-            StringBuilder sb = new StringBuilder("XML Validation failed. See errors below :\n");
-            for (ValidationError val : list) {
-                sb.append(val.toString()).append("\n");
-            }
-            throw new IllegalArgumentException(sb.toString());
-        }
-
-
         try {
 
             ErrorList errList = getErrorList(file);
@@ -107,15 +96,7 @@ public class KloParser implements Serializable {
 
             }
             
-            int severityDelimiter = 3; // default
-            // Version 9.5 Klocwork changed issue severity levels
-            // TODO: Improve maintainability of code by removing version-dependency here
-            if (
-                    (kloVersion != null && (kloVersion.startsWith("9.5") || kloVersion.startsWith("9.6")|| kloVersion.startsWith("10.0")|| kloVersion.startsWith("10.1")))
-                    || use96up
-                    ) {
-                severityDelimiter = 2;
-            }
+            int severityDelimiter = 2;
            
             int i = 0;
             for (Problem problem : errList.getProblem()) {
