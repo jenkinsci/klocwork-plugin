@@ -1,0 +1,29 @@
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
+         xmlns:l="/lib/layout">
+    <l:layout norefresh="true">
+        <st:include it="${it.owner}" page="sidepanel.jelly"/>
+        <l:main-panel>
+            <h1>Klocwork Result</h1>
+            <h2>Errors Trend</h2>
+            <p style="line-height: 80%">Klocwork Build Name: abcdefc</p>
+            <p style="line-height: 80%">Built on: xubuntu-emenda</p>
+            <p style="line-height: 80%">Search Query: "status:New severity:1,2"</p>
+
+
+            <h2>Errors Trend</h2>
+            <table class="sortable" style="width:80%">
+                <tr>
+                    <td class="pane-header" style="width:50%">All errors</td>
+                    <td class="pane-header" style="width:50%">New errors</td>
+                </tr>
+                <tbody>
+                    <tr>
+                        <td class="pane">${it.report.numberTotal}</td>
+                        <td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

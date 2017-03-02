@@ -1,0 +1,59 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Perform Dry Run}" field="dryRun">
+        <f:checkbox default="true"/>
+    </f:entry>
+    <f:entry title="${%Project Filter}">
+        <f:textbox field="projectRegexp"/>
+    </f:entry>
+    <f:entry title="${%Last Sync}">
+        <f:textbox field="lastSync" default="00-00-0000 00:00:00"/>
+    </f:entry>
+    <f:entry title="${%Sync Statuses}">
+        <table>
+            <tr>
+                <td>
+                    <f:checkbox default="true" field="statusAnalyze"/>
+                    <label>Analyze</label>
+                </td>
+                <td>
+                    <f:checkbox default="true" field="statusIgnore"/>
+                    <label>Ignore</label>
+                </td>
+                <td>
+                    <f:checkbox default="true" field="statusNotAProblem"/>
+                    <label>Not a Problem</label>
+                </td>
+                <td>
+                    <f:checkbox default="true" field="statusFix"/>
+                    <label>Fix</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <f:checkbox default="true" field="statusFixInNextRelease"/>
+                    <label>Fix in Next Release</label>
+                </td>
+                <td>
+                    <f:checkbox default="false" field="statusFixInLaterRelease"/>
+                    <label>Fix in Later Release</label>
+                </td>
+                <td>
+                    <f:checkbox default="true" field="statusDefer"/>
+                    <label>Defer</label>
+                </td>
+                <td>
+                    <f:checkbox default="true" field="statusFilter"/>
+                    <label>Filter</label>
+                </td>
+            </tr>
+        </table>
+    </f:entry>
+    <f:advanced>
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+          <f:textbox/>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>

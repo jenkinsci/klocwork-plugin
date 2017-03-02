@@ -1,0 +1,35 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:advanced>
+        <f:entry title="${%Local Project Directory}">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:60%">
+                        <f:textbox field="projectDir"/>
+                    </td>
+                    <td style="width:40%">
+                        <f:checkbox name="cleanupProject" checked="${instance.cleanupProject=='true'}" value="cleanupProject"/>
+                        <f:label for="cleanupProject">Cleanup Existing Project</f:label>
+                    </td>
+                </tr>
+            </table>
+        </f:entry>
+        <f:entry title="${%XML Report File}">
+          <f:textbox field="reportFile"/>
+        </f:entry>
+        <f:entry title="${%Additional Options}">
+          <f:textbox field="additionalOpts"/>
+        </f:entry>
+        <!-- <f:block>
+            <f:optionalBlock name="setupKwdtagent" title="${%Start Remote Desktop Agent}" checked="${instance.setupKwdtagent}" inline="true">
+                <f:entry title="${%kwdtagent Port}" field="kwdtagentPort">
+                    <f:textbox default="9011"/>
+                </f:entry>
+            </f:optionalBlock>
+        </f:block> -->
+        <f:optionalBlock name="incrementalAnalysis" title="${%Perform Incremental Analysis}" checked="${instance.incrementalAnalysis}" inline="true">
+            <f:property field="diffAnalysisConfig" />
+        </f:optionalBlock>
+    </f:advanced>
+</j:jelly>

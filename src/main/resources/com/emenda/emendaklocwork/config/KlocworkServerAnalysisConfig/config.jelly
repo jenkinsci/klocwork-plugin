@@ -1,0 +1,22 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Incremental Analysis}">
+      <f:checkbox field="incrementalAnalysis" default="true"/>
+    </f:entry>
+
+    <f:advanced>
+        <f:entry title="${%Tables Directory}">
+          <f:textbox field="tablesDir" default="kwtables"/>
+        </f:entry>
+
+        <f:entry title="${%Ignore Return Codes}">
+          <f:checkbox field="ignoreReturnCodes" default="true"/>
+        </f:entry>
+
+        <f:entry title="${%Additional Options}">
+          <f:textbox field="additionalOpts"/>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>
