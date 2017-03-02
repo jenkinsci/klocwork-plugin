@@ -22,18 +22,18 @@
  * THE SOFTWARE.                                                                *
  *******************************************************************************/
  -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
   xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
   xmlns:i="jelly:fmt" xmlns:local="local">
-         
+
      <j:if test="${it.report.allSeverities != 0}">
         <st:header name="Content-Type" value="text/html;charset=UTF-8" />
          <j:if test="${it.kloSourceContainer != null}">
             <h2>Details</h2>
             <st:include page="summary.jelly" />
          </j:if>
-         
+
      </j:if>
 
 </j:jelly>

@@ -22,15 +22,15 @@
  * THE SOFTWARE.                                                                *
  *******************************************************************************/
  -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:u="/util">
 
     <j:set var="config" value="${instance.kloConfig}"/>
     <j:if test="${config == null}">
         <j:set var="config" value="${descriptor.config}"/>
-    </j:if>    
-	
+    </j:if>
+
     <f:rowSet name="config">
         <f:block>
             <table>
@@ -41,14 +41,14 @@
                             <f:textbox name="webAPIQuery" value="${config.webAPI.webAPIQuery}" default="status:Analyze,Fix -status:'Fix in'"/>
                         </f:entry>
                     </f:optionalBlock>
-                </tr>   
+                </tr>
             </table>
         </f:block>
         <f:block>
-            <table>                            
+            <table>
                 <f:entry title="${%Klocwork report XMLs}"						description="${%description.pattern('http://ant.apache.org/manual/Types/fileset.html')}" help="/plugin/klocwork/reportXML.html" >
                         <f:textbox name="klocworkReportPattern" value="${config.klocworkReportPattern}"/>
-                </f:entry>			
+                </f:entry>
                 <f:entry title="${%Publish Graphs}" description="Enter the number of Klocwork builds to report on the project trend graph and the interval." help="/plugin/klocwork/trendConfig.html">
                     <table>
                         <tr>
@@ -113,11 +113,11 @@
             <f:entry title="${%Host Name}" help="/plugin/klocwork/buildLink9.html">
                     <f:textbox name="host" value="${config.host}"/>
             </f:entry>
-				
+
             <f:entry title="${%Port}">
                 <f:textbox name="port" value="${config.port}"/>
             </f:entry>
-            
+
             <f:entry title="">
                 <f:checkbox name="useSSL" checked="${config.useSSL}" title="${%Use SSL}"/>
             </f:entry>
@@ -147,34 +147,34 @@
             </f:optionalBlock>
         </table>
     </f:block>
-		
+
         <!--
         <f:entry title="${%Publish Klocwork Results}" help="/plugin/klocwork/resultsLink.html" >
             <table>
                 <tr>
                     <td style="width:200px">
-                        <f:checkbox name="publishKlocworkResults" checked="${config.publishKlocworkResults}" 
+                        <f:checkbox name="publishKlocworkResults" checked="${config.publishKlocworkResults}"
                                     title="${%Publish Klocwork Results}" />
                     </td>
                 </tr>
             </table>
         </f:entry>
         -->
-  
-             
-     
-   
+
+
+
+
         <f:entry title="${%Create Links for}" help="/plugin/klocwork/buildLinks.html" >
             <table>
                 <tr>
                     <td style="width:200px">
-                        <f:checkbox name="linkReview" checked="${config.linkReview}" title="${%Klocwork Review}" />     
+                        <f:checkbox name="linkReview" checked="${config.linkReview}" title="${%Klocwork Review}" />
                     </td>
 <!--                    <td style="width:200px">
-                        <f:checkbox name="linkBuildLog" checked="${config.linkBuildLog}" title="${%Build Log}" />     
+                        <f:checkbox name="linkBuildLog" checked="${config.linkBuildLog}" title="${%Build Log}" />
                     </td>
                     <td style="width:200px">
-                        <f:checkbox name="linkParseLog" checked="${config.linkParseLog}" title="${%Parse Log}" />     
+                        <f:checkbox name="linkParseLog" checked="${config.linkParseLog}" title="${%Parse Log}" />
                     </td>-->
                 </tr>
             </table>
@@ -190,6 +190,6 @@
             </table>
         </f:entry>
         -->
-        
+
     </f:rowSet>
 </j:jelly>

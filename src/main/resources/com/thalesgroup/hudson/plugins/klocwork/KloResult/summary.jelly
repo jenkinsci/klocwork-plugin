@@ -22,7 +22,7 @@
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
 -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:i="jelly:fmt" xmlns:g="/jelly/klocwork" xmlns:local="local">
@@ -50,7 +50,7 @@
             <td class="pane-header" style="width:2em">Status</td>
         </tr>
         <tbody>
-            <j:forEach var="elt" items="${it.kloSourceContainer.internalMap.values()}">    
+            <j:forEach var="elt" items="${it.kloSourceContainer.internalMap.values()}">
                 <j:set var="kloFile" value="${elt.kloFile}"/>
                 <tr>
                     <td class="pane">
@@ -83,6 +83,6 @@
                     <g:format value="${kloFile.citingStatus}" />
                 </tr>
             </j:forEach>
-        </tbody>    
+        </tbody>
     </table>
 </j:jelly>

@@ -22,9 +22,9 @@
 * THE SOFTWARE.                                                                *
 *******************************************************************************/
 -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" >
-  
+
     <f:entry title="Klocwork Version" help="/plugin/klocwork/instName.html">
         <select class="setting-input" name="klocwork.kloName">
             <option>(Default)</option>
@@ -33,7 +33,7 @@
             </j:forEach>
         </select>
     </f:entry>
-  
+
     <f:entry title="Klocwork v9.6 or later" help="/plugin/klocwork/kwinspectreport.html">
         <f:checkbox name="kwinspectreportDeprecated" checked="${instance.kwinspectreportDeprecated}" />
     </f:entry>
@@ -41,11 +41,11 @@
     <f:entry title="Delete Table after analysis" help="/plugin/klocwork/deleterTableAfterAnalysis.html" description="Deletes the table generated in your Jenkins workspace after analysis is complete and results have been processed.">
         <f:checkbox name="deleteTable" checked="${instance.deleteTable}" />
     </f:entry>
-        
+
     <f:entry title="Project Name" field="projectName" description="Specify Klocwork project name (must be an existing project)">
-        <f:textbox  />           		   
+        <f:textbox  />
     </f:entry>
-		
+
     <f:entry title="Build Name" help="/plugin/klocwork/help-buildName.html" field="buildName" description="(Optional) Specify a particular build name.">
         <f:textbox />
     </f:entry>
@@ -58,7 +58,7 @@
         </select>
     </f:entry>
 
-   
+
     <f:entry title="Build value" description="If you have specified to build using a Build Command, enter the build command starting with kwinject or kwant (note if you use the -o option the buildspec file must end in .out). If you have specified to build using an existing build specification file, enter the full or relative path to the build specification file. Multiple build specification files can be provided, separated by commas (,)." field="kwCommand">
         <f:textbox />
     </f:entry>
@@ -66,19 +66,19 @@
     <f:entry title="Klocwork Build Options" description="" field="kwbuildprojectOptions">
         <f:textbox />
     </f:entry>
-  
+
     <!-- Binary build option. Stop build if build errors exist -->
     <f:entry title="Binary Build" description="Set whether to stop the build process if a build error exists." help="/plugin/klocwork/help-binaryBuild.html">
         <f:checkbox name="compilerBinaryBuild" title="Stop build if compiler build error exists (Strict)" checked="${instance.compilerBinaryBuild}" />
         <br />
         <f:checkbox name="kwBinaryBuild" title="Stop build if a Klocwork build error exists (Less Strict)" checked="${instance.kwBinaryBuild}" />
     </f:entry>
-    
+
     <f:entry title="Save build.log" help="/plugin/klocwork/buildLog.html">
         <f:checkbox name="buildLog" checked="${instance.buildLog}" default="true"/>
     </f:entry>
     <f:entry title="Save parse_errors.log" help="/plugin/klocwork/parseLog.html">
         <f:checkbox name="parseLog" checked="${instance.parseLog}" default="true"/>
     </f:entry>
-    
+
 </j:jelly>

@@ -28,16 +28,16 @@
 
   <%@attribute name="id" required="true" %>
 -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
   xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
   xmlns:f="/lib/form" xmlns:u="/util">
-  
+
   <j:set var="config" value="${instance.kloConfig}"/>
    <j:if test="${config == null}">
       <j:set var="config" value="${descriptor.config}"/>
    </j:if>
-   
+
 
   <f:entry title="${%Build status}" description="${%description.status}">
     <table>
@@ -132,17 +132,17 @@
 		<st:nbsp/>
 		<label for="thresholdLimit.every">${%All severities}</label>
 		<st:nbsp />-->
-		
+
 		<f:checkbox name="${id}.config.configSeverityEvaluation.highSeverity" checked="${config.configSeverityEvaluation.highSeverity}" id="thresholdLimit.highSeverity"/>
 		<st:nbsp/>
 		<label for="thresholdLimit.highSeverity">${%Warnings and suggestions}</label>
 		<st:nbsp />
-		
+
 		<f:checkbox name="${id}.config.configSeverityEvaluation.lowSeverity" checked="${config.configSeverityEvaluation.lowSeverity}" id="thresholdLimit.lowSeverity"/>
 		<st:nbsp/>
 		<label for="thresholdLimit.lowSeverity">${%Critical errors}</label>
 		<st:nbsp />
-		
+
     </f:entry>
-    
+
 </j:jelly>

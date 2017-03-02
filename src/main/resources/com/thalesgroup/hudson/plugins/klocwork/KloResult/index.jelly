@@ -22,7 +22,7 @@
  * THE SOFTWARE.                                                                *
  *******************************************************************************/
  -->
-
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
 	xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 	xmlns:f="/lib/form" xmlns:i="jelly:fmt">
@@ -30,7 +30,7 @@
 		<st:include it="${it.owner}" page="sidepanel.jelly" />
 		<l:main-panel>
 			 <h1>Klocwork Result</h1>
-			
+
 			 <h2>Errors Trend</h2>
 			 <table class="pane sortable">
     				<tr>
@@ -43,9 +43,9 @@
 	          			<td class="pane">${it.numberNewErrorsFromPreviousBuild}</td>
 					</tr>
 				</tbody>
-			 </table>	
-			 
-			 
+			 </table>
+
+
 			 <h2>Summary</h2>
 			 <table class="pane sortable">
     				<tr>
@@ -60,8 +60,8 @@
 	          			<td class="pane">${it.report.numberLowSeverities}</td>
 					</tr>
 				</tbody>
-			 </table>			 
-			 	          				
+			 </table>
+
 	        <st:include page="/tabview/main.jelly" />
 		</l:main-panel>
 	</l:layout>

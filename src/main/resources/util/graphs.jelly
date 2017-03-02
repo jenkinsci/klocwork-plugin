@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler"
 xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson"
 xmlns:f="/lib/form" xmlns:u="/util">
@@ -97,7 +98,7 @@ xmlns:f="/lib/form" xmlns:u="/util">
                     <label for="trendGraph.warningSuggestion">${%Warning and Suggestions}</label>
                     <st:nbsp />
                 </td>
-            </tr> 
+            </tr>
          </table>
     </f:entry>
 -->
@@ -138,7 +139,7 @@ xmlns:f="/lib/form" xmlns:u="/util">
                         <st:nbsp />
                     </td>
                 </tr>
-            </table> 
+            </table>
         </f:entry>
     </f:advanced>
 </j:jelly>

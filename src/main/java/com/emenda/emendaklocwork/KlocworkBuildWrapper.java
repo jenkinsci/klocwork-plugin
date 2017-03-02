@@ -81,12 +81,12 @@ public class KlocworkBuildWrapper extends BuildWrapper {
 
 
     @Override
-    public Launcher decorateLauncher(AbstractBuild build, Launcher launcher,
+    public Launcher decorateLauncher(AbstractBuild build, final Launcher launcher,
                              BuildListener listener) throws IOException,
                              RunnerAbortedException {
-        KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
+        final KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
         logger.logMessage("Setting up PATH for Klocwork jobs...");
-        KlocworkInstallConfig install = getDescriptor().getInstallConfig(installConfig);
+        final KlocworkInstallConfig install = getDescriptor().getInstallConfig(installConfig);
 
         final Node node =  Computer.currentComputer().getNode();
         if (node == null) {
@@ -134,9 +134,9 @@ public class KlocworkBuildWrapper extends BuildWrapper {
     public Environment setUp(AbstractBuild build, Launcher launcher,
             BuildListener listener) throws IOException, InterruptedException {
 
-            KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
+            final KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
             logger.logMessage("Setting up environment variables for Klocwork jobs...");
-            KlocworkServerConfig server = getDescriptor().getServerConfig(serverConfig);
+            final KlocworkServerConfig server = getDescriptor().getServerConfig(serverConfig);
             return new Environment() {
                 @Override
                 public void buildEnvVars(Map<String, String> env) {
