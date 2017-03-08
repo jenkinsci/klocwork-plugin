@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import org.emendashaded.json.JSONObject;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.jenkinsci.remoting.RoleChecker;
 
 /**
  * KloXMLGenerator uses the kwjlib library to connect to the Klocwork server and
@@ -66,6 +67,11 @@ public class KloXMLGenerator implements Serializable {
 
         public String call() throws RuntimeException {
             return GenerateXMLFromIssues(a_host, a_port, useSSL, a_projectname, a_filename, listener, a_query, a_user);
+        }
+
+        public void checkRoles(RoleChecker checker)
+                    throws SecurityException {
+            // added for support with newer Jenkins v1.6+
         }
     }
 
@@ -169,7 +175,7 @@ public class KloXMLGenerator implements Serializable {
                             KWservice.errorMessage.clear();
                         }
                         return "1";
-                    }           
+                    }
                 } else {
                     listener.getLogger().println("ERROR while generating XML. Could not open file for writing: " + a_filename);
                 }

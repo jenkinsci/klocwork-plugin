@@ -18,7 +18,7 @@
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER *
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN *
- * THE SOFTWARE. * 
+ * THE SOFTWARE. *
  * *
  *******************************************************************************/
 package com.thalesgroup.hudson.plugins.klocwork;
@@ -31,6 +31,7 @@ import com.thalesgroup.hudson.plugins.klocwork.model.KloReport;
 import com.thalesgroup.hudson.plugins.klocwork.util.KloBuildHealthEvaluator;
 import hudson.model.AbstractBuild;
 import hudson.model.HealthReport;
+import hudson.model.Run;
 import hudson.util.ChartUtil;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.DataSetBuilder;
@@ -48,8 +49,8 @@ public class KloBuildAction extends AbstractKloBuildAction {
     public static final String URL_NAME = "kloResult";
 	private String iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
 	private String displayName = "Klocwork Results";
-	
-	
+
+
     private KloResult result;
     private KloConfig kloConfig;
     private Map<String, String> matrixBuildVars;
@@ -74,7 +75,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
 //		}
                 iconFileName = "/plugin/klocwork/icons/klocwork-24.gif";
                 displayName = "Klocwork Results";
-		
+
     }
 
     public String getIconFileName() {
@@ -104,7 +105,7 @@ public class KloBuildAction extends AbstractKloBuildAction {
     public Object getTarget() {
         return this.result;
     }
-	
+
 	public boolean isSummary() {
 		//AM : for compatibility with old versions
                 //AL : Compatibility no longer required
@@ -137,7 +138,11 @@ public class KloBuildAction extends AbstractKloBuildAction {
         for (KloBuildAction a = this; a != null; a = a.getPreviousResult()) {
 
             if (checkBuildNumber(interval, trendNum, count)) {
-                ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(a.owner);
+                // jenkins v1.6+ requires NumberOnlyBuildLabel to not be ambiguous
+                // owner can be AbstractBuild or hudson.model.Run (super class)
+                // NumberOnlyBuildLabel(AbstractBuild) is deprecated, so cast
+                // to super class... verify this works!
+                ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel((Run) a.owner);
 				if (a.getResult() != null) {
 					KloReport report = a.getResult().getReport();
 
@@ -194,4 +199,3 @@ public class KloBuildAction extends AbstractKloBuildAction {
     }
 
 }
-

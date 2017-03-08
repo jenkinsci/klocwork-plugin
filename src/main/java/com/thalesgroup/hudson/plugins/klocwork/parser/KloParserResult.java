@@ -31,6 +31,7 @@ import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.remoting.RoleChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
     public KloParserResult(final BuildListener listener, KloConfig kloConfig) {
 
         String kwRepPattern = kloConfig.getKlocworkReportPattern();
-        
+
         if (kwRepPattern == null) {
             kwRepPattern = DELAULT_REPORT_MAVEN;
         }
@@ -92,7 +93,7 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
                 KloReport kloReport = new KloParser().parse(new File(basedir, kloReportFileName), listener, kw96up);
                 mergeReport(kloReportResult, kloReport);
             }
-            
+
         } catch (Exception e) {
             listener.getLogger().println("Parsing has been canceled. " + e.getMessage() + " " + e.getLocalizedMessage());
             return null;
@@ -102,12 +103,12 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         numErr = kloReportResult.getNumErr();
         numWarn = kloReportResult.getNumWarn();
         numRev = kloReportResult.getNumRev();
-        
+
         totalNumCrit = kloReportResult.getTotalNumCrit();
         totalNumErr = kloReportResult.getTotalNumErr();
         totalNumWarn = kloReportResult.getTotalNumWarn();
         totalNumRev = kloReportResult.getTotalNumRev();
-        
+
         return kloReportResult;
     }
 
@@ -141,6 +142,11 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] kloFiles = ds.getIncludedFiles();
         return kloFiles;
+    }
+
+    public void checkRoles(RoleChecker checker)
+                throws SecurityException {
+        // added for support with newer Jenkins v1.6+
     }
 
     public double getNewIssues() {
