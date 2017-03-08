@@ -13,6 +13,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import hudson.AbortException;
 import hudson.EnvVars;
@@ -23,10 +24,12 @@ import hudson.Launcher;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.ArgumentListBuilder;
+import hudson.util.FormValidation;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.StringBuilder;
@@ -233,6 +236,24 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkXSyncConfig> {
         public String getDisplayName() { return null; }
+
+        public FormValidation doCheckLastSync(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.error("Last Sync is mandatory");
+            } else {
+                Pattern p = Pattern.compile(KlocworkConstants.REGEXP_LASTSYNC);
+                Matcher m = p.matcher(value);
+                if (!m.find()) {
+                    return FormValidation.error("Error: Could not match Last Sync value " +
+                        value + " using regular expression. " +
+                        "Please check date/time format on job config.");
+                } else {
+                    return FormValidation.ok();
+                }
+            }
+        }
     }
 
 }

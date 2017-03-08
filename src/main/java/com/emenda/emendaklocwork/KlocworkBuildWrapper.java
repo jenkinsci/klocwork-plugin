@@ -263,5 +263,25 @@ public class KlocworkBuildWrapper extends BuildWrapper {
                 return FormValidation.error("Port must be a number");
             }
         }
+
+        public FormValidation doCheckServerProject(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.error("Server Project is mandatory");
+            } else {
+                return FormValidation.ok();
+            }
+        }
+
+        public FormValidation doCheckBuildSpec(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.ok("Default is " + KlocworkConstants.DEFAULT_BUILD_SPEC);
+            } else {
+                return FormValidation.ok();
+            }
+        }
     }
 }

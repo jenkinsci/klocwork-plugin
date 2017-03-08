@@ -15,6 +15,7 @@
                     </f:entry>
                 </f:radioBlock>
                 <f:radioBlock checked="${instance.diffType=='manual'}" name="diffType" title="${%Manual}" value="manual" inline="true">
+                    <f:entry description="This option will use the Incremental Analysis File List. Please make sure this is populated every build with the change list you want to analyse"/>
                 </f:radioBlock>
             </table>
         </f:entry>

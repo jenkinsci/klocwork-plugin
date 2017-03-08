@@ -33,8 +33,8 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     @DslExtensionMethod(context = StepContext.class)
-    public Object klocworkServerBuilder(String buildName, String tablesDir, boolean incrementalAnalysis, boolean ignoreReturnCodes, String additionalOptions) {
-        return new KlocworkServerAnalysisBuilder(new KlocworkServerAnalysisConfig(buildName, tablesDir, incrementalAnalysis, ignoreReturnCodes, additionalOptions));
+    public Object klocworkServerBuilder(String buildName, String tablesDir, boolean incrementalAnalysis, boolean ignoreCompileErrors, String additionalOptions) {
+        return new KlocworkServerAnalysisBuilder(new KlocworkServerAnalysisConfig(buildName, tablesDir, incrementalAnalysis, ignoreCompileErrors, additionalOptions));
     }
 
     @DslExtensionMethod(context = StepContext.class)

@@ -8,6 +8,7 @@ import com.emenda.emendaklocwork.util.KlocworkUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.QueryParameter;
 
 import hudson.EnvVars;
 import hudson.Extension;
@@ -16,8 +17,10 @@ import hudson.Launcher;
 
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.util.FormValidation;
 import hudson.util.ArgumentListBuilder;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.lang.InterruptedException;
 import java.net.URL;
@@ -56,7 +59,28 @@ public class KlocworkDiffAnalysisConfig extends AbstractDescribableImpl<Klocwork
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkDiffAnalysisConfig> {
         public String getDisplayName() { return null; }
+
+        public FormValidation doCheckDiffFileList(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.ok("Default is " + KlocworkConstants.DEFAULT_DIFF_FILE_LIST);
+            } else {
+                return FormValidation.ok();
+            }
+        }
+
+        public FormValidation doCheckGitPreviousCommit(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.error("Previous Git commit is mandatory");
+            } else {
+                return FormValidation.ok();
+            }
+        }
     }
+
 
 
 }

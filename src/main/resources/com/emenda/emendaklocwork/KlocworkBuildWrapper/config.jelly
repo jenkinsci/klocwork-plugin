@@ -1,5 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
     <f:entry title="${%Klocwork Server Configuration}" field="serverConfig">
         <select name="serverConfig" style="width:30%">
@@ -14,7 +14,7 @@
         <f:textbox/>
     </f:entry>
     <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
-        <f:textbox/>
+        <f:textbox default="kwinject"/>
     </f:entry>
 
     <f:advanced>

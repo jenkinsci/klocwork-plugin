@@ -19,22 +19,26 @@ import hudson.util.ArgumentListBuilder;
 
 import java.io.IOException;
 import java.lang.InterruptedException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<KlocworkServerAnalysisConfig> {
 
     private final String tablesDir;
     private final boolean incrementalAnalysis;
-    private final boolean ignoreReturnCodes;
+    private final boolean ignoreCompileErrors;
+    private final String importConfig;
     private final String additionalOpts;
 
     @DataBoundConstructor
     public KlocworkServerAnalysisConfig(String buildName, String tablesDir,
-            boolean incrementalAnalysis, boolean ignoreReturnCodes,
-            String additionalOpts) {
+            boolean incrementalAnalysis, boolean ignoreCompileErrors,
+            String importConfig, String additionalOpts) {
 
         this.tablesDir = tablesDir;
         this.incrementalAnalysis = incrementalAnalysis;
-        this.ignoreReturnCodes = ignoreReturnCodes;
+        this.ignoreCompileErrors = ignoreCompileErrors;
+        this.importConfig = importConfig;
         this.additionalOpts = additionalOpts;
     }
 
@@ -52,6 +56,24 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwbuildproject");
         versionCmd.add("--version");
         return versionCmd;
+    }
+
+    public List<ArgumentListBuilder> getKwadminImportConfigCmds(EnvVars envVars) {
+        List<ArgumentListBuilder> kwadminCmds = new ArrayList<ArgumentListBuilder>();
+
+        for (String configFile : importConfig.split(",")) {
+            ArgumentListBuilder kwadminCmd =
+                new ArgumentListBuilder("kwadmin");
+            kwadminCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
+                KlocworkConstants.KLOCWORK_URL));
+            kwadminCmd.add("import-config");
+            kwadminCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
+                KlocworkConstants.KLOCWORK_PROJECT));
+            kwadminCmd.add(configFile);
+            kwadminCmds.add(kwadminCmd);
+        }
+
+        return kwadminCmds;
     }
 
     public ArgumentListBuilder getKwbuildprojectCmd(EnvVars envVars) throws IOException, InterruptedException {
@@ -92,9 +114,15 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         return kwadminCmd;
     }
 
+
+    public boolean hasImportConfig() {
+        return !StringUtils.isEmpty(importConfig);
+    }
+
     public String getTablesDir() { return tablesDir; }
     public boolean getIncrementalAnalysis() { return incrementalAnalysis; }
-    public boolean getIgnorereturnCodes() { return ignoreReturnCodes; }
+    public boolean getIgnoreCompileErrors() { return ignoreCompileErrors; }
+    public String getImportConfig() { return importConfig; }
     public String getAdditionalOpts() { return additionalOpts; }
 
     @Extension

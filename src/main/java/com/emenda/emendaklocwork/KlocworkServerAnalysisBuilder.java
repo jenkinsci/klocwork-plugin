@@ -82,18 +82,36 @@ public class KlocworkServerAnalysisBuilder extends Builder {
                     build.getWorkspace(), envVars,
                     serverConfig.getVersionCmd());
 
+            // check if there are config files to import, then for each...
+            if (serverConfig.hasImportConfig()) {
+                logger.logMessage("Detected config files to import. Running "+
+                    "kwadmin import-config for each");
+                // create kwadmin import-config command for each config file
+                for (ArgumentListBuilder cmd : serverConfig.getKwadminImportConfigCmds(envVars)) {
+                    KlocworkUtil.executeCommand(launcher, listener,
+                            build.getWorkspace(), envVars, cmd);
+                }
+            }
 
             KlocworkUtil.executeCommand(launcher, listener,
                     build.getWorkspace(), envVars,
                     serverConfig.getKwdeployCmd(envVars, build.getWorkspace()));
 
             // ignore return codes with kwbuildproject as we need to assess them
-            // baed on which options user provided
+            // based on which options user provided
             int rc_kwbuild = KlocworkUtil.executeCommand(launcher, listener,
                     build.getWorkspace(), envVars,
                     serverConfig.getKwbuildprojectCmd(envVars), true);
-            if (!serverConfig.getIgnorereturnCodes() && rc_kwbuild != 0) {
-                return false;
+            if (rc_kwbuild != 0) {
+                if (serverConfig.getIgnoreCompileErrors() && rc_kwbuild == 2) {
+                    // this is fine, kwbuildproject returns exit code 2 if
+                    // the command still ran and generated a tables directory
+                    // but there was a compile error
+                    logger.logMessage("Return code 2 indicates compile errors. " +
+                        "Check the build.log. Job config says to ignore return code");
+                } else {
+                    throw new AbortException("Non-zero return code: " + Integer.toString(rc_kwbuild));
+                }
             }
 
         } catch (IOException | InterruptedException ex) {

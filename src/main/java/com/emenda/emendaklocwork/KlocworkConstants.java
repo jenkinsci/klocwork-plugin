@@ -10,6 +10,7 @@ public class KlocworkConstants {
     public static final String DEFAULT_BUILD_SPEC = "kwinject.out";
     public static final String DEFAULT_TABLES_DIR = "kwtables";
     public static final String DEFAULT_KWCHECK_REPORT_FILE = "kwcheck_report.xml";
+    public static final String DEFAULT_DIFF_FILE_LIST = "diff_file_list.txt";
 
 
 

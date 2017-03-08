@@ -44,19 +44,16 @@ import java.util.List;
 import java.util.Map;
 
 
+public class KlocworkXSyncBuilder extends Builder {
 
-import java.util.Properties; // DELETE
-
-public class KlocworkXSyncBuilder extends Builder implements Serializable {
-
-    private final KlocworkXSyncConfig xsyncUtil;
+    private final KlocworkXSyncConfig xsyncConfig;
 
     @DataBoundConstructor
-    public KlocworkXSyncBuilder(KlocworkXSyncConfig xsyncUtil) {
-        this.xsyncUtil = xsyncUtil;
+    public KlocworkXSyncBuilder(KlocworkXSyncConfig xsyncConfig) {
+        this.xsyncConfig = xsyncConfig;
     }
 
-    public KlocworkXSyncConfig getXsyncConfig() { return xsyncUtil; }
+    public KlocworkXSyncConfig getXsyncConfig() { return xsyncConfig; }
 
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
@@ -65,13 +62,18 @@ public class KlocworkXSyncBuilder extends Builder implements Serializable {
         EnvVars envVars = null;
 
         try {
+            if (xsyncConfig == null) {
+                throw new AbortException("xsyncConfig == null !!!!!!");
+            } else {
+                xsyncConfig.getVersionCmd();
+            }
             envVars = build.getEnvironment(listener);
 
             KlocworkUtil.executeCommand(launcher, listener,
                     build.getWorkspace(), envVars,
-                    xsyncUtil.getVersionCmd());
+                    xsyncConfig.getVersionCmd());
             KlocworkUtil.executeCommand(launcher, listener,
-                     build.getWorkspace(), envVars, xsyncUtil.getxsyncCmd(envVars, launcher));
+                     build.getWorkspace(), envVars, xsyncConfig.getxsyncCmd(envVars, launcher));
 
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
