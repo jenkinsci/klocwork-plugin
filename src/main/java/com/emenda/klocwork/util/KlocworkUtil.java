@@ -28,12 +28,29 @@ import java.util.List;
 
 public class KlocworkUtil {
 
-    // public static void validateEnvironmentVariables(EnvVars envVars) throws AbortException {
-    //     List<String> missingConfigurations = "";
-    //     if (StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_URL))) {}
-    // }
+    public static void validateServerConfigs(EnvVars envVars) throws AbortException {
+        validateServerURL(envVars);
+        validateServerProject(envVars);
+    }
 
-    public static String[] getLtokenValues(EnvVars envVars, Launcher launcher) throws IOException {
+    public static void validateServerURL(EnvVars envVars) throws AbortException {
+        if (StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_URL))) {
+            throw new AbortException("Klocwork Server not specified. Klocwork " +
+            "servers are configured on the Jenkins global configuration page and " +
+            "referenced under Build Environment settings on the Job configuration " +
+            "page.");
+        }
+    }
+
+    public static void validateServerProject(EnvVars envVars) throws AbortException {
+        if (StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_PROJECT))) {
+            throw new AbortException("Klocwork Server Project not specified. " +
+            "Server projects are provided under Build Environment settings on the " +
+            "Job configuration page.");
+        }
+    }
+
+    public static String[] getLtokenValues(EnvVars envVars, Launcher launcher) throws AbortException {
         try {
             String[] ltokenLine = launcher.getChannel().call(
                 new KlocworkLtokenFetcher(
@@ -51,8 +68,8 @@ public class KlocworkUtil {
             } else {
                 return ltokenLine;
             }
-        } catch (InterruptedException ex) {
-            throw new IOException(ex.getMessage(), ex);
+        } catch (IOException | InterruptedException ex) {
+            throw new AbortException(ex.getMessage());
         }
     }
 
@@ -71,7 +88,7 @@ public class KlocworkUtil {
         return envVars.expand(value);
     }
 
-    public static String getKlocworkProjectUrl(EnvVars envVars) throws IOException {
+    public static String getKlocworkProjectUrl(EnvVars envVars) throws AbortException {
         try {
             // handle URLs ending with "/", e.g. http://kwserver:8080/
             String urlStr = getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL);
@@ -80,18 +97,18 @@ public class KlocworkUtil {
                 getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_PROJECT));
             return url.toString();
         } catch (MalformedURLException ex) {
-            throw new IOException(ex.getMessage(), ex);
+            throw new AbortException(ex.getMessage());
         }
     }
 
     public static String getBuildSpecFile(EnvVars envVars)
-                    throws IOException, InterruptedException {
+                    throws AbortException {
         String envBuildSpec = getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_BUILD_SPEC);
         return (StringUtils.isEmpty(envBuildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : envBuildSpec;
     }
 
     public static String getBuildSpecPath(EnvVars envVars, FilePath workspace)
-                    throws IOException, InterruptedException {
+                    throws AbortException {
         return (new FilePath(workspace, getBuildSpecFile(envVars))).getRemote();
     }
 

@@ -8,6 +8,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import org.apache.commons.lang3.StringUtils;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -42,6 +43,12 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         this.additionalOpts = additionalOpts;
     }
 
+    public ArgumentListBuilder getVersionCmd() {
+        ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwbuildproject");
+        versionCmd.add("--version");
+        return versionCmd;
+    }
+
     public ArgumentListBuilder getKwdeployCmd(EnvVars envVars, FilePath workspace) {
         ArgumentListBuilder kwdeployCmd =
             new ArgumentListBuilder("kwdeploy");
@@ -49,13 +56,6 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         kwdeployCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
             KlocworkConstants.KLOCWORK_URL));
         return kwdeployCmd;
-    }
-
-    public ArgumentListBuilder getVersionCmd()
-                                        throws IOException, InterruptedException {
-        ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwbuildproject");
-        versionCmd.add("--version");
-        return versionCmd;
     }
 
     public List<ArgumentListBuilder> getKwadminImportConfigCmds(EnvVars envVars) {
@@ -76,7 +76,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         return kwadminCmds;
     }
 
-    public ArgumentListBuilder getKwbuildprojectCmd(EnvVars envVars) throws IOException, InterruptedException {
+    public ArgumentListBuilder getKwbuildprojectCmd(EnvVars envVars) throws AbortException {
 
         ArgumentListBuilder kwbuildprojectCmd =
             new ArgumentListBuilder("kwbuildproject");

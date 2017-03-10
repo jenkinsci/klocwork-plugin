@@ -124,8 +124,13 @@ public class KlocworkBuildWrapper extends BuildWrapper {
                 public void buildEnvVars(Map<String, String> env) {
 
                     if (server != null) {
-                        logger.logMessage("Adding the Klocwork Server URL " + server.getUrl());
-                        env.put(KlocworkConstants.KLOCWORK_URL, server.getUrl());
+                        if (StringUtils.isEmpty(server.getUrl())) {
+                            logger.logMessage("WARNING: Server URL for configuration \"" +
+                                server.getName() + "\" is empty");
+                        } else {
+                            logger.logMessage("Adding the Klocwork Server URL " + server.getUrl());
+                            env.put(KlocworkConstants.KLOCWORK_URL, server.getUrl());
+                        }
                         // if specific license details, else use the global ones
                         if (server.isSpecificLicense()) {
                             logger.logMessage("Using specific License for given server " +
@@ -144,7 +149,7 @@ public class KlocworkBuildWrapper extends BuildWrapper {
                                             getDescriptor().getGlobalLicensePort());
                         }
                     } else {
-                        logger.logMessage("Warning: No Klocwork server selected. " +
+                        logger.logMessage("WARNING: No Klocwork server selected. " +
                             "Klocwork cannot perform server builds or synchronisations " +
                             "without a server.");
                         logger.logMessage("Using Global License Settings " +
@@ -155,8 +160,13 @@ public class KlocworkBuildWrapper extends BuildWrapper {
                         env.put(KlocworkConstants.KLOCWORK_LICENSE_PORT,
                                         getDescriptor().getGlobalLicensePort());
                     }
-
-                    env.put(KlocworkConstants.KLOCWORK_PROJECT, serverProject);
+                    if (StringUtils.isEmpty(serverProject)) {
+                        logger.logMessage("WARNING: No Klocwork project provided. " +
+                            "Klocwork cannot perform server builds or synchronisations " +
+                            "without a project.");
+                    } else {
+                        env.put(KlocworkConstants.KLOCWORK_PROJECT, serverProject);
+                    }
                     if (StringUtils.isEmpty(buildSpec)) {
                         env.put(KlocworkConstants.KLOCWORK_BUILD_SPEC,
                             KlocworkConstants.DEFAULT_BUILD_SPEC);
@@ -173,6 +183,8 @@ public class KlocworkBuildWrapper extends BuildWrapper {
     public String getInstallConfig() { return installConfig; }
     public String getServerProject() { return serverProject; }
     public String getBuildSpec() { return buildSpec; }
+
+    public final static String getNoneValue() { return "-- none --"; }
 
     @Override
     public DescriptorImpl getDescriptor() {
@@ -246,11 +258,30 @@ public class KlocworkBuildWrapper extends BuildWrapper {
             }
         }
 
+        public ListBoxModel doFillServerConfigItems() {
+            ListBoxModel items = new ListBoxModel();
+            items.add(getNoneValue());
+            for (KlocworkServerConfig config : serverConfigs) {
+                items.add(config.getName());
+            }
+            return items;
+        }
+
+        public FormValidation doCheckServerConfig(@QueryParameter String value)
+            throws IOException, ServletException {
+
+            if (value.equals(getNoneValue())) {
+                return FormValidation.warning("Server Configuration is required for server builds, cross synchronisation and desktop analysis synchronisation");
+            } else {
+                return FormValidation.ok();
+            }
+        }
+
         public FormValidation doCheckServerProject(@QueryParameter String value)
             throws IOException, ServletException {
 
             if (StringUtils.isEmpty(value)) {
-                return FormValidation.error("Server Project is mandatory");
+                return FormValidation.warning("Server Project is required for server builds, cross synchronisation and desktop analysis synchronisation");
             } else {
                 return FormValidation.ok();
             }
@@ -264,6 +295,15 @@ public class KlocworkBuildWrapper extends BuildWrapper {
             } else {
                 return FormValidation.ok();
             }
+        }
+
+        public ListBoxModel doFillInstallConfigItems() {
+            ListBoxModel items = new ListBoxModel();
+            items.add(getNoneValue());
+            for (KlocworkInstallConfig config : installConfigs) {
+                items.add(config.getName());
+            }
+            return items;
         }
     }
 }

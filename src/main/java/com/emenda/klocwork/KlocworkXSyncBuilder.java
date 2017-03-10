@@ -59,25 +59,25 @@ public class KlocworkXSyncBuilder extends Builder {
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
         throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("XSyncBuilder", listener.getLogger());
+        logger.logMessage("Starting Klocwork Cross Synchronisation Step");
         EnvVars envVars = null;
+        FilePath workspace = null;
 
         try {
-            if (xsyncConfig == null) {
-                throw new AbortException("xsyncConfig == null !!!!!!");
-            } else {
-                xsyncConfig.getVersionCmd();
-            }
             envVars = build.getEnvironment(listener);
-
-            KlocworkUtil.executeCommand(launcher, listener,
-                    build.getWorkspace(), envVars,
-                    xsyncConfig.getVersionCmd());
-            KlocworkUtil.executeCommand(launcher, listener,
-                     build.getWorkspace(), envVars, xsyncConfig.getxsyncCmd(envVars, launcher));
-
+            workspace = build.getWorkspace();
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+
+        // validate server URL required for accessing Klocwork server
+        KlocworkUtil.validateServerURL(envVars);
+
+        KlocworkUtil.executeCommand(launcher, listener,
+                workspace, envVars,
+                xsyncConfig.getVersionCmd());
+        KlocworkUtil.executeCommand(launcher, listener,
+                 workspace, envVars, xsyncConfig.getxsyncCmd(envVars, launcher));
 
         return true;
 
@@ -101,7 +101,7 @@ public class KlocworkXSyncBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Project Synchronisation";
+            return "Emenda Klocwork Cross Project Synchronisation (kwxsync)";
         }
 
         @Override

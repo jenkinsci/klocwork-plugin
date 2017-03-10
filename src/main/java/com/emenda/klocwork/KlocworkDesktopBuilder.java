@@ -73,6 +73,7 @@ public class KlocworkDesktopBuilder extends Builder {
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
         throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("DesktopBuilder", listener.getLogger());
+        logger.logMessage("Starting Klocwork Desktop Analysis");
         EnvVars envVars = new EnvVars();
         try {
             envVars = build.getEnvironment(launcher.getListener());
@@ -184,7 +185,7 @@ public class KlocworkDesktopBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Desktop Analysis";
+            return "Emenda Klocwork Desktop Analysis (kwcheck)";
         }
 
         @Override

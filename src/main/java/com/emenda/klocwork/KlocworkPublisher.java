@@ -192,7 +192,7 @@ public class KlocworkPublisher extends Publisher {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Report";
+            return "Emenda Klocwork Quality Gateway";
         }
 
         @Override

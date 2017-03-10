@@ -8,7 +8,7 @@
         <f:textbox/>
     </f:entry>
     <f:entry title="${%Last Sync}" field="lastSync">
-        <f:textbox default="00-00-0000 00:00:00"/>
+        <f:textbox default="03-00-0000 00:00:00"/>
     </f:entry>
     <f:advanced>
         <f:entry title="${%Sync Statuses}" field="syncStatusesField">

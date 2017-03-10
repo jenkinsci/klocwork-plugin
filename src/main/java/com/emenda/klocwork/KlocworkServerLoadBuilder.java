@@ -56,6 +56,7 @@ public class KlocworkServerLoadBuilder extends Builder {
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
         throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkServerLoadConfig", listener.getLogger());
+        logger.logMessage("Starting Klocwork Server Analysis Load Step");
         EnvVars envVars = null;
         FilePath workspace = null;
         try {
@@ -64,6 +65,11 @@ public class KlocworkServerLoadBuilder extends Builder {
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+
+        // validate server settings needed for build-step. AbortException is
+        // thrown if URL and server project are not provided as we cannot perform
+        // a server analysis without these settings
+        KlocworkUtil.validateServerConfigs(envVars);
 
         KlocworkServerAnalysisBuilder analysisBuilder = (KlocworkServerAnalysisBuilder) KlocworkUtil.getInstanceOfBuilder(KlocworkServerAnalysisBuilder.class, build);
 
@@ -107,7 +113,7 @@ public class KlocworkServerLoadBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork - Step 2 - Load Build";
+            return "Emenda Klocwork Server Build - Step 2 - kwadmin load";
         }
 
         @Override

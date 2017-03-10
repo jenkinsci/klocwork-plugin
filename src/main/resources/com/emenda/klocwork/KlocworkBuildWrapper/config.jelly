@@ -2,12 +2,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
     <f:entry title="${%Klocwork Server Configuration}" field="serverConfig">
-        <select name="serverConfig" style="width:30%">
-            <option>-- none --</option>
-            <j:forEach var="config" items="${descriptor.serverConfigs}">
-                <f:option selected="${config.name==instance.serverConfig}" value="${config.name}">${config.name}</f:option>
-            </j:forEach>
-        </select>
+        <f:select style="width:30%"/>
     </f:entry>
 
     <f:entry title="${%Klocwork Server Project}" field="serverProject">
@@ -19,12 +14,13 @@
 
     <f:advanced>
         <f:entry title="${%Klocwork Install Configuration}" field="installConfig">
-            <select name="installConfig" style="width:30%">
-                <option>-- none --</option>
+            <f:select style="width:30%"/>
+            <!-- <select name="installConfig" style="width:30%">
+                <f:option selected="${instance.getNoneValue()==instance.installConfig}" value="${instance.getNoneValue()}">${instance.getNoneValue()}</f:option>
                 <j:forEach var="config" items="${descriptor.installConfigs}">
                     <f:option selected="${config.name==instance.installConfig}" value="${config.name}">${config.name}</f:option>
                 </j:forEach>
-            </select>
+            </select> -->
         </f:entry>
     </f:advanced>
 

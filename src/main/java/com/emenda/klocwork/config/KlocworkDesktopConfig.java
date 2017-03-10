@@ -62,7 +62,10 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         validateParentProjectDir(getKwlpDir(workspace, envVars).getParent());
 
         ArgumentListBuilder kwcheckCreateCmd = new ArgumentListBuilder("kwcheck", "create");
-        kwcheckCreateCmd.add("--url", KlocworkUtil.getKlocworkProjectUrl(envVars));
+        String projectUrl = KlocworkUtil.getKlocworkProjectUrl(envVars);
+        if (!StringUtils.isEmpty(projectUrl)) {
+            kwcheckCreateCmd.add("--url", projectUrl);
+        }
         kwcheckCreateCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
         kwcheckCreateCmd.add("--settings-dir", getKwpsDir(workspace, envVars).getRemote());
         kwcheckCreateCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
@@ -76,11 +79,14 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
 
         ArgumentListBuilder kwcheckSetCmd = new ArgumentListBuilder("kwcheck", "set");
         kwcheckSetCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-        URL url = new URL(KlocworkUtil.getKlocworkProjectUrl(envVars));
-        kwcheckSetCmd.add("klocwork.host=" + url.getHost());
-        kwcheckSetCmd.add("klocwork.port=" + Integer.toString(url.getPort()));
-        kwcheckSetCmd.add("klocwork.project=" + KlocworkUtil.getAndExpandEnvVar(
-            envVars, KlocworkConstants.KLOCWORK_PROJECT));
+        String serverUrl = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL);
+        if (!StringUtils.isEmpty(serverUrl)) {
+            URL url = new URL(serverUrl);
+            kwcheckSetCmd.add("klocwork.host=" + url.getHost());
+            kwcheckSetCmd.add("klocwork.port=" + Integer.toString(url.getPort()));
+            kwcheckSetCmd.add("klocwork.project=" + KlocworkUtil.getAndExpandEnvVar(
+                envVars, KlocworkConstants.KLOCWORK_PROJECT));
+        }
         return kwcheckSetCmd;
     }
 
@@ -90,10 +96,16 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         ArgumentListBuilder kwcheckRunCmd =
             new ArgumentListBuilder("kwcheck", "run");
         kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-        kwcheckRunCmd.add("--license-host", KlocworkUtil.getAndExpandEnvVar(
-            envVars, KlocworkConstants.KLOCWORK_LICENSE_HOST));
-        kwcheckRunCmd.add("--license-port", KlocworkUtil.getAndExpandEnvVar(
-            envVars, KlocworkConstants.KLOCWORK_LICENSE_PORT));
+        String licenseHost = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_HOST);
+        if (!StringUtils.isEmpty(licenseHost)) {
+            kwcheckRunCmd.add("--license-host", licenseHost);
+        }
+
+        String licensePort = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_PORT);
+        if (!StringUtils.isEmpty(licensePort)) {
+            kwcheckRunCmd.add("--license-port", licensePort);
+        }
+
         kwcheckRunCmd.add("-F", "xml", "--report", getKwcheckReportFile(envVars));
         kwcheckRunCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
         if (!StringUtils.isEmpty(additionalOpts)) {
@@ -193,10 +205,15 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         }
     }
 
-    public String getKwcheckDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws IOException, InterruptedException {
-        List<String> fileList = launcher.getChannel().call(
-            new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(diffAnalysisConfig.getDiffFileList()), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
-        return String.join(" ", fileList); // TODO: is Java 8 OK?
+    public String getKwcheckDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
+        try {
+            List<String> fileList = launcher.getChannel().call(
+                new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(diffAnalysisConfig.getDiffFileList()), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
+            return String.join(" ", fileList); // TODO: is Java 8 OK?
+        } catch (IOException | InterruptedException ex) {
+            throw new AbortException(ex.getMessage());
+        }
+
     }
 
     public String getDiffFileList(EnvVars envVars) {

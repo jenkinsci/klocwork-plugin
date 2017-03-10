@@ -79,8 +79,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         this.additionalOpts = additionalOpts;
     }
 
-    public ArgumentListBuilder getVersionCmd()
-                                        throws IOException, InterruptedException {
+    public ArgumentListBuilder getVersionCmd() {
         ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwxsync");
         versionCmd.add("--version");
         return versionCmd;
