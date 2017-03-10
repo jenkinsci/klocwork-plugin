@@ -3,16 +3,10 @@ package com.emenda.klocwork;
 
 public class KlocworkConstants {
 
-    public enum PASSFAIL_INDEX {
-        TOTAL, SEVERITY_1, SEVERITY_2, SEVERITY_3, SEVERITY_4
-    }
-
     public static final String DEFAULT_BUILD_SPEC = "kwinject.out";
     public static final String DEFAULT_TABLES_DIR = "kwtables";
     public static final String DEFAULT_KWCHECK_REPORT_FILE = "kwcheck_report.xml";
     public static final String DEFAULT_DIFF_FILE_LIST = "diff_file_list.txt";
-
-
 
     public static final String KLOCWORK_URL = "KLOCWORK_URL";
     public static final String KLOCWORK_LICENSE_HOST = "KLOCWORK_LICENSE_HOST";
@@ -36,5 +30,4 @@ public class KlocworkConstants {
     public static final int REGEXP_GROUP_HOUR = 4;
     public static final int REGEXP_GROUP_MINUTE = 5;
     public static final int REGEXP_GROUP_SECOND = 6;
-
 }

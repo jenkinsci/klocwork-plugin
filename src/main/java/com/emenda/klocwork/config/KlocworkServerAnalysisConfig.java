@@ -104,17 +104,6 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         return kwbuildprojectCmd;
     }
 
-    public ArgumentListBuilder getKwadminImportCmd(EnvVars envVars, FilePath workspace) {
-        ArgumentListBuilder kwadminCmd =
-            new ArgumentListBuilder("kwadmin");
-        kwadminCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_URL));
-        kwadminCmd.add("import-config");
-        // TODO: add more!
-        return kwadminCmd;
-    }
-
-
     public boolean hasImportConfig() {
         return !StringUtils.isEmpty(importConfig);
     }

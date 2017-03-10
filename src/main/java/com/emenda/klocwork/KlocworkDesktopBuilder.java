@@ -76,7 +76,6 @@ public class KlocworkDesktopBuilder extends Builder {
         EnvVars envVars = new EnvVars();
         try {
             envVars = build.getEnvironment(launcher.getListener());
-            logger.logMessage(Arrays.toString(launcher.launch().envs()));
 
             KlocworkUtil.executeCommand(launcher, listener,
                     build.getWorkspace(), envVars,
@@ -95,7 +94,8 @@ public class KlocworkDesktopBuilder extends Builder {
             String diffList = "";
             // should we perform incremental analysis?
             if (desktopConfig.getIncrementalAnalysis()) {
-                logger.logMessage("Performing incremental analysis");
+                logger.logMessage("Performing incremental analysis using " +
+                "change list specified in " + desktopConfig.getDiffFileList(envVars));
                 // check which type of incremental analysis (e.g. git/manual)
                 // check if we need to execute git diff first
                 if (desktopConfig.isGitDiffType()) {
@@ -166,72 +166,29 @@ public class KlocworkDesktopBuilder extends Builder {
         return true;
     }
 
-    // private String getDiffFileList(ProcStarter ps) throws IOException, InterruptedException {
-    //     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    //     List<String> fileList = new ArrayList<String>();
-    //
-    //     if (!ekwDiffCmd.equals("")) {
-    //         ps.stdout(baos).
-    //             cmds(new ArgumentListBuilder().addTokenized(ekwDiffCmd)).
-    //             join();
-    //     }
-    //
-    //     StringBuilder fileListStr = new StringBuilder();
-    //     BufferedReader br = new BufferedReader(new StringReader(baos.toString()));
-    //     String line=null;
-    //     while ((line=br.readLine()) != null) {
-    //         fileListStr.append(line);
-    //         fileListStr.append(" ");
-    //     }
-    //
-    //     return fileListStr.toString();
-    //     // return baos.toString();
-    // }
-
-
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    /**
-     * Descriptor for {@link KlocworkDesktopBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See {@code src/main/resources/hudson/plugins/hello_world/KlocworkDesktopBuilder/*.jelly}
-     * for the actual HTML fragment for the configuration screen.
-     */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        /**
-         * In order to load the persisted global configuration, you have to
-         * call load() in the constructor.
-         */
         public DescriptorImpl() {
             load();
         }
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            // Indicates that this builder can be used with all kinds of project types
             return true;
         }
 
-        /**
-         * This human readable name is used in the configuration screen.
-         */
         public String getDisplayName() {
             return "Emenda Klocwork Desktop Analysis";
         }
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-
             save();
             return super.configure(req,formData);
         }

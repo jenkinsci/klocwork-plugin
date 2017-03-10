@@ -94,7 +94,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
             envVars, KlocworkConstants.KLOCWORK_LICENSE_HOST));
         kwcheckRunCmd.add("--license-port", KlocworkUtil.getAndExpandEnvVar(
             envVars, KlocworkConstants.KLOCWORK_LICENSE_PORT));
-        kwcheckRunCmd.add("-F", "xml", "--report", envVars.expand(reportFile));
+        kwcheckRunCmd.add("-F", "xml", "--report", getKwcheckReportFile(envVars));
         kwcheckRunCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
         if (!StringUtils.isEmpty(additionalOpts)) {
             kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
@@ -118,7 +118,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     public ArgumentListBuilder getGitDiffCmd(EnvVars envVars) {
         ArgumentListBuilder gitDiffCmd = new ArgumentListBuilder("git");
         gitDiffCmd.add("diff", "--name-only", envVars.expand(diffAnalysisConfig.getGitPreviousCommit()));
-        gitDiffCmd.add(">", envVars.expand(diffAnalysisConfig.getDiffFileList()));
+        gitDiffCmd.add(">", getDiffFileList(envVars));
         return gitDiffCmd;
     }
 
@@ -185,11 +185,11 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         }
     }
 
-    public String getKwcheckReportFile() {
+    public String getKwcheckReportFile(EnvVars envVars) {
         if (StringUtils.isEmpty(reportFile)) {
             return KlocworkConstants.DEFAULT_KWCHECK_REPORT_FILE;
         } else {
-            return reportFile;
+            return envVars.expand(reportFile);
         }
     }
 
@@ -197,6 +197,14 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         List<String> fileList = launcher.getChannel().call(
             new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(diffAnalysisConfig.getDiffFileList()), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
         return String.join(" ", fileList); // TODO: is Java 8 OK?
+    }
+
+    public String getDiffFileList(EnvVars envVars) {
+        String diffFileList = envVars.expand(diffAnalysisConfig.getDiffFileList());
+        if (StringUtils.isEmpty(diffFileList)) {
+            diffFileList = KlocworkConstants.DEFAULT_DIFF_FILE_LIST;
+        }
+        return diffFileList;
     }
 
     public boolean isGitDiffType() {

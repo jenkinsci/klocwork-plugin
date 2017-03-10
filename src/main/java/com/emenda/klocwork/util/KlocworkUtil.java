@@ -8,7 +8,12 @@ import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.matrix.MatrixProject;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Project;
+import hudson.tasks.Builder;
 import hudson.util.ArgumentListBuilder;
 
 import java.io.IOException;
@@ -18,9 +23,15 @@ import java.lang.InterruptedException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class KlocworkUtil {
+
+    // public static void validateEnvironmentVariables(EnvVars envVars) throws AbortException {
+    //     List<String> missingConfigurations = "";
+    //     if (StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_URL))) {}
+    // }
 
     public static String[] getLtokenValues(EnvVars envVars, Launcher launcher) throws IOException {
         try {
@@ -45,12 +56,12 @@ public class KlocworkUtil {
         }
     }
 
-    public static String exceptionToString(Exception e) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-        return sw.toString();
-    }
+    // public static String exceptionToString(Exception e) {
+    //     StringWriter sw = new StringWriter();
+    //     PrintWriter pw = new PrintWriter(sw);
+    //     e.printStackTrace(pw);
+    //     return sw.toString();
+    // }
 
     public static String getAndExpandEnvVar(EnvVars envVars, String var) {
         String value = envVars.get(var, "");
@@ -116,6 +127,25 @@ public class KlocworkUtil {
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+    }
+
+    public static Object getInstanceOfBuilder(Class<? extends Builder> classType, AbstractBuild<?,?> build) {
+        AbstractProject p = build.getProject();
+        List<Builder> builders;
+        if (p instanceof Project) {
+            builders = ((Project) p).getBuilders();
+        } else if (p instanceof MatrixProject) {
+            builders = ((MatrixProject) p).getBuilders();
+        } else {
+            builders = Collections.emptyList();
+        }
+
+        for (Builder builder : builders) {
+            if (classType.isInstance(builder)) {
+                return builder;
+            }
+        }
+        return null;
     }
 
 

@@ -32,8 +32,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         this.additionalOpts = additionalOpts;
     }
 
-    public ArgumentListBuilder getVersionCmd()
-                                        throws IOException, InterruptedException {
+    public ArgumentListBuilder getVersionCmd() {
         ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwadmin");
         versionCmd.add("--version");
         return versionCmd;

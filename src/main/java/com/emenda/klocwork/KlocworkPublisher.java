@@ -4,6 +4,7 @@ import com.emenda.klocwork.config.KlocworkPassFailConfig;
 import com.emenda.klocwork.config.KlocworkDesktopGateway;
 import com.emenda.klocwork.services.KlocworkApiConnection;
 import com.emenda.klocwork.util.KlocworkUtil;
+import com.emenda.klocwork.util.KlocworkXMLReportParser;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,11 +17,12 @@ import hudson.FilePath;
 import hudson.Proc;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
-// import hudson.matrix.MatrixProject;
+import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
 import hudson.model.Project;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.security.ACL;
@@ -44,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.InterruptedException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -51,48 +54,30 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Sample {@link Publisher}.
- *
- * <p>
- * When the user configures the project and enables this Publisher,
- * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link KlocworkPublisher} is created. The created
- * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #name})
- * to remember the configuration.
- *
- * <p>
- * When a build is performed, the {@link #perform} method will be invoked.
- *
- * @author Kohsuke Kawaguchi
- */
+
 public class KlocworkPublisher extends Publisher {
 
+    private final boolean enableServerGateway;
     private final List<KlocworkPassFailConfig> passFailConfigs;
     private final boolean enableDesktopGateway;
     private final KlocworkDesktopGateway desktopGateway;
-    // private final KlocworkPassFailConfig passFailConfig;
 
     @DataBoundConstructor
-    public KlocworkPublisher(List<KlocworkPassFailConfig> passFailConfigs,
+    public KlocworkPublisher(boolean enableServerGateway, List<KlocworkPassFailConfig> passFailConfigs,
         boolean enableDesktopGateway, KlocworkDesktopGateway desktopGateway) {
-    // public KlocworkPublisher(KlocworkPassFailConfig passFailConfig) {
+        this.enableServerGateway = enableServerGateway;
         this.passFailConfigs = passFailConfigs;
         this.enableDesktopGateway = enableDesktopGateway;
         this.desktopGateway = desktopGateway;
     }
 
-    /**
-     * We'll use this from the {@code config.jelly}.
-     */
+    public boolean getEnableServerGateway() {
+        return enableServerGateway;
+    }
+
     public List<KlocworkPassFailConfig> getPassFailConfigs() {
         return passFailConfigs;
     }
-
-    // public KlocworkPassFailConfig getPassFailConfig() {
-    //     return passFailConfig;
-    // }
 
     public boolean getEnableDesktopGateway() {
         return enableDesktopGateway;
@@ -108,23 +93,23 @@ public class KlocworkPublisher extends Publisher {
         EnvVars envVars = null;
         try {
             envVars = build.getEnvironment(listener);
-            // AbstractProject p = build.getProject();
-            // List<Builder> builders;
-            // if (p instanceof Project) {
-            //     builders = ((Project) p).getBuilders();
-            // } else if (p instanceof MatrixProject) {
-            //     builders = ((MatrixProject) p).getBuilders();
-            // } else {
-            //     builders = Collections.emptyList();
-            // }
+        } catch (IOException | InterruptedException ex) {
+            throw new AbortException(ex.getMessage());
+        }
 
-            for (KlocworkPassFailConfig kw : passFailConfigs) {
+        if (enableServerGateway) {
+            logger.logMessage("Performing Klocwork Server Gateway");
+            for (KlocworkPassFailConfig pfConfig : passFailConfigs) {
                 String request = "action=search&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
-                if (!StringUtils.isEmpty(kw.getQuery())) {
-                    request += "&query=grouping:off " + URLEncoder.encode(kw.getQuery(), "UTF-8");
+                if (!StringUtils.isEmpty(pfConfig.getQuery())) {
+                    try {
+                        request += "&query=grouping:off " + URLEncoder.encode(pfConfig.getQuery(), "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        throw new AbortException(ex.getMessage());
+                    }
+
                 }
-
-
+                logger.logMessage("Condition Name : " + pfConfig.getConditionName());
                 logger.logMessage("Using query: " + request);
                 JSONArray response;
 
@@ -140,21 +125,47 @@ public class KlocworkPublisher extends Publisher {
                         " web API.\nCause: " + ex.getMessage());
                 }
 
-                logger.logMessage("Condition Name : " + kw.getConditionName());
+
                 logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
-                if (response.size() >= Integer.parseInt(kw.getThreshold())) {
-                    logger.logMessage("Failing build...");
-                    build.setResult(kw.getResultValue());
+                if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
+                    logger.logMessage("Threshold exceeded. Marking build as failed.");
+                    build.setResult(pfConfig.getResultValue());
                 }
                 for (int i = 0; i < response.size(); i++) {
                       JSONObject jObj = response.getJSONObject(i);
                       logger.logMessage(jObj.toString());
                 }
             }
-
-        } catch (IOException | InterruptedException ex) {
-            throw new AbortException(ex.getMessage());
         }
+
+        if (enableDesktopGateway) {
+            KlocworkDesktopBuilder desktopBuilder = (KlocworkDesktopBuilder)
+                KlocworkUtil.getInstanceOfBuilder(KlocworkDesktopBuilder.class, build);
+
+            String xmlReport = null;
+
+            if (desktopBuilder == null) {
+                throw new AbortException("Could not find build-step for " +
+                "Klocwork Desktop analysis in this job. Please configure a " +
+                "Klocwork Desktop build.");
+            }
+            try {
+                int totalIssueCount = launcher.getChannel().call(
+                    new KlocworkXMLReportParser(
+                    build.getWorkspace().getRemote(), xmlReport));
+                logger.logMessage("Total Desktop Issues : " +
+                    Integer.toString(totalIssueCount));
+                logger.logMessage("Configured Threshold : " +
+                    desktopGateway.getThreshold());
+                if (totalIssueCount >= Integer.parseInt(desktopGateway.getThreshold())) {
+                    logger.logMessage("Threshold exceeded. Marking build as failed.");
+                        build.setResult(Result.FAILURE);
+                }
+            } catch (InterruptedException | IOException ex) {
+                throw new AbortException(ex.getMessage());
+            }
+        }
+
 
         return true;
     }
@@ -163,53 +174,29 @@ public class KlocworkPublisher extends Publisher {
         return BuildStepMonitor.NONE;
     }
 
-
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    /**
-     * Descriptor for {@link KlocworkPublisher}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See {@code src/main/resources/hudson/plugins/hello_world/KlocworkPublisher/*.jelly}
-     * for the actual HTML fragment for the configuration screen.
-     */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
-        /**
-         * In order to load the persisted global configuration, you have to
-         * call load() in the constructor.
-         */
         public DescriptorImpl() {
             load();
         }
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            // Indicates that this Publisher can be used with all kinds of project types
             return true;
         }
 
-
-        /**
-         * This human readable name is used in the configuration screen.
-         */
         public String getDisplayName() {
             return "Emenda Klocwork Report";
         }
 
-
-
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-
             save();
             return super.configure(req,formData);
         }

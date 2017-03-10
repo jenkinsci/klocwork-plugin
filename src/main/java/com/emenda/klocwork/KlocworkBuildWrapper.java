@@ -46,22 +46,6 @@ import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-/**
- * Sample {@link Builder}.
- *
- * <p>
- * When the user configures the project and enables this builder,
- * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link HelloWorldBuilder} is created. The created
- * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #name})
- * to remember the configuration.
- *
- * <p>
- * When a build is performed, the {@link #perform} method will be invoked.
- *
- * @author Kohsuke Kawaguchi
- */
 public class KlocworkBuildWrapper extends BuildWrapper {
 
     private final String serverConfig;
@@ -78,14 +62,12 @@ public class KlocworkBuildWrapper extends BuildWrapper {
         this.buildSpec = buildSpec;
     }
 
-
-
     @Override
     public Launcher decorateLauncher(AbstractBuild build, final Launcher launcher,
                              BuildListener listener) throws IOException,
                              RunnerAbortedException {
         final KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
-        logger.logMessage("Setting up PATH for Klocwork jobs...");
+        logger.logMessage("Setting up PATH env var for Klocwork jobs...");
         final KlocworkInstallConfig install = getDescriptor().getInstallConfig(installConfig);
 
         final Node node =  Computer.currentComputer().getNode();
@@ -107,7 +89,7 @@ public class KlocworkBuildWrapper extends BuildWrapper {
                 }
 
                 if (install != null) {
-                    logger.logMessage("Adding Klocwork to PATH. Using install \""
+                    logger.logMessage("Adding Klocwork paths. Using install \""
                     + install.getName() + "\"");
                     String paths = vars.get("PATH");
                     String separator = (launcher.isUnix()) ? ":" : ";";

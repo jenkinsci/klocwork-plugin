@@ -17,6 +17,4 @@ public class KlocworkLogger {
     public void logMessage(String message) {
         printStream.println(msgPrefix + message);
     }
-
-
 }

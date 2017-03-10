@@ -28,11 +28,8 @@ import java.util.List;
 
 public class KlocworkDiffAnalysisConfig extends AbstractDescribableImpl<KlocworkDiffAnalysisConfig> {
 
-
-    // private final boolean usingGit;
     private final String diffType;
     private final String gitPreviousCommit;
-    // private final boolean usingManual;
     private final String diffFileList;
 
     @DataBoundConstructor
@@ -40,7 +37,6 @@ public class KlocworkDiffAnalysisConfig extends AbstractDescribableImpl<Klocwork
 
         this.diffType = diffType;
         this.gitPreviousCommit = gitPreviousCommit;
-        // this.usingManual = usingManual;
         this.diffFileList = diffFileList;
     }
 

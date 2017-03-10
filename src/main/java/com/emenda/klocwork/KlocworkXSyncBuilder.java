@@ -83,44 +83,23 @@ public class KlocworkXSyncBuilder extends Builder {
 
     }
 
-    // Overridden for better type safety.
-    // If your plugin doesn't really define any property on Descriptor,
-    // you don't have to do this.
     @Override
     public DescriptorImpl getDescriptor() {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    /**
-     * Descriptor for {@link KlocworkXSyncBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See {@code src/main/resources/hudson/plugins/hello_world/KlocworkXSyncBuilder/*.jelly}
-     * for the actual HTML fragment for the configuration screen.
-     */
-    @Extension // This indicates to Jenkins that this is an implementation of an extension point.
+    @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-        /**
-         * In order to load the persisted global configuration, you have to
-         * call load() in the constructor.
-         */
         public DescriptorImpl() {
             load();
         }
 
-
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            // Indicates that this builder can be used with all kinds of project types
             return true;
         }
 
-
-        /**
-         * This human readable name is used in the configuration screen.
-         */
         public String getDisplayName() {
             return "Emenda Klocwork Project Synchronisation";
         }
