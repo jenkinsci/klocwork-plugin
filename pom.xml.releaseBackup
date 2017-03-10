@@ -10,7 +10,7 @@
     <artifactId>klocwork</artifactId>
     <packaging>hpi</packaging>
     <name>Jenkins Klocwork Plug-in</name>
-    <version>1.24-SNAPSHOT</version>
+    <version>1.23-SNAPSHOT</version>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
 
     <licenses>
@@ -59,30 +59,8 @@
             <url>https://gitlab.com/emenda/java-libs/raw/master</url>
             <layout>default</layout>
         </repository>
-	 <repository>
-      <id>repo.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-    </repository>
     </repositories>
 
-<pluginRepositories>
-    <pluginRepository>
-      <id>repo.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-    </pluginRepository>
-  </pluginRepositories>
-  
-  <distributionManagement>
-    <repository>
-      <id>repo.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>maven.jenkins-ci.org</id>
-      <url>https://repo.jenkins-ci.org/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-  
     <build>
         <plugins>
             <plugin>
