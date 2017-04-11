@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class KlocworkPublisher extends Publisher {
+public class KlocworkQualityGateway extends Publisher {
 
     private final boolean enableServerGateway;
     private final List<KlocworkPassFailConfig> passFailConfigs;
@@ -63,7 +63,8 @@ public class KlocworkPublisher extends Publisher {
     private final KlocworkDesktopGateway desktopGateway;
 
     @DataBoundConstructor
-    public KlocworkPublisher(boolean enableServerGateway, List<KlocworkPassFailConfig> passFailConfigs,
+    public KlocworkQualityGateway(boolean enableServerGateway,
+        List<KlocworkPassFailConfig> passFailConfigs,
         boolean enableDesktopGateway, KlocworkDesktopGateway desktopGateway) {
         this.enableServerGateway = enableServerGateway;
         this.passFailConfigs = passFailConfigs;
@@ -192,7 +193,7 @@ public class KlocworkPublisher extends Publisher {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Quality Gateway";
+            return "Klocwork - Quality Gateway";
         }
 
         @Override

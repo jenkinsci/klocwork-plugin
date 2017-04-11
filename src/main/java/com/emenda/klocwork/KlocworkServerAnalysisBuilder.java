@@ -125,7 +125,7 @@ public class KlocworkServerAnalysisBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Server Build - Step 1 - kwbuildproject";
+            return "Klocwork - Full Integration Analysis (step 1 - analysis)";
         }
 
         @Override

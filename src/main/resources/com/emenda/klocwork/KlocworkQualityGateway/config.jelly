@@ -1,8 +1,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
-  <f:optionalBlock name="enableServerGateway" title="${%Perform Server Gateway}" checked="${instance.enableServerGateway}" inline="true">
-      <f:advanced title="${%Server Conditions}">
+  <f:optionalBlock name="enableServerGateway" title="${%Perform Full Integration Analysis Gateway}" checked="${instance.enableServerGateway}" inline="true" field="enableServerGateway">
+      <f:advanced title="${%Conditions}">
           <!-- <f:property field="passFailConfig" /> -->
           <f:entry title="">
             <f:repeatableProperty field="passFailConfigs" header="${%Condition}" add="${%Add Condition}"/>
@@ -10,8 +10,8 @@
       </f:advanced>
   </f:optionalBlock>
 
-  <f:optionalBlock name="enableDesktopGateway" title="${%Perform Desktop Gateway}" checked="${instance.enableDesktopGateway}" inline="true">
-      <f:advanced title="${%Desktop Condition}">
+  <f:optionalBlock name="enableDesktopGateway" title="${%Perform Incremental Diff Analysis Gateway}" checked="${instance.enableDesktopGateway}" inline="true" field="enableDesktopGateway">
+      <f:advanced title="${%Condition}">
           <f:property field="desktopGateway" />
       </f:advanced>
   </f:optionalBlock>

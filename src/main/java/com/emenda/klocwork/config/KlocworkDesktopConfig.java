@@ -30,21 +30,22 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     private final boolean cleanupProject;
     private final String reportFile;
     private final String additionalOpts;
-    private final boolean setupKwdtagent;
-    private final String kwdtagentPort;
+    // private final boolean setupKwdtagent;
+    // private final String kwdtagentPort;
     private final boolean incrementalAnalysis;
     private final KlocworkDiffAnalysisConfig diffAnalysisConfig;
 
     @DataBoundConstructor
-    public KlocworkDesktopConfig(String projectDir, boolean cleanupProject, String reportFile, String additionalOpts, boolean setupKwdtagent, String kwdtagentPort, boolean incrementalAnalysis,
-    KlocworkDiffAnalysisConfig diffAnalysisConfig) {
+    public KlocworkDesktopConfig(String projectDir, boolean cleanupProject, String reportFile, String additionalOpts,
+    // boolean setupKwdtagent, String kwdtagentPort,
+    boolean incrementalAnalysis, KlocworkDiffAnalysisConfig diffAnalysisConfig) {
 
         this.projectDir = projectDir;
         this.cleanupProject = cleanupProject;
         this.reportFile = reportFile;
         this.additionalOpts = additionalOpts;
-        this.setupKwdtagent = setupKwdtagent;
-        this.kwdtagentPort = kwdtagentPort;
+        // this.setupKwdtagent = setupKwdtagent;
+        // this.kwdtagentPort = kwdtagentPort;
         this.incrementalAnalysis = incrementalAnalysis;
         this.diffAnalysisConfig = diffAnalysisConfig;
     }
@@ -232,8 +233,8 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     public boolean getCleanupProject() { return cleanupProject; }
     public String getReportFile() { return reportFile; }
     public String getAdditionalOpts() { return additionalOpts; }
-    public boolean getSetupKwdtagent() { return setupKwdtagent; }
-    public String getKwdtagentPort() { return kwdtagentPort; }
+    // public boolean getSetupKwdtagent() { return setupKwdtagent; }
+    // public String getKwdtagentPort() { return kwdtagentPort; }
     public boolean getIncrementalAnalysis() { return incrementalAnalysis; }
     public KlocworkDiffAnalysisConfig getDiffAnalysisConfig() { return diffAnalysisConfig; }
 

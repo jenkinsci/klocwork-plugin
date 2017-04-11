@@ -32,7 +32,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     private final String additionalOpts;
 
     @DataBoundConstructor
-    public KlocworkServerAnalysisConfig(String buildName, String tablesDir,
+    public KlocworkServerAnalysisConfig(String tablesDir,
             boolean incrementalAnalysis, boolean ignoreCompileErrors,
             String importConfig, String additionalOpts) {
 

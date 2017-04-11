@@ -113,7 +113,7 @@ public class KlocworkServerLoadBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Server Build - Step 2 - kwadmin load";
+            return "Klocwork - Full Integration Analysis (step 2 - DB load)";
         }
 
         @Override

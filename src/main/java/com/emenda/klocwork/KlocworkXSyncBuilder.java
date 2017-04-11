@@ -101,7 +101,7 @@ public class KlocworkXSyncBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Cross Project Synchronisation (kwxsync)";
+            return "Klocwork - Cross-Project Issue Sync";
         }
 
         @Override

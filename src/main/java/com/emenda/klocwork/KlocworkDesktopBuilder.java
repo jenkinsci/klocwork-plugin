@@ -42,22 +42,6 @@ import java.util.concurrent.TimeUnit;
 
 import java.util.Arrays;
 
-/**
- * Sample {@link Builder}.
- *
- * <p>
- * When the user configures the project and enables this builder,
- * {@link DescriptorImpl#newInstance(StaplerRequest)} is invoked
- * and a new {@link KlocworkDesktopBuilder} is created. The created
- * instance is persisted to the project configuration XML by using
- * XStream, so this allows you to use instance fields (like {@link #name})
- * to remember the configuration.
- *
- * <p>
- * When a build is performed, the {@link #perform} method will be invoked.
- *
- * @author Kohsuke Kawaguchi
- */
 public class KlocworkDesktopBuilder extends Builder {
 
     private final KlocworkDesktopConfig desktopConfig;
@@ -185,7 +169,7 @@ public class KlocworkDesktopBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Emenda Klocwork Desktop Analysis (kwcheck)";
+            return "Klocwork - Incremental Diff Analysis";
         }
 
         @Override

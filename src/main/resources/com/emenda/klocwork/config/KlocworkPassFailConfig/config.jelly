@@ -5,57 +5,33 @@
     <table>
         <tr>
             <td>
+                <!-- set default jobResult to failure -->
+                <j:set var="jobResultValue" value="${instance.jobResult==null ? 'failure' : instance.jobResult}" />
                 <f:label>${%Mark Build As}</f:label><br/>
-                <f:radio name="jobResult" checked="${instance.jobResult=='failure'}" value="failure"/>
+
+                <f:radio name="jobResult" checked="${jobResultValue=='failure'}" value="failure"/>
                 <label>
                     <img src="${rootURL}/images/16x16/red.gif" alt="100%" title="${%description.failureThreshold}" />
                     Failed
                 </label>
-                <f:radio name="jobResult" checked="${instance.jobResult=='unstable'}" value="unstable"/>
+                <f:radio name="jobResult" checked="${jobResultValue=='unstable'}" value="unstable"/>
                 <label>
                     <img src="${rootURL}/images/16x16/yellow.gif" alt="100%" title="${%description.newThreshold}" />
                     Unstable
                 </label>
-                <f:radio name="jobResult" checked="${instance.jobResult=='pass'}" value="pass"/>
+                <f:radio name="jobResult" checked="${jobResultValue=='pass'}" value="pass"/>
                 <label>
                     <img src="${rootURL}/images/16x16/green.gif" alt="100%" title="${%description.newThreshold}" />
                     Passed
                 </label>
-                <!-- <select name="jobResult" style="width:100%">
-                    <f:option selected="${instance.jobResult=='failure'}" value="failure">FAILURE</f:option>
-                    <f:option selected="${instance.jobResult=='unstable'}" value="unstable">UNSTABLE</f:option>
-                </select> -->
             </td>
-            <!-- <td>
-                <img src="${rootURL}/images/16x16/health-00to19.gif" alt="0%" title="${%description.unhealthy}" />
-                <img src="${rootURL}/images/16x16/health-20to39.gif" alt="0%" title="${%description.unhealthy}" />
-                <img src="${rootURL}/images/16x16/health-40to59.gif" alt="0%" title="${%description.unhealthy}" />
-                <img src="${rootURL}/images/16x16/health-60to79.gif" alt="0%" title="${%description.unhealthy}" />
-                <img src="${rootURL}/images/16x16/health-80plus.gif" alt="0%" title="${%description.unhealthy}" />
-            </td> -->
-            <!-- <td>
-                <label>Severity Threshold:</label>
-                <select name="severity" style="width:100%">
-                    <f:option value="critical" selected="${instance.severity=='critical'}">Severity 1</f:option>
-                    <f:option value="error" selected="${instance.severity=='error'}">Severity 2</f:option>
-                    <f:option value="warning" selected="${instance.severity=='warning'}">Severity 3</f:option>
-                    <f:option value="suggestion" selected="${instance.severity=='suggestion'}">Severity 4</f:option>
-                </select>
-            </td> -->
-            <!-- <td>
-                <label>State Threshold:</label>
-                <select name="state" style="width:100%">
-                    <f:option value="new" selected="${instance.state=='new'}">New</f:option>
-                    <f:option value="existing" selected="${instance.state=='existing'}">Existing</f:option>
-                </select>
-            </td> -->
             <td>
                 <f:label for="query">${%Search Query}</f:label>
                 <f:textbox field="query" default="state:+New status:Analyze severity:1,2"/>
             </td>
             <td style="width:10%">
                 <label>Threshold:</label>
-                <f:textbox field="threshold"/>
+                <f:textbox field="threshold" default="0"/>
             </td>
         </tr>
     </table>

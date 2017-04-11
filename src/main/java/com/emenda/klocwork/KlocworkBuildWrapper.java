@@ -208,7 +208,7 @@ public class KlocworkBuildWrapper extends BuildWrapper {
         }
 
         public String getDisplayName() {
-            return "Klocwork Build Settings";
+            return "Klocwork - Build Capture Settings";
         }
 
         @Override
