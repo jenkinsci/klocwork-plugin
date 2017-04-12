@@ -11,6 +11,7 @@ import com.emenda.klocwork.config.KlocworkDiffAnalysisConfig;
 import com.emenda.klocwork.config.KlocworkServerAnalysisConfig;
 import com.emenda.klocwork.config.KlocworkServerLoadConfig;
 import com.emenda.klocwork.config.KlocworkXSyncConfig;
+import com.emenda.klocwork.config.KlocworkDesktopGateway;
 
 import hudson.Extension;
 import javaposse.jobdsl.dsl.RequiresPlugin;
@@ -22,27 +23,30 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 
 /*
 job("DSL-KW-Test") {
-label "VM_Linux"
-scm {
-git("https://github.com/jlarfors/git.git")
-}
-wrappers {
-klocworkWrapper("xubuntu","","git","kwinject.out")
-}
-steps {
-shell("kwinject make NO_EXPAT=YesPlease")
-klocworkDesktopBuilder("",false, "", "", true, "", "", "")
-klocworkServerAnalysis("",
-    true, true, "",
-    "")
+  wrappers {
+    klocworkWrapper("KlocworkServerConfigName","KlocworkInstallationName","KlocworkProjectName","BuildSpecificationFileName")
+  }
+  steps {
+    shell("kwinject make")
+    
+    klocworkDesktopBuilder(){
+      klocworkDesktopConfig("LocalProjectDirectory", true, "ReportFile", "AdditionalOptions", true){
+        klocworkDiffAnalysisConfig("DiffFileListFileName", "git", "GitPreviousCommit")
+      }
+    }
+ 
+    klocworkServerAnalysis("TablesDirectory", true, true, "ImportConfig", "AdditionalOptions")
 
-klocworkServerDBLoad("", "")
+    klocworkServerDBLoad("BuildName", "AdditionalOptions")
 
-klocworkXSyncBuilder(true, "03-00-0000 00:00:00", "git",
-    true, true,
-    true, true, true,
-    true, true, true,
-    "")
+    klocworkXSyncBuilder(true, "03-00-0000 00:00:00", "ProjectFilter", true, true, true, true, true, true, true, true,"AdditionalOptions")
+  }
+  publishers{
+    klocworkQualityGateway(true, true){
+      klocworkDesktopGateway("2")
+      klocworkPassFailConfig("unstable", "severity:Critical", "2", "ConditionName")
+    }
+  }
 }
 */
 
@@ -57,18 +61,11 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     @DslExtensionMethod(context = StepContext.class)
-    public Object klocworkDesktopBuilder(String projectDir, boolean cleanupProject,
-                                        String reportFile, String additionalOptions,
-                                        boolean incrementalAnalysis,
-                                        // arguments for KlocworkDiffAnalysisConfig
-                                        String diffType, String gitPreviousCommit,
-                                        String diffFileList) {
-        // TODO: add support for DSL Contexts to make this cleaner...
-        return new KlocworkDesktopBuilder(
-            new KlocworkDesktopConfig(projectDir, cleanupProject, reportFile,
-                additionalOptions, incrementalAnalysis,
-                    new KlocworkDiffAnalysisConfig(diffType, gitPreviousCommit,
-                        diffFileList)));
+    public Object klocworkDesktopBuilder(Runnable closure){
+		KlocworkDesktopConfigJobDslContext context =  new KlocworkDesktopConfigJobDslContext();
+		executeInContext(closure, context);
+		
+		return new KlocworkDesktopBuilder(context.klocworkDesktopConfig);
     }
 
     @DslExtensionMethod(context = StepContext.class)
@@ -88,14 +85,14 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     @DslExtensionMethod(context = StepContext.class)
-    public Object klocworkXSyncBuilder(boolean dryRun, String lastSync, String projectRegexp,
+    public Object klocworkXSyncBuilder(boolean dryRun, String projectRegexp, String lastSync,
                                         boolean statusAnalyze, boolean statusIgnore,
                                         boolean statusNotAProblem, boolean statusFix,
                                         boolean statusFixInNextRelease, boolean statusFixInLaterRelease,
                                         boolean statusDefer, boolean statusFilter,
                                         String additionalOptions) {
         return new KlocworkXSyncBuilder(
-            new KlocworkXSyncConfig(dryRun, lastSync, projectRegexp,
+            new KlocworkXSyncConfig(dryRun, projectRegexp, lastSync,
                 statusAnalyze, statusIgnore,
                 statusNotAProblem, statusFix, statusFixInNextRelease,
                 statusFixInLaterRelease, statusDefer, statusFilter,
@@ -103,9 +100,15 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     // TODO: add context support for conditions to handle List...
-    // @DslExtensionMethod(context = PublisherContext.class)
-    // public Object KlocworkQualityGateway() {
-    //     return null;
-    // }
+    
+	@DslExtensionMethod(context = PublisherContext.class)
+    public Object klocworkQualityGateway(boolean enableServerGateway, boolean enableDesktopGateway, Runnable closure){
+		
+		KlocworkGatewayJobDslContext context = new KlocworkGatewayJobDslContext();
+		executeInContext(closure, context);
+		
+		return new KlocworkQualityGateway(enableServerGateway, context.passFailsConfig, 
+											enableDesktopGateway, context.klocworkDesktopGateway);
+	}
 
 }
