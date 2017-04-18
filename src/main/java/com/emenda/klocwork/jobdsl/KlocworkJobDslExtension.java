@@ -43,8 +43,8 @@ job("DSL-KW-Test") {
   }
   publishers{
     klocworkQualityGateway(true, true){
-      klocworkDesktopGateway("2")
-      klocworkPassFailConfig("unstable", "severity:Critical", "2", "ConditionName")
+      klocworkIncrementalDiffGateway("2")
+      klocworkFullIntegrationGateway("unstable", "severity:Critical", "2", "ConditionName")
     }
   }
 }
@@ -99,7 +99,6 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
                 additionalOptions));
     }
 
-    // TODO: add context support for conditions to handle List...
     
 	@DslExtensionMethod(context = PublisherContext.class)
     public Object klocworkQualityGateway(boolean enableServerGateway, boolean enableDesktopGateway, Runnable closure){
