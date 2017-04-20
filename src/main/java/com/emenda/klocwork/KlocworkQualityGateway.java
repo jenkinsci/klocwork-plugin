@@ -140,16 +140,19 @@ public class KlocworkQualityGateway extends Publisher {
         }
 
         if (enableDesktopGateway) {
+			logger.logMessage("Performing Klocwork Desktop Gateway");
             KlocworkDesktopBuilder desktopBuilder = (KlocworkDesktopBuilder)
                 KlocworkUtil.getInstanceOfBuilder(KlocworkDesktopBuilder.class, build);
-
-            String xmlReport = null;
 
             if (desktopBuilder == null) {
                 throw new AbortException("Could not find build-step for " +
                 "Klocwork Desktop analysis in this job. Please configure a " +
                 "Klocwork Desktop build.");
             }
+			
+			String xmlReport = desktopBuilder.getDesktopConfig().getKwcheckReportFile(envVars);
+			logger.logMessage("Working with report file: " + xmlReport);
+			
             try {
                 int totalIssueCount = launcher.getChannel().call(
                     new KlocworkXMLReportParser(

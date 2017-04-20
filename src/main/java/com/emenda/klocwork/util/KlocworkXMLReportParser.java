@@ -7,7 +7,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import hudson.AbortException;;
 import jenkins.security.MasterToSlaveCallable;
@@ -30,13 +31,20 @@ public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOExc
     public Integer call() throws IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
-           InputStream xmlInput = new FileInputStream(new File(workspace, xmlReport));
+			//We must handle both relative and absolute paths
+			InputStream xmlInput = null;
+			if (Paths.get(xmlReport).isAbsolute()) {
+				xmlInput = new FileInputStream(new File(xmlReport));
+			}
+			else {
+				xmlInput = new FileInputStream(new File(workspace, xmlReport));
+			}
 
-           SAXParser saxParser = factory.newSAXParser();
-           KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler();
-           saxParser.parse(xmlInput, handler);
+			SAXParser saxParser = factory.newSAXParser();
+			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler();
+			saxParser.parse(xmlInput, handler);
 
-           return handler.getTotalIssueCount();
+			return handler.getTotalIssueCount();
 
        } catch (ParserConfigurationException | SAXException ex) {
            throw new AbortException(ex.getMessage());

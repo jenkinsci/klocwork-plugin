@@ -209,7 +209,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     public String getKwcheckDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
         try {
             List<String> fileList = launcher.getChannel().call(
-                new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(diffAnalysisConfig.getDiffFileList()), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
+                new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(getDiffFileList(envVars)), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
             return String.join(" ", fileList); // TODO: is Java 8 OK?
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
@@ -219,9 +219,6 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
 
     public String getDiffFileList(EnvVars envVars) {
         String diffFileList = envVars.expand(diffAnalysisConfig.getDiffFileList());
-        if (StringUtils.isEmpty(diffFileList)) {
-            diffFileList = KlocworkConstants.DEFAULT_DIFF_FILE_LIST;
-        }
         return diffFileList;
     }
 

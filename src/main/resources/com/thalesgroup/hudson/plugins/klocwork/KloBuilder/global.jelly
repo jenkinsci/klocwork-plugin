@@ -24,9 +24,9 @@
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <f:section title="Klocwork">
-        <f:entry title="Klocwork installation"
-             description="List of Klocwork installations on this system">
+    <f:section title="Klocwork (deprecated)">
+        <f:entry title="Klocwork installation (deprecated)"
+             description="List of Klocwork installations on this system (deprecated)">
             <f:repeatable var="inst" items="${descriptor.installations}">
                 <table width="100%">
 

@@ -69,7 +69,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
             kwadminCmd.add("import-config");
             kwadminCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
                 KlocworkConstants.KLOCWORK_PROJECT));
-            kwadminCmd.add(configFile);
+            kwadminCmd.add(envVars.expand(configFile));
             kwadminCmds.add(kwadminCmd);
         }
 

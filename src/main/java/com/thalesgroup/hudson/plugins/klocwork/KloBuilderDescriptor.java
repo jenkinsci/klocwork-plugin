@@ -60,7 +60,7 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
     }
 
     public String getDisplayName() {
-        return "Invoke klocwork command";
+        return "Invoke klocwork command (deprecated)";
     }
 
     public KloInstallation[] getInstallations() {

@@ -43,7 +43,11 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
     }
 
     private void populateFileList() throws IOException {
-        Path diffFileListPath = Paths.get(workspace, diffFileList);
+		Path diffFileListPath = Paths.get(diffFileList);
+		//We must handle both relative and absolute paths
+		if (! diffFileListPath.isAbsolute()) {
+			diffFileListPath = Paths.get(workspace, diffFileList);
+		}
         try (Scanner scanner = new Scanner(diffFileListPath)) {
             while (scanner.hasNextLine()) {
                 fileList.add(diffFileListPath.resolveSibling(scanner.nextLine()).normalize().toString());

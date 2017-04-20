@@ -164,6 +164,12 @@ public class KlocworkUtil {
         }
         return null;
     }
+	
+	public static String getAbsolutePath(EnvVars envVars, String path) {
+		String absolutePath = path;
+		
+		return absolutePath;
+	}
 
 
 }

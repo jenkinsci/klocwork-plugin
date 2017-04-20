@@ -50,7 +50,12 @@ public class KlocworkDiffAnalysisConfig extends AbstractDescribableImpl<Klocwork
 
     public String getDiffType() { return diffType; }
     public String getGitPreviousCommit() { return gitPreviousCommit; }
-    public String getDiffFileList() { return diffFileList; }
+    public String getDiffFileList() {
+		if (StringUtils.isEmpty(diffFileList)) {
+            return KlocworkConstants.DEFAULT_DIFF_FILE_LIST;
+        }
+		return diffFileList; 
+	}
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkDiffAnalysisConfig> {

@@ -404,7 +404,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         @Override
         public String getDisplayName() {
-            return "Publish Klocwork test result report";
+            return "Publish Klocwork test result report (deprecated)";
         }
 
         @Override

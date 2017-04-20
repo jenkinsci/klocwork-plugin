@@ -53,6 +53,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         kwadminCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
             KlocworkConstants.KLOCWORK_PROJECT));
         kwadminCmd.add(envVars.expand(KlocworkUtil.getKwtablesDir(tablesDir)));
+		kwadminCmd.add(additionalOpts);
         return kwadminCmd;
     }
 
