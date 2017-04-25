@@ -140,6 +140,7 @@ public class KlocworkQualityGateway extends Publisher {
         }
 
         if (enableDesktopGateway) {
+          //Skip gateway if no analysis was run (otherwise the XML will be missing)
 			logger.logMessage("Performing Klocwork Desktop Gateway");
             KlocworkDesktopBuilder desktopBuilder = (KlocworkDesktopBuilder)
                 KlocworkUtil.getInstanceOfBuilder(KlocworkDesktopBuilder.class, build);
@@ -149,10 +150,15 @@ public class KlocworkQualityGateway extends Publisher {
                 "Klocwork Desktop analysis in this job. Please configure a " +
                 "Klocwork Desktop build.");
             }
-			
+
+            //Skip gateway if no analysis was run (otherwise the XML will be missing)
+            if ( desktopBuilder.isAnalysisSkipped() ) {
+              return true;
+            }
+
 			String xmlReport = desktopBuilder.getDesktopConfig().getKwcheckReportFile(envVars);
 			logger.logMessage("Working with report file: " + xmlReport);
-			
+
             try {
                 int totalIssueCount = launcher.getChannel().call(
                     new KlocworkXMLReportParser(

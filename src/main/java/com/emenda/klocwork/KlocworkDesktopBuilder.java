@@ -45,13 +45,16 @@ import java.util.Arrays;
 public class KlocworkDesktopBuilder extends Builder {
 
     private final KlocworkDesktopConfig desktopConfig;
+    private boolean analysisSkipped;
 
     @DataBoundConstructor
     public KlocworkDesktopBuilder(KlocworkDesktopConfig desktopConfig) {
         this.desktopConfig = desktopConfig;
+        this.analysisSkipped = false;
     }
 
     public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
+    public boolean isAnalysisSkipped() { return analysisSkipped; }
 
     @Override
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
@@ -101,6 +104,9 @@ public class KlocworkDesktopBuilder extends Builder {
                     // we do not need to do anything!
                     logger.logMessage("Incremental analysis did not detect any " +
                         "changed files in the build specification. Skipping the analysis");
+                    // mark build as skipped
+                    analysisSkipped = true;
+
                     return true;
                 }
             }

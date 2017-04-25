@@ -20,6 +20,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Files;
 
 public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,IOException>  {
 
@@ -35,23 +36,24 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
         this.diffFileList = diffFileList;
     }
 
-    public KlocworkBuildSpecParser(String workspace, List<String> fileList, String buildSpec) {
-        this.workspace = workspace;
-        this.fileList = fileList;
-        this.buildSpec = buildSpec;
-        this.diffFileList = null;
-    }
-
     private void populateFileList() throws IOException {
-		Path diffFileListPath = Paths.get(diffFileList);
-		//We must handle both relative and absolute paths
-		if (! diffFileListPath.isAbsolute()) {
-			diffFileListPath = Paths.get(workspace, diffFileList);
-		}
-        try (Scanner scanner = new Scanner(diffFileListPath)) {
-            while (scanner.hasNextLine()) {
-                fileList.add(diffFileListPath.resolveSibling(scanner.nextLine()).normalize().toString());
-            }
+		    Path diffFileListPath = Paths.get(diffFileList);
+		    //We must handle both relative and absolute paths
+		    if (! diffFileListPath.isAbsolute()) {
+			       diffFileListPath = Paths.get(workspace, diffFileList);
+        }
+        //Let's check the file exists before we try to read it
+        if (Files.exists(diffFileListPath)) {
+          try (Scanner scanner = new Scanner(diffFileListPath)) {
+              while (scanner.hasNextLine()) {
+                  fileList.add(diffFileListPath.resolveSibling(scanner.nextLine()).normalize().toString());
+              }
+          }
+        }
+        else {
+            //Diff file list is missing, report an error by propagating exception
+            throw new IOException("Diff file list " + diffFileList + " does not " +
+            "exist. Either provide a valid diff file list or disable Diff Analysis");
         }
     }
 
@@ -59,10 +61,8 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
         List<String> validFiles = new ArrayList<String>();
         HashSet<String> buildSpecFiles = new HashSet<String>(); // optimisation for initial capacity?
 
-        if (diffFileList != null) {
-            // read list of files from a file
-            populateFileList();
-        }
+        // read list of files from a file
+        populateFileList();
 
         try (Scanner scanner =  new Scanner(Paths.get(buildSpec))) {
             while (scanner.hasNextLine()){
