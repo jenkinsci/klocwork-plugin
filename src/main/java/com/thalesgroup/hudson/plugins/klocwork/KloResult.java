@@ -124,7 +124,7 @@ public class KloResult implements Serializable {
      * @param kloConfig     the Klocwork configuration object
      * @param checkNewError true, if the request is for the number of new errors
      * @return the number of errors or new errors (if checkNewEroor is set to true) for the current configuration object
-     * @throws IOException
+     * @throws IOException klocwork configuration file is missing
      */
     public int getNumberErrorsAccordingConfiguration(KloConfig kloConfig,
                                                      boolean checkNewError) throws IOException {
