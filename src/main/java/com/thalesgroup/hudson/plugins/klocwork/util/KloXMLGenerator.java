@@ -175,7 +175,7 @@ public class KloXMLGenerator implements Serializable {
                             KWservice.errorMessage.clear();
                         }
                         return "1";
-                    }
+                    }           
                 } else {
                     listener.getLogger().println("ERROR while generating XML. Could not open file for writing: " + a_filename);
                 }

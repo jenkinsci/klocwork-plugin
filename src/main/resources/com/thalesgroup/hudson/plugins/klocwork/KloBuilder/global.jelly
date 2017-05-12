@@ -29,7 +29,7 @@
              description="List of Klocwork installations on this system (deprecated)">
             <f:repeatable var="inst" items="${descriptor.installations}">
                 <table width="100%">
-
+          
                     <f:entry title="name" help="/plugin/klocwork/globalName.html">
                         <f:textbox name="klocwork.name" value="${inst.name}" />
                     </f:entry>
@@ -38,33 +38,33 @@
                         <f:textbox name="klocwork.executablePath" value="${inst.executablePath}" />
                         <!-- checkUrl="'builder/KloBuilder/doCheckKloHome?value='+encode(this.value)" /> -->
                     </f:entry>
-
+			
                     <!--<f:entry help="/plugin/klocwork/spacesPath.html" >
                             <f:checkbox name="klocwork.useLink" value="true" checked="${inst.useLink}" id="klocwork.useLink"/>
                             <label for="klocwork.useLink">My installation path contains spaces, so I give you a link path</label>
                     </f:entry>-->
-
+		   
                     <f:entry title="PROJECT_HOST" help="/plugin/klocwork/projectHost.html">
                         <f:textbox name="klocwork.projectHost" value="${inst.projectHost}"/>
                     </f:entry>
-
+			
                     <!--New in 1.15 - SSL support.-->
                     <f:entry title="" help="/plugin/klocwork/useSSL.html">
                         <f:checkbox name="klocwork.useSSL" checked="${inst.useSSL}" title="USE_SSL"/>
                     </f:entry>
-
+                        		
                     <f:entry title="PROJECT_PORT" help="/plugin/klocwork/projectPort.html">
                         <f:textbox name="klocwork.projectPort" value="${inst.projectPort}" default="8080" />
                     </f:entry>
-
+		   
                     <f:entry title="LICENCE_HOST" help="/plugin/klocwork/licenseHost.html">
                         <f:textbox name="klocwork.licenseHost" value="${inst.licenseHost}"/>
                     </f:entry>
-
+		   
                     <f:entry title="LICENCE_PORT" help="/plugin/klocwork/licensePort.html">
                         <f:textbox name="klocwork.licensePort" value="${inst.licensePort}" default="27000" />
                     </f:entry>
-
+          
                     <f:entry title="">
                         <div align="right">
                             <f:repeatableDeleteButton />

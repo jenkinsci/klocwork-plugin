@@ -98,7 +98,7 @@ xmlns:f="/lib/form" xmlns:u="/util">
                     <label for="trendGraph.warningSuggestion">${%Warning and Suggestions}</label>
                     <st:nbsp />
                 </td>
-            </tr>
+            </tr> 
          </table>
     </f:entry>
 -->
@@ -139,7 +139,7 @@ xmlns:f="/lib/form" xmlns:u="/util">
                         <st:nbsp />
                     </td>
                 </tr>
-            </table>
+            </table> 
         </f:entry>
     </f:advanced>
 </j:jelly>
