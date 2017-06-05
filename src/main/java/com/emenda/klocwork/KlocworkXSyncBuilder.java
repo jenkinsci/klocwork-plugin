@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class KlocworkXSyncBuilder extends Builder {
+public class KlocworkXSyncBuilder extends Builder implements SimpleBuildStep {
 
     private final KlocworkXSyncConfig xsyncConfig;
 
@@ -56,19 +56,21 @@ public class KlocworkXSyncBuilder extends Builder {
     public KlocworkXSyncConfig getXsyncConfig() { return xsyncConfig; }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
         throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("XSyncBuilder", listener.getLogger());
-        logger.logMessage("Starting Klocwork Cross Synchronisation Step");
         EnvVars envVars = null;
-        FilePath workspace = null;
-
         try {
             envVars = build.getEnvironment(listener);
-            workspace = build.getWorkspace();
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+        perform(build, envVars, workspace, launcher, listener);
+    }
+
+    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
+        throws AbortException {
+        KlocworkLogger logger = new KlocworkLogger("XSyncBuilder", listener.getLogger());
+        logger.logMessage("Starting Klocwork Cross Synchronisation Step");
 
         // validate server URL required for accessing Klocwork server
         KlocworkUtil.validateServerURL(envVars);
@@ -78,8 +80,6 @@ public class KlocworkXSyncBuilder extends Builder {
                 xsyncConfig.getVersionCmd());
         KlocworkUtil.executeCommand(launcher, listener,
                  workspace, envVars, xsyncConfig.getxsyncCmd(envVars, launcher));
-
-        return true;
 
     }
 
@@ -101,7 +101,7 @@ public class KlocworkXSyncBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Cross-Project Issue Sync";
+            return KlocworkConstants.KLOCWORK_XSYNC_DISPLAY_NAME;
         }
 
         @Override

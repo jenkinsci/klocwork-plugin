@@ -91,6 +91,33 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         return kwcheckSetCmd;
     }
 
+    public ArgumentListBuilder getKwcheckListCmd(EnvVars envVars, FilePath workspace,
+        String diffList)
+                                        throws IOException, InterruptedException {
+        ArgumentListBuilder kwcheckRunCmd =
+            new ArgumentListBuilder("kwcheck", "list");
+        kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
+        String licenseHost = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_HOST);
+        if (!StringUtils.isEmpty(licenseHost)) {
+            kwcheckRunCmd.add("--license-host", licenseHost);
+        }
+
+        String licensePort = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_PORT);
+        if (!StringUtils.isEmpty(licensePort)) {
+            kwcheckRunCmd.add("--license-port", licensePort);
+        }
+
+        kwcheckRunCmd.add("-F", "xml", "--report", getKwcheckReportFile(envVars));
+        if (!StringUtils.isEmpty(additionalOpts)) {
+            kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
+        }
+
+        // add list of changed files to end of kwcheck run command
+        kwcheckRunCmd.addTokenized(diffList);
+
+        return kwcheckRunCmd;
+    }
+
     public ArgumentListBuilder getKwcheckRunCmd(EnvVars envVars, FilePath workspace,
         String diffList)
                                         throws IOException, InterruptedException {

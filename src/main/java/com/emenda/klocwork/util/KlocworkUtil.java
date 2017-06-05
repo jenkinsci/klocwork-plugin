@@ -1,6 +1,7 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.KlocworkServerAnalysisBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +13,11 @@ import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Job;
+import hudson.model.JobProperty;
+import hudson.model.Run;
 import hudson.model.Project;
+import hudson.model.TaskListener;
 import hudson.tasks.Builder;
 import hudson.util.ArgumentListBuilder;
 
@@ -116,12 +121,12 @@ public class KlocworkUtil {
         return (StringUtils.isEmpty(tablesDir)) ? KlocworkConstants.DEFAULT_TABLES_DIR : tablesDir;
     }
 
-    public static int executeCommand(Launcher launcher, BuildListener listener,
+    public static int executeCommand(Launcher launcher, TaskListener listener,
                         FilePath buildDir, EnvVars envVars, ArgumentListBuilder cmds) throws AbortException {
         return executeCommand(launcher, listener, buildDir, envVars, cmds, false);
     }
 
-    public static int executeCommand(Launcher launcher, BuildListener listener,
+    public static int executeCommand(Launcher launcher, TaskListener listener,
                         FilePath buildDir, EnvVars envVars, ArgumentListBuilder cmds,
                         boolean ignoreReturnCode)
                         throws AbortException {
@@ -146,28 +151,9 @@ public class KlocworkUtil {
         }
     }
 
-    public static Object getInstanceOfBuilder(Class<? extends Builder> classType, AbstractBuild<?,?> build) {
-        AbstractProject p = build.getProject();
-        List<Builder> builders;
-        if (p instanceof Project) {
-            builders = ((Project) p).getBuilders();
-        } else if (p instanceof MatrixProject) {
-            builders = ((MatrixProject) p).getBuilders();
-        } else {
-            builders = Collections.emptyList();
-        }
-
-        for (Builder builder : builders) {
-            if (classType.isInstance(builder)) {
-                return builder;
-            }
-        }
-        return null;
-    }
-	
 	public static String getAbsolutePath(EnvVars envVars, String path) {
 		String absolutePath = path;
-		
+
 		return absolutePath;
 	}
 

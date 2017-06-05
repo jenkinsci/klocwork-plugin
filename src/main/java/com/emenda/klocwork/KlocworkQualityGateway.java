@@ -55,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class KlocworkQualityGateway extends Publisher {
+public class KlocworkQualityGateway extends Publisher implements SimpleBuildStep {
 
     private final boolean enableServerGateway;
     private final List<KlocworkPassFailConfig> passFailConfigs;
@@ -89,8 +89,9 @@ public class KlocworkQualityGateway extends Publisher {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("Publisher", listener.getLogger());
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
+    throws AbortException {
+        KlocworkLogger logger = new KlocworkLogger("KlocworkQualityGateway", listener.getLogger());
         EnvVars envVars = null;
         try {
             envVars = build.getEnvironment(listener);
@@ -142,27 +143,14 @@ public class KlocworkQualityGateway extends Publisher {
         if (enableDesktopGateway) {
           //Skip gateway if no analysis was run (otherwise the XML will be missing)
 			logger.logMessage("Performing Klocwork Desktop Gateway");
-            KlocworkDesktopBuilder desktopBuilder = (KlocworkDesktopBuilder)
-                KlocworkUtil.getInstanceOfBuilder(KlocworkDesktopBuilder.class, build);
 
-            if (desktopBuilder == null) {
-                throw new AbortException("Could not find build-step for " +
-                "Klocwork Desktop analysis in this job. Please configure a " +
-                "Klocwork Desktop build.");
-            }
-
-            //Skip gateway if no analysis was run (otherwise the XML will be missing)
-            if ( desktopBuilder.isAnalysisSkipped() ) {
-              return true;
-            }
-
-			String xmlReport = desktopBuilder.getDesktopConfig().getKwcheckReportFile(envVars);
+            String xmlReport = KlocworkUtil.getAndExpandEnvVar(envVars, desktopGateway.getReportFile());
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {
                 int totalIssueCount = launcher.getChannel().call(
                     new KlocworkXMLReportParser(
-                    build.getWorkspace().getRemote(), xmlReport));
+                    workspace.getRemote(), xmlReport));
                 logger.logMessage("Total Desktop Issues : " +
                     Integer.toString(totalIssueCount));
                 logger.logMessage("Configured Threshold : " +
@@ -175,9 +163,6 @@ public class KlocworkQualityGateway extends Publisher {
                 throw new AbortException(ex.getMessage());
             }
         }
-
-
-        return true;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {

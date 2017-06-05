@@ -28,22 +28,22 @@ job("DSL-KW-Test") {
   }
   steps {
     shell("kwinject make")
-    
+
     klocworkDesktopBuilder(){
       klocworkDesktopConfig("LocalProjectDirectory", true, "ReportFile", "AdditionalOptions", true){
         klocworkDiffAnalysisConfig("DiffFileListFileName", "git", "GitPreviousCommit")
       }
     }
- 
+
     klocworkServerAnalysis("TablesDirectory", true, true, "ImportConfig", "AdditionalOptions")
 
-    klocworkServerDBLoad("BuildName", "AdditionalOptions")
+    klocworkServerDBLoad("TablesDirectory", "BuildName", "AdditionalOptions")
 
     klocworkXSyncBuilder(true, "03-00-0000 00:00:00", "ProjectFilter", true, true, true, true, true, true, true, true,"AdditionalOptions")
   }
   publishers{
     klocworkQualityGateway(true, true){
-      klocworkIncrementalDiffGateway("2")
+      klocworkIncrementalDiffGateway("2", "ReportFile")
       klocworkFullIntegrationGateway("unstable", "severity:Critical", "2", "ConditionName")
     }
   }
@@ -64,7 +64,7 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     public Object klocworkDesktopBuilder(Runnable closure){
 		KlocworkDesktopConfigJobDslContext context =  new KlocworkDesktopConfigJobDslContext();
 		executeInContext(closure, context);
-		
+
 		return new KlocworkDesktopBuilder(context.klocworkDesktopConfig);
     }
 
@@ -79,9 +79,9 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     @DslExtensionMethod(context = StepContext.class)
-    public Object klocworkServerDBLoad(String buildName, String additionalOptions) {
+    public Object klocworkServerDBLoad(String tablesDir, String buildName, String additionalOptions) {
         return new KlocworkServerLoadBuilder(
-            new KlocworkServerLoadConfig(buildName, additionalOptions));
+            new KlocworkServerLoadConfig(tablesDir, buildName, additionalOptions));
     }
 
     @DslExtensionMethod(context = StepContext.class)
@@ -99,14 +99,14 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
                 additionalOptions));
     }
 
-    
+
 	@DslExtensionMethod(context = PublisherContext.class)
     public Object klocworkQualityGateway(boolean enableServerGateway, boolean enableDesktopGateway, Runnable closure){
-		
+
 		KlocworkGatewayJobDslContext context = new KlocworkGatewayJobDslContext();
 		executeInContext(closure, context);
-		
-		return new KlocworkQualityGateway(enableServerGateway, context.passFailsConfig, 
+
+		return new KlocworkQualityGateway(enableServerGateway, context.passFailConfigs,
 											enableDesktopGateway, context.klocworkDesktopGateway);
 	}
 

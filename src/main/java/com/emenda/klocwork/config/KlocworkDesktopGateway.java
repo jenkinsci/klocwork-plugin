@@ -23,14 +23,20 @@ import java.net.URL;
 public class KlocworkDesktopGateway extends AbstractDescribableImpl<KlocworkDesktopGateway> {
 
     private final String threshold;
+    private final String reportFile;
 
 
     @DataBoundConstructor
-    public KlocworkDesktopGateway(String threshold) {
+    public KlocworkDesktopGateway(String reportFile, String threshold) {
+        this.reportFile = reportFile;
         this.threshold = threshold;
     }
     public String getThreshold() {
         return threshold;
+    }
+
+    public String getReportFile() {
+        return reportFile;
     }
 
     @Extension

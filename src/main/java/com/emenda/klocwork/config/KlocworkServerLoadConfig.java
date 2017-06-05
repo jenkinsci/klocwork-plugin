@@ -22,12 +22,13 @@ import java.lang.InterruptedException;
 
 public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkServerLoadConfig> {
 
+    private final String tablesDir;
     private final String buildName;
     private final String additionalOpts;
 
     @DataBoundConstructor
-    public KlocworkServerLoadConfig(String buildName, String additionalOpts) {
-
+    public KlocworkServerLoadConfig(String tablesDir, String buildName, String additionalOpts) {
+        this.tablesDir = tablesDir;
         this.buildName = buildName;
         this.additionalOpts = additionalOpts;
     }
@@ -38,7 +39,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         return versionCmd;
     }
 
-    public ArgumentListBuilder getKwadminLoadCmd(EnvVars envVars, FilePath workspace, String tablesDir) {
+    public ArgumentListBuilder getKwadminLoadCmd(EnvVars envVars, FilePath workspace) {
         ArgumentListBuilder kwadminCmd =
             new ArgumentListBuilder("kwadmin");
         kwadminCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
@@ -57,6 +58,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         return kwadminCmd;
     }
 
+    public String getTablesDir() { return tablesDir; }
     public String getBuildName() { return buildName; }
     public String getAdditionalOpts() { return additionalOpts; }
 

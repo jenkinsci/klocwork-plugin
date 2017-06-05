@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class KlocworkServerAnalysisBuilder extends Builder {
+public class KlocworkServerAnalysisBuilder extends Builder implements SimpleBuildStep {
 
-    private final KlocworkServerAnalysisConfig serverConfig;
+    private KlocworkServerAnalysisConfig serverConfig;
 
     @DataBoundConstructor
     public KlocworkServerAnalysisBuilder(KlocworkServerAnalysisConfig serverConfig) {
@@ -50,18 +50,23 @@ public class KlocworkServerAnalysisBuilder extends Builder {
     }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
         throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("ServerBuilder", listener.getLogger());
-        logger.logMessage("Starting Klocwork Server Analysis Build Step");
+
         EnvVars envVars = null;
-        FilePath workspace = null;
         try {
             envVars = build.getEnvironment(listener);
-            workspace = build.getWorkspace();
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+        perform(build, envVars, workspace, launcher, listener);
+    }
+
+    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
+        throws AbortException {
+
+        KlocworkLogger logger = new KlocworkLogger("ServerAnalysisBuilder", listener.getLogger());
+        logger.logMessage("Starting Klocwork Server Analysis Build Step");
 
         // validate server settings needed for build-step. AbortException is
         // thrown if URL and server project are not provided as we cannot perform
@@ -74,7 +79,7 @@ public class KlocworkServerAnalysisBuilder extends Builder {
 
         KlocworkUtil.executeCommand(launcher, listener,
                 workspace, envVars,
-                serverConfig.getKwdeployCmd(envVars, build.getWorkspace()));
+                serverConfig.getKwdeployCmd(envVars, workspace));
 
         // check if there are config files to import, then for each...
         if (serverConfig.hasImportConfig()) {
@@ -83,14 +88,14 @@ public class KlocworkServerAnalysisBuilder extends Builder {
             // create kwadmin import-config command for each config file
             for (ArgumentListBuilder cmd : serverConfig.getKwadminImportConfigCmds(envVars)) {
                 KlocworkUtil.executeCommand(launcher, listener,
-                        build.getWorkspace(), envVars, cmd);
+                        workspace, envVars, cmd);
             }
         }
 
         // ignore return codes with kwbuildproject as we need to assess them
         // based on which options user provided
         int rc_kwbuild = KlocworkUtil.executeCommand(launcher, listener,
-                build.getWorkspace(), envVars,
+                workspace, envVars,
                 serverConfig.getKwbuildprojectCmd(envVars), true);
         if (rc_kwbuild != 0) {
             if (serverConfig.getIgnoreCompileErrors() && rc_kwbuild == 2) {
@@ -103,7 +108,6 @@ public class KlocworkServerAnalysisBuilder extends Builder {
                 throw new AbortException("Non-zero return code: " + Integer.toString(rc_kwbuild));
             }
         }
-        return true;
     }
 
     @Override
@@ -125,7 +129,7 @@ public class KlocworkServerAnalysisBuilder extends Builder {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Full Integration Analysis (step 1 - analysis)";
+            return KlocworkConstants.KLOCWORK_SERVER_ANALYSIS_DISPLAY_NAME;
         }
 
         @Override
