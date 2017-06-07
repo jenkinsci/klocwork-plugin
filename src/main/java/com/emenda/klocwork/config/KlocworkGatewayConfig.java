@@ -25,34 +25,34 @@ import java.util.List;
 public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatewayConfig> {
 
     private final boolean enableServerGateway;
-    private final List<KlocworkGatewayServerConfig> passFailConfigs;
+    private final List<KlocworkGatewayServerConfig> gatewayServerConfigs;
     private final boolean enableDesktopGateway;
-    private final KlocworkGatewayDesktopConfig desktopGateway;
+    private final KlocworkGatewayDesktopConfig gatewayDesktopConfig;
 
     @DataBoundConstructor
     public KlocworkGatewayConfig(boolean enableServerGateway,
-        List<KlocworkGatewayServerConfig> passFailConfigs,
-        boolean enableDesktopGateway, KlocworkGatewayDesktopConfig desktopGateway) {
+        List<KlocworkGatewayServerConfig> gatewayServerConfigs,
+        boolean enableDesktopGateway, KlocworkGatewayDesktopConfig gatewayDesktopConfig) {
         this.enableServerGateway = enableServerGateway;
-        this.passFailConfigs = passFailConfigs;
+        this.gatewayServerConfigs = gatewayServerConfigs;
         this.enableDesktopGateway = enableDesktopGateway;
-        this.desktopGateway = desktopGateway;
+        this.gatewayDesktopConfig = gatewayDesktopConfig;
     }
 
     public boolean getEnableServerGateway() {
         return enableServerGateway;
     }
 
-    public List<KlocworkGatewayServerConfig> getPassFailConfigs() {
-        return passFailConfigs;
+    public List<KlocworkGatewayServerConfig> getGatewayServerConfigs() {
+        return gatewayServerConfigs;
     }
 
     public boolean getEnableDesktopGateway() {
         return enableDesktopGateway;
     }
 
-    public KlocworkGatewayDesktopConfig getDesktopGateway() {
-        return desktopGateway;
+    public KlocworkGatewayDesktopConfig getGatewayDesktopConfig() {
+        return gatewayDesktopConfig;
     }
 
     @Extension

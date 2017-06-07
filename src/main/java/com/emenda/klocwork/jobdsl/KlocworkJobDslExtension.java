@@ -108,7 +108,7 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
 		executeInContext(closure, context);
 
 		return new KlocworkGatewayPublisher(
-            new KlocworkGatewayConfig(enableServerGateway, context.passFailConfigs,
+            new KlocworkGatewayConfig(enableServerGateway, context.gatewayServerConfigs,
 											enableDesktopGateway, context.klocworkDesktopGateway));
 	}
 

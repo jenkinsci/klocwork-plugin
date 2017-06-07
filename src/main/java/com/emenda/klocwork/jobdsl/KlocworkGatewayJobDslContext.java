@@ -12,7 +12,7 @@ import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
 class KlocworkGatewayJobDslContext implements Context {
 
 	KlocworkGatewayDesktopConfig klocworkDesktopGateway;
-	List<KlocworkGatewayServerConfig> passFailConfigs = new ArrayList<KlocworkGatewayServerConfig>();
+	List<KlocworkGatewayServerConfig> gatewayServerConfigs = new ArrayList<KlocworkGatewayServerConfig>();
 
 	public void klocworkIncrementalGateway(String threshold, String reportFile){
 		klocworkDesktopGateway = new KlocworkGatewayDesktopConfig(threshold, reportFile);
@@ -21,7 +21,7 @@ class KlocworkGatewayJobDslContext implements Context {
 	public void klocworkIntegrationGateway(String jobResult, String query,
 										String threshold, String conditionName){
 		KlocworkGatewayServerConfig passFailConfig = new KlocworkGatewayServerConfig(jobResult, query, threshold, conditionName);
-		passFailConfigs.add(passFailConfig);
+		gatewayServerConfigs.add(passFailConfig);
 	}
 
 

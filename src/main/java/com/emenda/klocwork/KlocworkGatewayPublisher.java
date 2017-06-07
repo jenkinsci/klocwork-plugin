@@ -85,70 +85,71 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
     public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
     throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkGatewayPublisher", listener.getLogger());
+        if (gatewayConfig.getEnableServerGateway()) {
+            logger.logMessage("Performing Klocwork Server Gateway");
+            for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
+                String request = "action=search&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
+                if (!StringUtils.isEmpty(pfConfig.getQuery())) {
+                    try {
+                        request += "&query=grouping:off " + URLEncoder.encode(pfConfig.getQuery(), "UTF-8");
+                    } catch (UnsupportedEncodingException ex) {
+                        throw new AbortException(ex.getMessage());
+                    }
 
-        // if (enableServerGateway) {
-        //     logger.logMessage("Performing Klocwork Server Gateway");
-        //     for (KlocworkGatewayServerConfig pfConfig : passFailConfigs) {
-        //         String request = "action=search&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
-        //         if (!StringUtils.isEmpty(pfConfig.getQuery())) {
-        //             try {
-        //                 request += "&query=grouping:off " + URLEncoder.encode(pfConfig.getQuery(), "UTF-8");
-        //             } catch (UnsupportedEncodingException ex) {
-        //                 throw new AbortException(ex.getMessage());
-        //             }
-        //
-        //         }
-        //         logger.logMessage("Condition Name : " + pfConfig.getConditionName());
-        //         logger.logMessage("Using query: " + request);
-        //         JSONArray response;
-        //
-        //         try {
-        //             String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
-        //             KlocworkApiConnection kwService = new KlocworkApiConnection(
-        //                             KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
-        //                             ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
-        //                             ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
-        //             response = kwService.sendRequest(request);
-        //         } catch (IOException ex) {
-        //             throw new AbortException("Error: failed to connect to the Klocwork" +
-        //                 " web API.\nCause: " + ex.getMessage());
-        //         }
-        //
-        //
-        //         logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
-        //         if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
-        //             logger.logMessage("Threshold exceeded. Marking build as failed.");
-        //             build.setResult(pfConfig.getResultValue());
-        //         }
-        //         for (int i = 0; i < response.size(); i++) {
-        //               JSONObject jObj = response.getJSONObject(i);
-        //               logger.logMessage(jObj.toString());
-        //         }
-        //     }
-        // }
-        //
-        // if (enableDesktopGateway) {
-		// 	logger.logMessage("Performing Klocwork Desktop Gateway");
-        //
-        //     String xmlReport = KlocworkUtil.getAndExpandEnvVar(envVars, desktopGateway.getReportFile());
-		// 	logger.logMessage("Working with report file: " + xmlReport);
-        //
-        //     try {
-        //         int totalIssueCount = launcher.getChannel().call(
-        //             new KlocworkXMLReportParser(
-        //             workspace.getRemote(), xmlReport));
-        //         logger.logMessage("Total Desktop Issues : " +
-        //             Integer.toString(totalIssueCount));
-        //         logger.logMessage("Configured Threshold : " +
-        //             desktopGateway.getThreshold());
-        //         if (totalIssueCount >= Integer.parseInt(desktopGateway.getThreshold())) {
-        //             logger.logMessage("Threshold exceeded. Marking build as failed.");
-        //                 build.setResult(Result.FAILURE);
-        //         }
-        //     } catch (InterruptedException | IOException ex) {
-        //         throw new AbortException(ex.getMessage());
-        //     }
-        // }
+                }
+                logger.logMessage("Condition Name : " + pfConfig.getConditionName());
+                logger.logMessage("Using query: " + request);
+                JSONArray response;
+
+                try {
+                    String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
+                    KlocworkApiConnection kwService = new KlocworkApiConnection(
+                                    KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
+                                    ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
+                                    ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
+                    response = kwService.sendRequest(request);
+                } catch (IOException ex) {
+                    throw new AbortException("Error: failed to connect to the Klocwork" +
+                        " web API.\nCause: " + ex.getMessage());
+                }
+
+
+                logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
+                if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
+                    logger.logMessage("Threshold exceeded. Marking build as failed.");
+                    build.setResult(pfConfig.getResultValue());
+                }
+                for (int i = 0; i < response.size(); i++) {
+                      JSONObject jObj = response.getJSONObject(i);
+                      logger.logMessage(jObj.toString());
+                }
+            }
+        }
+
+
+        if (gatewayConfig.getEnableDesktopGateway()) {
+			logger.logMessage("Performing Klocwork Desktop Gateway");
+
+            String xmlReport = KlocworkUtil.getAndExpandEnvVar(envVars,
+                gatewayConfig.getGatewayDesktopConfig().getReportFile());
+			logger.logMessage("Working with report file: " + xmlReport);
+
+            try {
+                int totalIssueCount = launcher.getChannel().call(
+                    new KlocworkXMLReportParser(
+                    workspace.getRemote(), xmlReport));
+                logger.logMessage("Total Desktop Issues : " +
+                    Integer.toString(totalIssueCount));
+                logger.logMessage("Configured Threshold : " +
+                    gatewayConfig.getGatewayDesktopConfig().getThreshold());
+                if (totalIssueCount >= Integer.parseInt(gatewayConfig.getGatewayDesktopConfig().getThreshold())) {
+                    logger.logMessage("Threshold exceeded. Marking build as failed.");
+                    build.setResult(Result.FAILURE);
+                }
+            } catch (InterruptedException | IOException ex) {
+                throw new AbortException(ex.getMessage());
+            }
+        }
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
