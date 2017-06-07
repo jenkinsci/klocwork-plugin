@@ -31,13 +31,14 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
     private KlocworkServerLoadConfig serverConfig;
 
     @DataBoundConstructor
-    public KlocworkServerLoadStep() {
-    }
-
-    @DataBoundSetter
-    public void setServerConfig(KlocworkServerLoadConfig serverConfig) {
+    public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig) {
         this.serverConfig = serverConfig;
     }
+
+    // @DataBoundSetter
+    // public void setServerConfig(KlocworkServerLoadConfig serverConfig) {
+    //     this.serverConfig = serverConfig;
+    // }
 
     public KlocworkServerLoadConfig getServerConfig() { return serverConfig; }
 

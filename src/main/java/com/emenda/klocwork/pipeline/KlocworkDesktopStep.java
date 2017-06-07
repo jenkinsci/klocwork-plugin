@@ -30,13 +30,14 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
     private KlocworkDesktopConfig desktopConfig;
 
     @DataBoundConstructor
-    public KlocworkDesktopStep() {
-    }
-
-    @DataBoundSetter
-    public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
+    public KlocworkDesktopStep(KlocworkDesktopConfig desktopConfig) {
         this.desktopConfig = desktopConfig;
     }
+
+    // @DataBoundSetter
+    // public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
+    //     this.desktopConfig = desktopConfig;
+    // }
 
     public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
 

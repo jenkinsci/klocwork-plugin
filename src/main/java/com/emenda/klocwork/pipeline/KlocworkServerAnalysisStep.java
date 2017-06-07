@@ -31,13 +31,14 @@ public class KlocworkServerAnalysisStep extends AbstractStepImpl {
     private KlocworkServerAnalysisConfig serverConfig;
 
     @DataBoundConstructor
-    public KlocworkServerAnalysisStep() {
-    }
-
-    @DataBoundSetter
-    public void setServerConfig(KlocworkServerAnalysisConfig serverConfig) {
+    public KlocworkServerAnalysisStep(KlocworkServerAnalysisConfig serverConfig) {
         this.serverConfig = serverConfig;
     }
+
+    // @DataBoundSetter
+    // public void setServerConfig(KlocworkServerAnalysisConfig serverConfig) {
+    //     this.serverConfig = serverConfig;
+    // }
 
     public KlocworkServerAnalysisConfig getServerConfig() { return serverConfig; }
 

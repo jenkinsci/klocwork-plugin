@@ -28,18 +28,19 @@ import hudson.model.TaskListener;
 
 public class KlocworkXSyncStep extends AbstractStepImpl {
 
-    private KlocworkXSyncConfig xsyncConfig;
+    private KlocworkXSyncConfig syncConfig;
 
     @DataBoundConstructor
-    public KlocworkXSyncStep() {
+    public KlocworkXSyncStep(KlocworkXSyncConfig syncConfig) {
+        this.syncConfig = syncConfig;
     }
 
-    @DataBoundSetter
-    public void setXsyncConfig(KlocworkXSyncConfig xsyncConfig) {
-        this.xsyncConfig = xsyncConfig;
-    }
+    // @DataBoundSetter
+    // public void setXsyncConfig(KlocworkXSyncConfig syncConfig) {
+    //     this.syncConfig = syncConfig;
+    // }
 
-    public KlocworkXSyncConfig getXsyncConfig() { return xsyncConfig; }
+    public KlocworkXSyncConfig getSyncConfig() { return syncConfig; }
 
 
     private static class KlocworkXSyncStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
@@ -71,7 +72,7 @@ public class KlocworkXSyncStep extends AbstractStepImpl {
         @Override
         protected Void run() throws Exception {
 
-            KlocworkXSyncBuilder builder = new KlocworkXSyncBuilder(step.getXsyncConfig());
+            KlocworkXSyncBuilder builder = new KlocworkXSyncBuilder(step.getSyncConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }

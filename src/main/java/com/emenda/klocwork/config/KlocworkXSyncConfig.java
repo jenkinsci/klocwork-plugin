@@ -222,14 +222,14 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
     public boolean getDryRun() { return dryRun; }
     public String getLastSync() { return lastSync; }
     public String getProjectRegexp() { return projectRegexp; }
-    public boolean isKlocworkStatusAnalyze() { return statusAnalyze; }
-    public boolean isKlocworkStatusIgnore() { return statusIgnore; }
-    public boolean isKlocworkStatusNotAProblem() { return statusNotAProblem; }
-    public boolean isKlocworkStatusFix() { return statusFix; }
-    public boolean isKlocworkStatusFixInNextRelease() { return statusFixInNextRelease; }
-    public boolean isKlocworkStatusFixInLaterRelease() { return statusFixInLaterRelease; }
-    public boolean isKlocworkStatusDefer() { return statusDefer; }
-    public boolean isKlocworkStatusFilter() { return statusFilter; }
+    public boolean getStatusAnalyze() { return statusAnalyze; }
+    public boolean getStatusIgnore() { return statusIgnore; }
+    public boolean getStatusNotAProblem() { return statusNotAProblem; }
+    public boolean getStatusFix() { return statusFix; }
+    public boolean getStatusFixInNextRelease() { return statusFixInNextRelease; }
+    public boolean getStatusFixInLaterRelease() { return statusFixInLaterRelease; }
+    public boolean getStatusDefer() { return statusDefer; }
+    public boolean getStatusFilter() { return statusFilter; }
     public String getAdditionalOpts() { return additionalOpts; }
 
     @Extension

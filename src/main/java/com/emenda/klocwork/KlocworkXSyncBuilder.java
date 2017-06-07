@@ -46,14 +46,14 @@ import java.util.Map;
 
 public class KlocworkXSyncBuilder extends Builder implements SimpleBuildStep {
 
-    private final KlocworkXSyncConfig xsyncConfig;
+    private final KlocworkXSyncConfig syncConfig;
 
     @DataBoundConstructor
-    public KlocworkXSyncBuilder(KlocworkXSyncConfig xsyncConfig) {
-        this.xsyncConfig = xsyncConfig;
+    public KlocworkXSyncBuilder(KlocworkXSyncConfig syncConfig) {
+        this.syncConfig = syncConfig;
     }
 
-    public KlocworkXSyncConfig getXsyncConfig() { return xsyncConfig; }
+    public KlocworkXSyncConfig getSyncConfig() { return syncConfig; }
 
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
@@ -77,9 +77,9 @@ public class KlocworkXSyncBuilder extends Builder implements SimpleBuildStep {
 
         KlocworkUtil.executeCommand(launcher, listener,
                 workspace, envVars,
-                xsyncConfig.getVersionCmd());
+                syncConfig.getVersionCmd());
         KlocworkUtil.executeCommand(launcher, listener,
-                 workspace, envVars, xsyncConfig.getxsyncCmd(envVars, launcher));
+                 workspace, envVars, syncConfig.getxsyncCmd(envVars, launcher));
 
     }
 
