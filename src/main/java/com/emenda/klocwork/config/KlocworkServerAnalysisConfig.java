@@ -53,8 +53,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         ArgumentListBuilder kwdeployCmd =
             new ArgumentListBuilder("kwdeploy");
         kwdeployCmd.add("sync");
-        kwdeployCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_URL));
+        kwdeployCmd.add("--url", envVars.get(KlocworkConstants.KLOCWORK_URL));
         return kwdeployCmd;
     }
 
@@ -64,11 +63,9 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         for (String configFile : importConfig.split(",")) {
             ArgumentListBuilder kwadminCmd =
                 new ArgumentListBuilder("kwadmin");
-            kwadminCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
-                KlocworkConstants.KLOCWORK_URL));
+            kwadminCmd.add("--url", envVars.get(KlocworkConstants.KLOCWORK_URL));
             kwadminCmd.add("import-config");
-            kwadminCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
-                KlocworkConstants.KLOCWORK_PROJECT));
+            kwadminCmd.add(envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
             kwadminCmd.add(envVars.expand(configFile));
             kwadminCmds.add(kwadminCmd);
         }
@@ -80,13 +77,11 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
 
         ArgumentListBuilder kwbuildprojectCmd =
             new ArgumentListBuilder("kwbuildproject");
-        kwbuildprojectCmd.add("--tables-directory", envVars.expand(KlocworkUtil.getKwtablesDir(tablesDir)));
+        kwbuildprojectCmd.add("--tables-directory", envVars.expand(KlocworkUtil.getDefaultKwtablesDir(tablesDir)));
         kwbuildprojectCmd.add("--license-host");
-        kwbuildprojectCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_LICENSE_HOST));
+        kwbuildprojectCmd.add(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST));
         kwbuildprojectCmd.add("--license-port");
-        kwbuildprojectCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_LICENSE_PORT));
+        kwbuildprojectCmd.add(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
         kwbuildprojectCmd.add("--url");
         kwbuildprojectCmd.add(KlocworkUtil.getKlocworkProjectUrl(envVars));
 

@@ -42,9 +42,9 @@ import java.util.concurrent.TimeUnit;
 
 import java.util.Arrays;
 
-public class KlocworkDesktopBuilder extends Builder {
+public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
 
-    private final KlocworkDesktopConfig desktopConfig;
+    private KlocworkDesktopConfig desktopConfig;
     private boolean analysisSkipped;
 
     @DataBoundConstructor
@@ -53,31 +53,47 @@ public class KlocworkDesktopBuilder extends Builder {
         this.analysisSkipped = false;
     }
 
+    // @DataBoundSetter
+    // public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
+    //     this.desktopConfig = desktopConfig;
+    // }
+
     public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
     public boolean isAnalysisSkipped() { return analysisSkipped; }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener)
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
+        throws AbortException {
+        EnvVars envVars = new EnvVars();
+        try {
+            envVars = build.getEnvironment(listener);
+        }  catch (IOException | InterruptedException ex) {
+            throw new AbortException(ex.getMessage());
+        }
+
+        // call the real perform function passing in envVars
+        perform(build, envVars, workspace, launcher, listener);
+    }
+
+    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
         throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("DesktopBuilder", listener.getLogger());
         logger.logMessage("Starting Klocwork Desktop Analysis");
-        EnvVars envVars = new EnvVars();
         try {
-            envVars = build.getEnvironment(launcher.getListener());
 
             KlocworkUtil.executeCommand(launcher, listener,
-                    build.getWorkspace(), envVars,
+                    workspace, envVars,
                     desktopConfig.getVersionCmd());
 
-            if (!desktopConfig.hasExistingProject(build.getWorkspace(), envVars)) {
+            if (!desktopConfig.hasExistingProject(workspace, envVars)) {
                 KlocworkUtil.executeCommand(launcher, listener,
-                        build.getWorkspace(), envVars,
-                        desktopConfig.getKwcheckCreateCmd(envVars, build.getWorkspace()));
+                        workspace, envVars,
+                        desktopConfig.getKwcheckCreateCmd(envVars, workspace));
             } else {
                 // update existing project
                 KlocworkUtil.executeCommand(launcher, listener,
-                        build.getWorkspace(), envVars,
-                        desktopConfig.getKwcheckSetCmd(envVars, build.getWorkspace()));
+                        workspace, envVars,
+                        desktopConfig.getKwcheckSetCmd(envVars, workspace));
             }
             String diffList = "";
             // should we perform incremental analysis?
@@ -89,7 +105,7 @@ public class KlocworkDesktopBuilder extends Builder {
                 if (desktopConfig.isGitDiffType()) {
                     logger.logMessage("Executing git diff to get change list");
                     KlocworkUtil.executeCommand(launcher, listener,
-                            build.getWorkspace(), envVars,
+                            workspace, envVars,
                             desktopConfig.getGitDiffCmd(envVars));
                 } else {
                     // manual diff just requires reading from diff file, same as git
@@ -98,23 +114,27 @@ public class KlocworkDesktopBuilder extends Builder {
 
                 // check diff file list and get list of files to analyse, if none,
                 // diffList will be empty
-                diffList = desktopConfig.getKwcheckDiffList(envVars, build.getWorkspace(), launcher);
+                diffList = desktopConfig.getKwcheckDiffList(envVars, workspace, launcher);
                 // if there are no files to analyse, do not analyse!
                 if (StringUtils.isEmpty(diffList)) {
                     // we do not need to do anything!
                     logger.logMessage("Incremental analysis did not detect any " +
                         "changed files in the build specification. Skipping the analysis");
-                    // mark build as skipped
-                    analysisSkipped = true;
 
-                    return true;
+                    // skip analysis and instead run "kwcheck list" to generate
+                    // XML reports file
+                    KlocworkUtil.executeCommand(launcher, listener,
+                            workspace, envVars,
+                            desktopConfig.getKwcheckListCmd(envVars, workspace, diffList));
+
+                    return;
                 }
             }
 
 
             KlocworkUtil.executeCommand(launcher, listener,
-                    build.getWorkspace(), envVars,
-                    desktopConfig.getKwcheckRunCmd(envVars, build.getWorkspace(), diffList));
+                    workspace, envVars,
+                    desktopConfig.getKwcheckRunCmd(envVars, workspace, diffList));
         }  catch (IOException | InterruptedException ex) {
             // throw new AbortException(KlocworkUtil.exceptionToString(ex));
             throw new AbortException(ex.getMessage());
@@ -152,9 +172,6 @@ public class KlocworkDesktopBuilder extends Builder {
         //         "kwdtagent session, as expected. Continuing build...");
         //     }
         // }
-
-
-        return true;
     }
 
     @Override

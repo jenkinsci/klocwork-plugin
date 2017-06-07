@@ -20,21 +20,27 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class KlocworkDesktopGateway extends AbstractDescribableImpl<KlocworkDesktopGateway> {
+public class KlocworkGatewayDesktopConfig extends AbstractDescribableImpl<KlocworkGatewayDesktopConfig> {
 
     private final String threshold;
+    private final String reportFile;
 
 
     @DataBoundConstructor
-    public KlocworkDesktopGateway(String threshold) {
+    public KlocworkGatewayDesktopConfig(String reportFile, String threshold) {
+        this.reportFile = reportFile;
         this.threshold = threshold;
     }
     public String getThreshold() {
         return threshold;
     }
 
+    public String getReportFile() {
+        return reportFile;
+    }
+
     @Extension
-    public static class DescriptorImpl extends Descriptor<KlocworkDesktopGateway> {
+    public static class DescriptorImpl extends Descriptor<KlocworkGatewayDesktopConfig> {
         public String getDisplayName() { return null; }
 
     }

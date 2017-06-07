@@ -3,6 +3,18 @@ package com.emenda.klocwork;
 
 public class KlocworkConstants {
 
+    public static final String KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME =
+        "Klocwork - Build Environment Settings";
+
+    public static final String KLOCWORK_SERVER_ANALYSIS_DISPLAY_NAME =
+        "Klocwork - Full Integration Analysis (step 1 - analysis)";
+    public static final String KLOCWORK_SERVER_LOAD_DISPLAY_NAME =
+        "Klocwork - Full Integration Analysis (step 2 - DB load)";
+    public static final String KLOCWORK_XSYNC_DISPLAY_NAME =
+        "Klocwork - Cross-Project Issue Sync";
+    public static final String KLOCWORK_QUALITY_GATEWAY_DISPLAY_NAME =
+        "Klocwork - Quality Gateway";
+
     public static final String DEFAULT_BUILD_SPEC = "kwinject.out";
     public static final String DEFAULT_TABLES_DIR = "kwtables";
     public static final String DEFAULT_KWCHECK_REPORT_FILE = "kwcheck_report.xml";

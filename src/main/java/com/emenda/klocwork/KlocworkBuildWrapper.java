@@ -31,8 +31,9 @@ import hudson.tasks.BuildWrapperDescriptor;
 import hudson.util.CopyOnWriteList;
 
 import jenkins.model.Jenkins;
-import jenkins.tasks.SimpleBuildStep;
+import jenkins.tasks.SimpleBuildWrapper;
 import net.sf.json.JSONObject;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -41,12 +42,13 @@ import org.kohsuke.stapler.QueryParameter;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.google.common.collect.Lists.newArrayList;
 
-public class KlocworkBuildWrapper extends BuildWrapper {
+public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
     private final String serverConfig;
     private final String installConfig;
@@ -63,120 +65,72 @@ public class KlocworkBuildWrapper extends BuildWrapper {
     }
 
     @Override
-    public Launcher decorateLauncher(AbstractBuild build, final Launcher launcher,
-                             BuildListener listener) throws IOException,
-                             RunnerAbortedException {
-        final KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
-        logger.logMessage("Setting up PATH env var for Klocwork jobs...");
-        final KlocworkInstallConfig install = getDescriptor().getInstallConfig(installConfig);
-
-        final Node node =  Computer.currentComputer().getNode();
-        if (node == null) {
-            throw new AbortException("Cannot add variables to deleted node");
-        }
-
-        return new DecoratedLauncher(launcher) {
-            @Override
-            public Proc launch(ProcStarter starter) throws IOException {
-                EnvVars vars;
-                // taken from CustomToolsPlugin
-                try { // Dirty hack, which allows to avoid NPEs in Launcher::envs()
-                    vars = toEnvVars(starter.envs());
-                } catch (NullPointerException npe) {
-                    vars = new EnvVars();
-                } catch (InterruptedException x) {
-                    throw new IOException(x);
-                }
-
-                if (install != null) {
-                    logger.logMessage("Adding Klocwork paths. Using install \""
-                    + install.getName() + "\"");
-                    String paths = vars.get("PATH");
-                    String separator = (launcher.isUnix()) ? ":" : ";";
-                    paths += separator + install.getPaths();
-                    vars.remove("PATH");
-                    vars.put("PATH+", paths);
-                }
-
-                return getInner().launch(starter.envs(vars));
-            }
-
-            private EnvVars toEnvVars(String[] envs) throws IOException, InterruptedException {
-                Computer computer = node.toComputer();
-                EnvVars vars = computer != null ? computer.getEnvironment() : new EnvVars();
-                for (String line : envs) {
-                    vars.addLine(line);
-                }
-                return vars;
-            }
-        };
-    }
-
-    @Override
-    public Environment setUp(AbstractBuild build, Launcher launcher,
-            BuildListener listener) throws IOException, InterruptedException {
+    public void setUp(Context context, Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener, EnvVars initialEnvironment) throws IOException, InterruptedException {
 
             final KlocworkLogger logger = new KlocworkLogger("BuildWrapper", listener.getLogger());
             logger.logMessage("Setting up environment variables for Klocwork jobs...");
             final KlocworkServerConfig server = getDescriptor().getServerConfig(serverConfig);
-            return new Environment() {
-                @Override
-                public void buildEnvVars(Map<String, String> env) {
-
-                    if (server != null) {
-                        if (StringUtils.isEmpty(server.getUrl())) {
-                            logger.logMessage("WARNING: Server URL for configuration \"" +
-                                server.getName() + "\" is empty");
-                        } else {
-                            logger.logMessage("Adding the Klocwork Server URL " + server.getUrl());
-                            env.put(KlocworkConstants.KLOCWORK_URL, server.getUrl());
-                        }
-                        // if specific license details, else use the global ones
-                        if (server.isSpecificLicense()) {
-                            logger.logMessage("Using specific License for given server " +
-                                server.getLicensePort() + "@" + server.getLicenseHost());
-                            env.put(KlocworkConstants.KLOCWORK_LICENSE_HOST,
-                                        server.getLicenseHost());
-                            env.put(KlocworkConstants.KLOCWORK_LICENSE_PORT,
-                                        server.getLicensePort());
-                        } else {
-                            logger.logMessage("Using Global License Settings " +
-                                getDescriptor().getGlobalLicensePort() + "@" +
-                                getDescriptor().getGlobalLicenseHost());
-                            env.put(KlocworkConstants.KLOCWORK_LICENSE_HOST,
-                                            getDescriptor().getGlobalLicenseHost());
-                            env.put(KlocworkConstants.KLOCWORK_LICENSE_PORT,
-                                            getDescriptor().getGlobalLicensePort());
-                        }
-                    } else {
-                        logger.logMessage("WARNING: No Klocwork server selected. " +
-                            "Klocwork cannot perform server builds or synchronisations " +
-                            "without a server.");
-                        logger.logMessage("Using Global License Settings " +
-                            getDescriptor().getGlobalLicensePort() + "@" +
-                            getDescriptor().getGlobalLicenseHost());
-                        env.put(KlocworkConstants.KLOCWORK_LICENSE_HOST,
-                                        getDescriptor().getGlobalLicenseHost());
-                        env.put(KlocworkConstants.KLOCWORK_LICENSE_PORT,
-                                        getDescriptor().getGlobalLicensePort());
-                    }
-                    if (StringUtils.isEmpty(serverProject)) {
-                        logger.logMessage("WARNING: No Klocwork project provided. " +
-                            "Klocwork cannot perform server builds or synchronisations " +
-                            "without a project.");
-                    } else {
-                        env.put(KlocworkConstants.KLOCWORK_PROJECT, serverProject);
-                    }
-                    if (StringUtils.isEmpty(buildSpec)) {
-                        env.put(KlocworkConstants.KLOCWORK_BUILD_SPEC,
-                            KlocworkConstants.DEFAULT_BUILD_SPEC);
-                    } else {
-                        env.put(KlocworkConstants.KLOCWORK_BUILD_SPEC, buildSpec);
-                    }
+            final KlocworkInstallConfig install = getDescriptor().getInstallConfig(installConfig);
 
 
+            if (server != null) {
+                if (StringUtils.isEmpty(server.getUrl())) {
+                    logger.logMessage("WARNING: Server URL for configuration \"" +
+                        server.getName() + "\" is empty");
+                } else {
+                    logger.logMessage("Adding the Klocwork Server URL " + server.getUrl());
+                    context.env(KlocworkConstants.KLOCWORK_URL, server.getUrl());
                 }
-            };
+                // if specific license details, else use the global ones
+                if (server.isSpecificLicense()) {
+                    logger.logMessage("Using specific License for given server " +
+                        server.getLicensePort() + "@" + server.getLicenseHost());
+                    context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
+                                server.getLicenseHost());
+                    context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
+                                server.getLicensePort());
+                } else {
+                    logger.logMessage("Using Global License Settings " +
+                        getDescriptor().getGlobalLicensePort() + "@" +
+                        getDescriptor().getGlobalLicenseHost());
+                    context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
+                                    getDescriptor().getGlobalLicenseHost());
+                    context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
+                                    getDescriptor().getGlobalLicensePort());
+                }
+            } else {
+                logger.logMessage("WARNING: No Klocwork server selected. " +
+                    "Klocwork cannot perform server builds or synchronisations " +
+                    "without a server.");
+                logger.logMessage("Using Global License Settings " +
+                    getDescriptor().getGlobalLicensePort() + "@" +
+                    getDescriptor().getGlobalLicenseHost());
+                context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
+                                getDescriptor().getGlobalLicenseHost());
+                context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
+                                getDescriptor().getGlobalLicensePort());
+            }
+            if (StringUtils.isEmpty(serverProject)) {
+                logger.logMessage("WARNING: No Klocwork project provided. " +
+                    "Klocwork cannot perform server builds or synchronisations " +
+                    "without a project.");
+            } else {
+                context.env(KlocworkConstants.KLOCWORK_PROJECT, serverProject);
+            }
+            if (StringUtils.isEmpty(buildSpec)) {
+                context.env(KlocworkConstants.KLOCWORK_BUILD_SPEC,
+                    KlocworkConstants.DEFAULT_BUILD_SPEC);
+            } else {
+                context.env(KlocworkConstants.KLOCWORK_BUILD_SPEC, buildSpec);
+            }
+
+            if (install != null) {
+                logger.logMessage("Adding Klocwork paths. Using install \""
+                + install.getName() + "\"");
+                String separator = (launcher.isUnix()) ? ":" : ";";
+                String paths = separator + install.getPaths();
+                context.env("PATH+KW", paths);
+            }
     }
 
     public String getServerConfig() { return serverConfig; }
@@ -191,6 +145,7 @@ public class KlocworkBuildWrapper extends BuildWrapper {
         return (DescriptorImpl)super.getDescriptor();
     }
 
+    @Symbol("klocworkWrapper")
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
 
@@ -208,7 +163,7 @@ public class KlocworkBuildWrapper extends BuildWrapper {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Build Capture Settings";
+            return KlocworkConstants.KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME;
         }
 
         @Override

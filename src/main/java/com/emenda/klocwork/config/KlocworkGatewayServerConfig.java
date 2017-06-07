@@ -21,7 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class KlocworkPassFailConfig extends AbstractDescribableImpl<KlocworkPassFailConfig> {
+public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<KlocworkGatewayServerConfig> {
 
     private final String jobResult;
     private final String query;
@@ -30,7 +30,7 @@ public class KlocworkPassFailConfig extends AbstractDescribableImpl<KlocworkPass
 
 
     @DataBoundConstructor
-    public KlocworkPassFailConfig(String jobResult, String query,
+    public KlocworkGatewayServerConfig(String jobResult, String query,
                            String threshold, String conditionName) {
 
         this.jobResult = jobResult;
@@ -74,7 +74,7 @@ public class KlocworkPassFailConfig extends AbstractDescribableImpl<KlocworkPass
     }
 
     @Extension
-    public static class DescriptorImpl extends Descriptor<KlocworkPassFailConfig> {
+    public static class DescriptorImpl extends Descriptor<KlocworkGatewayServerConfig> {
         public String getDisplayName() { return null; }
 
     }

@@ -3,17 +3,15 @@
 
   <f:optionalBlock name="enableServerGateway" title="${%Perform Full Integration Analysis Gateway}" checked="${instance.enableServerGateway}" inline="true" field="enableServerGateway">
       <f:advanced title="${%Conditions}">
-          <!-- <f:property field="passFailConfig" /> -->
           <f:entry title="">
-            <f:repeatableProperty field="passFailConfigs" header="${%Condition}" add="${%Add Condition}"/>
+            <f:repeatableProperty field="gatewayServerConfigs" header="${%Condition}" add="${%Add Condition}"/>
           </f:entry>
       </f:advanced>
   </f:optionalBlock>
 
   <f:optionalBlock name="enableDesktopGateway" title="${%Perform Incremental Diff Analysis Gateway}" checked="${instance.enableDesktopGateway}" inline="true" field="enableDesktopGateway">
       <f:advanced title="${%Condition}">
-          <f:property field="desktopGateway" />
+          <f:property field="gatewayDesktopConfig" />
       </f:advanced>
   </f:optionalBlock>
-
 </j:jelly>

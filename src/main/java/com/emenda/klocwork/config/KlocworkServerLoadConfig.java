@@ -22,12 +22,13 @@ import java.lang.InterruptedException;
 
 public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkServerLoadConfig> {
 
+    private final String tablesDir;
     private final String buildName;
     private final String additionalOpts;
 
     @DataBoundConstructor
-    public KlocworkServerLoadConfig(String buildName, String additionalOpts) {
-
+    public KlocworkServerLoadConfig(String tablesDir, String buildName, String additionalOpts) {
+        this.tablesDir = tablesDir;
         this.buildName = buildName;
         this.additionalOpts = additionalOpts;
     }
@@ -38,11 +39,10 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         return versionCmd;
     }
 
-    public ArgumentListBuilder getKwadminLoadCmd(EnvVars envVars, FilePath workspace, String tablesDir) {
+    public ArgumentListBuilder getKwadminLoadCmd(EnvVars envVars, FilePath workspace) {
         ArgumentListBuilder kwadminCmd =
             new ArgumentListBuilder("kwadmin");
-        kwadminCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_URL));
+        kwadminCmd.add("--url", envVars.get(KlocworkConstants.KLOCWORK_URL));
         kwadminCmd.add("load");
 
         // add options such as --name of build
@@ -50,13 +50,13 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
             kwadminCmd.add("--name", envVars.expand(buildName));
         }
 
-        kwadminCmd.add(KlocworkUtil.getAndExpandEnvVar(envVars,
-            KlocworkConstants.KLOCWORK_PROJECT));
-        kwadminCmd.add(envVars.expand(KlocworkUtil.getKwtablesDir(tablesDir)));
+        kwadminCmd.add(envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
+        kwadminCmd.add(envVars.expand(KlocworkUtil.getDefaultKwtablesDir(tablesDir)));
 		kwadminCmd.add(additionalOpts);
         return kwadminCmd;
     }
 
+    public String getTablesDir() { return tablesDir; }
     public String getBuildName() { return buildName; }
     public String getAdditionalOpts() { return additionalOpts; }
 

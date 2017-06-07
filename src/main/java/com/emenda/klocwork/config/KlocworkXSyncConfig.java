@@ -92,7 +92,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         String projectList = getProjectList(envVars, launcher);
         String lastSyncArg = getLastSyncDateDiff();
 
-        xsyncCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL));
+        xsyncCmd.add("--url", envVars.get(KlocworkConstants.KLOCWORK_URL));
         xsyncCmd.add("--last-sync", lastSyncArg);
 
         if (dryRun) {
@@ -147,7 +147,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         try {
             String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
             KlocworkApiConnection kwService = new KlocworkApiConnection(
-                            KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
+                            envVars.get(KlocworkConstants.KLOCWORK_URL),
                             ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
                             ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
             response = kwService.sendRequest(request);
@@ -169,7 +169,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         }
         if (StringUtils.isEmpty(projectList)) {
             throw new AbortException("Could not match any projects on server " +
-                KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL) +
+                envVars.get(KlocworkConstants.KLOCWORK_URL) +
                 " with regular expression \"" + projectRegexp + "\"");
         }
 
@@ -222,14 +222,14 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
     public boolean getDryRun() { return dryRun; }
     public String getLastSync() { return lastSync; }
     public String getProjectRegexp() { return projectRegexp; }
-    public boolean isKlocworkStatusAnalyze() { return statusAnalyze; }
-    public boolean isKlocworkStatusIgnore() { return statusIgnore; }
-    public boolean isKlocworkStatusNotAProblem() { return statusNotAProblem; }
-    public boolean isKlocworkStatusFix() { return statusFix; }
-    public boolean isKlocworkStatusFixInNextRelease() { return statusFixInNextRelease; }
-    public boolean isKlocworkStatusFixInLaterRelease() { return statusFixInLaterRelease; }
-    public boolean isKlocworkStatusDefer() { return statusDefer; }
-    public boolean isKlocworkStatusFilter() { return statusFilter; }
+    public boolean getStatusAnalyze() { return statusAnalyze; }
+    public boolean getStatusIgnore() { return statusIgnore; }
+    public boolean getStatusNotAProblem() { return statusNotAProblem; }
+    public boolean getStatusFix() { return statusFix; }
+    public boolean getStatusFixInNextRelease() { return statusFixInNextRelease; }
+    public boolean getStatusFixInLaterRelease() { return statusFixInLaterRelease; }
+    public boolean getStatusDefer() { return statusDefer; }
+    public boolean getStatusFilter() { return statusFilter; }
     public String getAdditionalOpts() { return additionalOpts; }
 
     @Extension

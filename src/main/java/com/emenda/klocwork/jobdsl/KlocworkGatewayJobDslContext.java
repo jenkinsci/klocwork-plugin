@@ -6,23 +6,23 @@ import java.util.List;
 import javaposse.jobdsl.dsl.Context;
 import static javaposse.jobdsl.plugin.ContextExtensionPoint.executeInContext;
 
-import com.emenda.klocwork.config.KlocworkDesktopGateway;
-import com.emenda.klocwork.config.KlocworkPassFailConfig;
+import com.emenda.klocwork.config.KlocworkGatewayDesktopConfig;
+import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
 
 class KlocworkGatewayJobDslContext implements Context {
-	
-	KlocworkDesktopGateway klocworkDesktopGateway;
-	List<KlocworkPassFailConfig> passFailsConfig = new ArrayList<KlocworkPassFailConfig>();
-	
-	public void klocworkIncrementalDiffGateway(String threshold){
-		klocworkDesktopGateway = new KlocworkDesktopGateway(threshold);
+
+	KlocworkGatewayDesktopConfig klocworkDesktopGateway;
+	List<KlocworkGatewayServerConfig> gatewayServerConfigs = new ArrayList<KlocworkGatewayServerConfig>();
+
+	public void klocworkIncrementalGateway(String threshold, String reportFile){
+		klocworkDesktopGateway = new KlocworkGatewayDesktopConfig(threshold, reportFile);
 	}
-	
-	public void klocworkFullIntegrationGateway(String jobResult, String query, 
+
+	public void klocworkIntegrationGateway(String jobResult, String query,
 										String threshold, String conditionName){
-		KlocworkPassFailConfig passFailConfig = new KlocworkPassFailConfig(jobResult, query, threshold, conditionName);
-		passFailsConfig.add(passFailConfig);
+		KlocworkGatewayServerConfig passFailConfig = new KlocworkGatewayServerConfig(jobResult, query, threshold, conditionName);
+		gatewayServerConfigs.add(passFailConfig);
 	}
-	
-	
+
+
 }

@@ -80,15 +80,42 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
 
         ArgumentListBuilder kwcheckSetCmd = new ArgumentListBuilder("kwcheck", "set");
         kwcheckSetCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-        String serverUrl = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL);
+        String serverUrl = envVars.get(KlocworkConstants.KLOCWORK_URL);
         if (!StringUtils.isEmpty(serverUrl)) {
             URL url = new URL(serverUrl);
             kwcheckSetCmd.add("klocwork.host=" + url.getHost());
             kwcheckSetCmd.add("klocwork.port=" + Integer.toString(url.getPort()));
-            kwcheckSetCmd.add("klocwork.project=" + KlocworkUtil.getAndExpandEnvVar(
-                envVars, KlocworkConstants.KLOCWORK_PROJECT));
+            kwcheckSetCmd.add("klocwork.project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
         }
         return kwcheckSetCmd;
+    }
+
+    public ArgumentListBuilder getKwcheckListCmd(EnvVars envVars, FilePath workspace,
+        String diffList)
+                                        throws IOException, InterruptedException {
+        ArgumentListBuilder kwcheckRunCmd =
+            new ArgumentListBuilder("kwcheck", "list");
+        kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
+        String licenseHost = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST);
+        if (!StringUtils.isEmpty(licenseHost)) {
+            kwcheckRunCmd.add("--license-host", licenseHost);
+        }
+
+        String licensePort = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT);
+        if (!StringUtils.isEmpty(licensePort)) {
+            kwcheckRunCmd.add("--license-port", licensePort);
+        }
+
+        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
+        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
+        if (!StringUtils.isEmpty(additionalOpts)) {
+            kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
+        }
+
+        // add list of changed files to end of kwcheck run command
+        kwcheckRunCmd.addTokenized(diffList);
+
+        return kwcheckRunCmd;
     }
 
     public ArgumentListBuilder getKwcheckRunCmd(EnvVars envVars, FilePath workspace,
@@ -97,17 +124,18 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         ArgumentListBuilder kwcheckRunCmd =
             new ArgumentListBuilder("kwcheck", "run");
         kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-        String licenseHost = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_HOST);
+        String licenseHost = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST);
         if (!StringUtils.isEmpty(licenseHost)) {
             kwcheckRunCmd.add("--license-host", licenseHost);
         }
 
-        String licensePort = KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_LICENSE_PORT);
+        String licensePort = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT);
         if (!StringUtils.isEmpty(licensePort)) {
             kwcheckRunCmd.add("--license-port", licensePort);
         }
 
-        kwcheckRunCmd.add("-F", "xml", "--report", getKwcheckReportFile(envVars));
+        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
+        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
         kwcheckRunCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
         if (!StringUtils.isEmpty(additionalOpts)) {
             kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
@@ -195,14 +223,6 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         }
         if (kwps.exists()) {
             kwps.deleteRecursive();
-        }
-    }
-
-    public String getKwcheckReportFile(EnvVars envVars) {
-        if (StringUtils.isEmpty(reportFile)) {
-            return KlocworkConstants.DEFAULT_KWCHECK_REPORT_FILE;
-        } else {
-            return envVars.expand(reportFile);
         }
     }
 

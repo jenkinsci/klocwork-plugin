@@ -1,7 +1,8 @@
 package com.emenda.klocwork;
 
-import com.emenda.klocwork.config.KlocworkPassFailConfig;
-import com.emenda.klocwork.config.KlocworkDesktopGateway;
+import com.emenda.klocwork.config.KlocworkGatewayConfig;
+import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
+import com.emenda.klocwork.config.KlocworkGatewayDesktopConfig;
 import com.emenda.klocwork.services.KlocworkApiConnection;
 import com.emenda.klocwork.util.KlocworkUtil;
 import com.emenda.klocwork.util.KlocworkXMLReportParser;
@@ -55,52 +56,38 @@ import java.util.List;
 import java.util.Map;
 
 
-public class KlocworkQualityGateway extends Publisher {
+public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
 
-    private final boolean enableServerGateway;
-    private final List<KlocworkPassFailConfig> passFailConfigs;
-    private final boolean enableDesktopGateway;
-    private final KlocworkDesktopGateway desktopGateway;
+    private final KlocworkGatewayConfig gatewayConfig;
 
     @DataBoundConstructor
-    public KlocworkQualityGateway(boolean enableServerGateway,
-        List<KlocworkPassFailConfig> passFailConfigs,
-        boolean enableDesktopGateway, KlocworkDesktopGateway desktopGateway) {
-        this.enableServerGateway = enableServerGateway;
-        this.passFailConfigs = passFailConfigs;
-        this.enableDesktopGateway = enableDesktopGateway;
-        this.desktopGateway = desktopGateway;
+    public KlocworkGatewayPublisher(KlocworkGatewayConfig gatewayConfig) {
+        this.gatewayConfig = gatewayConfig;
     }
 
-    public boolean getEnableServerGateway() {
-        return enableServerGateway;
-    }
-
-    public List<KlocworkPassFailConfig> getPassFailConfigs() {
-        return passFailConfigs;
-    }
-
-    public boolean getEnableDesktopGateway() {
-        return enableDesktopGateway;
-    }
-
-    public KlocworkDesktopGateway getDesktopGateway() {
-        return desktopGateway;
+    public KlocworkGatewayConfig getGatewayConfig() {
+        return gatewayConfig;
     }
 
     @Override
-    public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("Publisher", listener.getLogger());
+    public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
+    throws AbortException {
         EnvVars envVars = null;
         try {
             envVars = build.getEnvironment(listener);
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+        perform(build, envVars, workspace, launcher, listener);
+    }
 
-        if (enableServerGateway) {
+
+    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
+    throws AbortException {
+        KlocworkLogger logger = new KlocworkLogger("KlocworkGatewayPublisher", listener.getLogger());
+        if (gatewayConfig.getEnableServerGateway()) {
             logger.logMessage("Performing Klocwork Server Gateway");
-            for (KlocworkPassFailConfig pfConfig : passFailConfigs) {
+            for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
                 String request = "action=search&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
                 if (!StringUtils.isEmpty(pfConfig.getQuery())) {
                     try {
@@ -117,7 +104,7 @@ public class KlocworkQualityGateway extends Publisher {
                 try {
                     String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
                     KlocworkApiConnection kwService = new KlocworkApiConnection(
-                                    KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
+                                    envVars.get(KlocworkConstants.KLOCWORK_URL),
                                     ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
                                     ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
                     response = kwService.sendRequest(request);
@@ -139,45 +126,30 @@ public class KlocworkQualityGateway extends Publisher {
             }
         }
 
-        if (enableDesktopGateway) {
-          //Skip gateway if no analysis was run (otherwise the XML will be missing)
+
+        if (gatewayConfig.getEnableDesktopGateway()) {
 			logger.logMessage("Performing Klocwork Desktop Gateway");
-            KlocworkDesktopBuilder desktopBuilder = (KlocworkDesktopBuilder)
-                KlocworkUtil.getInstanceOfBuilder(KlocworkDesktopBuilder.class, build);
 
-            if (desktopBuilder == null) {
-                throw new AbortException("Could not find build-step for " +
-                "Klocwork Desktop analysis in this job. Please configure a " +
-                "Klocwork Desktop build.");
-            }
-
-            //Skip gateway if no analysis was run (otherwise the XML will be missing)
-            if ( desktopBuilder.isAnalysisSkipped() ) {
-              return true;
-            }
-
-			String xmlReport = desktopBuilder.getDesktopConfig().getKwcheckReportFile(envVars);
+            String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
+                gatewayConfig.getGatewayDesktopConfig().getReportFile()));
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {
                 int totalIssueCount = launcher.getChannel().call(
                     new KlocworkXMLReportParser(
-                    build.getWorkspace().getRemote(), xmlReport));
+                    workspace.getRemote(), xmlReport));
                 logger.logMessage("Total Desktop Issues : " +
                     Integer.toString(totalIssueCount));
                 logger.logMessage("Configured Threshold : " +
-                    desktopGateway.getThreshold());
-                if (totalIssueCount >= Integer.parseInt(desktopGateway.getThreshold())) {
+                    gatewayConfig.getGatewayDesktopConfig().getThreshold());
+                if (totalIssueCount >= Integer.parseInt(gatewayConfig.getGatewayDesktopConfig().getThreshold())) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
-                        build.setResult(Result.FAILURE);
+                    build.setResult(Result.FAILURE);
                 }
             } catch (InterruptedException | IOException ex) {
                 throw new AbortException(ex.getMessage());
             }
         }
-
-
-        return true;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -202,7 +174,7 @@ public class KlocworkQualityGateway extends Publisher {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Quality Gateway";
+            return KlocworkConstants.KLOCWORK_QUALITY_GATEWAY_DISPLAY_NAME;
         }
 
         @Override
