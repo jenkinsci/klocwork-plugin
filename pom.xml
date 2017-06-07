@@ -3,13 +3,18 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>2.26</version>
+    <version>2.16</version>
   </parent>
 
   <properties>
-      <jenkins.version>2.26</jenkins.version>
-    <!-- <jenkins-test-harness.version>${jenkins.version}</jenkins-test-harness.version> -->
-    <findbugs.failOnError>false</findbugs.failOnError>
+        <!--
+        If your are using the Plugin Parent POM version 2.3 or later, just set the jenkins.version property to the version you need to depend on
+        Source: https://wiki.jenkins-ci.org/display/JENKINS/Choosing+Jenkins+version+to+build+against
+        -->
+        <jenkins.version>2.16</jenkins.version>
+        <!-- <jenkins-test-harness.version>${jenkins.version}</jenkins-test-harness.version> -->
+        <findbugs.failOnError>false</findbugs.failOnError>
+        <java.level>8</java.level>
   </properties>
 
   <artifactId>klocwork</artifactId>
@@ -102,11 +107,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
-		  <!--Java version configuration, use Java 8-->
+		  <!--Java version configuration-->
 		  <configuration>
-			<source>1.8</source>
-			<target>1.8</target>
+			<source>1.${java.level}</source>
+			<target>1.${java.level}</target>
 		  </configuration>
         </plugin>
         <plugin>
@@ -125,6 +129,25 @@
             <compatibleSinceVersion>1.4.0</compatibleSinceVersion>
           </configuration>
         </plugin>
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>animal-sniffer-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <signature>
+                <groupId>org.codehaus.mojo.signature</groupId>
+                <artifactId>java1${java.level}</artifactId>
+                <version>1.0</version>
+              </signature>
+            </configuration>
+          </plugin>
       </plugins>
   </build>
 
@@ -180,6 +203,16 @@
           <groupId>org.jenkins-ci.plugins.workflow</groupId>
           <artifactId>workflow-job</artifactId>
           <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>structs</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>scm-api</artifactId>
+            <version>2.1.1</version>
         </dependency>
   </dependencies>
 </project>
