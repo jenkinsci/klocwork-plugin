@@ -91,13 +91,19 @@ public class KlocworkQualityGateway extends Publisher implements SimpleBuildStep
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
     throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("KlocworkQualityGateway", listener.getLogger());
         EnvVars envVars = null;
         try {
             envVars = build.getEnvironment(listener);
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+        perform(build, envVars, workspace, launcher, listener);
+    }
+
+
+    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
+    throws AbortException {
+        KlocworkLogger logger = new KlocworkLogger("KlocworkQualityGateway", listener.getLogger());
 
         if (enableServerGateway) {
             logger.logMessage("Performing Klocwork Server Gateway");
@@ -141,7 +147,6 @@ public class KlocworkQualityGateway extends Publisher implements SimpleBuildStep
         }
 
         if (enableDesktopGateway) {
-          //Skip gateway if no analysis was run (otherwise the XML will be missing)
 			logger.logMessage("Performing Klocwork Desktop Gateway");
 
             String xmlReport = KlocworkUtil.getAndExpandEnvVar(envVars, desktopGateway.getReportFile());
@@ -187,7 +192,7 @@ public class KlocworkQualityGateway extends Publisher implements SimpleBuildStep
         }
 
         public String getDisplayName() {
-            return "Klocwork - Quality Gateway";
+            return KlocworkConstants.KLOCWORK_QUALITY_GATEWAY_DISPLAY_NAME;
         }
 
         @Override
