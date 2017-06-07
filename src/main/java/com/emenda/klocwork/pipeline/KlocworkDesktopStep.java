@@ -84,7 +84,7 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
 
         @Override
         public String getFunctionName() {
-            return "klocworkDesktop";
+            return "klocworkIncremental";
         }
 
         @Nonnull

@@ -33,6 +33,7 @@ import hudson.util.CopyOnWriteList;
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildWrapper;
 import net.sf.json.JSONObject;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -144,6 +145,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
         return (DescriptorImpl)super.getDescriptor();
     }
 
+    @Symbol("klocworkWrapper")
     @Extension
     public static final class DescriptorImpl extends BuildWrapperDescriptor {
 
@@ -161,7 +163,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Build Capture Settings";
+            return KlocworkConstants.KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME;
         }
 
         @Override

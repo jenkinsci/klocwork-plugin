@@ -86,7 +86,7 @@ public class KlocworkServerAnalysisStep extends AbstractStepImpl {
 
         @Override
         public String getFunctionName() {
-            return "klocworkServerAnalysis";
+            return "klocworkIntegrationStep1";
         }
 
         @Nonnull

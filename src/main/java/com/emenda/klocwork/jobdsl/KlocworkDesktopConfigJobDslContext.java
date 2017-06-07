@@ -9,7 +9,7 @@ class KlocworkDesktopConfigJobDslContext implements Context {
 
 	KlocworkDesktopConfig klocworkDesktopConfig;
 
-	public void klocworkDesktopConfig(String projectDir, boolean cleanupProject,
+	public void analysisConfig(String projectDir, boolean cleanupProject,
                                         String reportFile, String additionalOptions,
                                         boolean incrementalAnalysis, Runnable closure){
 

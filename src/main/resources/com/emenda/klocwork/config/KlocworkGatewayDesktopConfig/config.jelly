@@ -5,10 +5,8 @@
         <f:textbox field="threshold" default="1"/>
     </f:entry>
 
-    <f:advanced>
-        <f:entry title="${%XML Report File}" field="reportFile">
-            <f:textbox/>
-        </f:entry>
-    </f:advanced>
+    <f:entry title="${%XML Report File}" field="reportFile">
+        <f:textbox/>
+    </f:entry>
 
 </j:jelly>

@@ -14,11 +14,11 @@ class KlocworkGatewayJobDslContext implements Context {
 	KlocworkGatewayDesktopConfig klocworkDesktopGateway;
 	List<KlocworkGatewayServerConfig> passFailConfigs = new ArrayList<KlocworkGatewayServerConfig>();
 
-	public void klocworkIncrementalDiffGateway(String threshold, String reportFile){
+	public void klocworkIncrementalGateway(String threshold, String reportFile){
 		klocworkDesktopGateway = new KlocworkGatewayDesktopConfig(threshold, reportFile);
 	}
 
-	public void klocworkFullIntegrationGateway(String jobResult, String query,
+	public void klocworkIntegrationGateway(String jobResult, String query,
 										String threshold, String conditionName){
 		KlocworkGatewayServerConfig passFailConfig = new KlocworkGatewayServerConfig(jobResult, query, threshold, conditionName);
 		passFailConfigs.add(passFailConfig);

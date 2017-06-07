@@ -85,7 +85,7 @@ public class KlocworkXSyncStep extends AbstractStepImpl {
 
         @Override
         public String getFunctionName() {
-            return "klocworkXSync";
+            return "klocworkIssueSync";
         }
 
         @Nonnull
