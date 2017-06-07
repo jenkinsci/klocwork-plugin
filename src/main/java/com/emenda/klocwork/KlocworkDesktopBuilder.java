@@ -81,8 +81,6 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
         logger.logMessage("Starting Klocwork Desktop Analysis");
         try {
 
-            logger.logMessage(envVars.toString());
-
             KlocworkUtil.executeCommand(launcher, listener,
                     workspace, envVars,
                     desktopConfig.getVersionCmd());

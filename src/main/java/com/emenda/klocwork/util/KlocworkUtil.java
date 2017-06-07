@@ -59,7 +59,7 @@ public class KlocworkUtil {
         try {
             String[] ltokenLine = launcher.getChannel().call(
                 new KlocworkLtokenFetcher(
-                getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL)));
+                envVars.get(KlocworkConstants.KLOCWORK_URL)));
 
             if (ltokenLine.length < 4) {
                 throw new IOException("Error: ltoken string returned is too short: " +
@@ -85,21 +85,21 @@ public class KlocworkUtil {
     //     return sw.toString();
     // }
 
-    public static String getAndExpandEnvVar(EnvVars envVars, String var) {
-        String value = envVars.get(var, "");
-        if (StringUtils.isEmpty(value)) {
-            return ""; // TODO - handle empty vs null
-        }
-        return envVars.expand(value);
-    }
+    // public static String getAndExpandEnvVar(EnvVars envVars, String var) {
+    //     String value = envVars.get(var, "");
+    //     if (StringUtils.isEmpty(value)) {
+    //         return ""; // TODO - handle empty vs null
+    //     }
+    //     return envVars.expand(value);
+    // }
 
     public static String getKlocworkProjectUrl(EnvVars envVars) throws AbortException {
         try {
             // handle URLs ending with "/", e.g. http://kwserver:8080/
-            String urlStr = getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL);
+            String urlStr = envVars.get(KlocworkConstants.KLOCWORK_URL);
             String separator = (urlStr.endsWith("/")) ? "" : "/";
             URL url = new URL(urlStr + separator +
-                getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_PROJECT));
+                envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
             return url.toString();
         } catch (MalformedURLException ex) {
             throw new AbortException(ex.getMessage());
@@ -108,7 +108,7 @@ public class KlocworkUtil {
 
     public static String getBuildSpecFile(EnvVars envVars)
                     throws AbortException {
-        String envBuildSpec = getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_BUILD_SPEC);
+        String envBuildSpec = envVars.get(KlocworkConstants.KLOCWORK_BUILD_SPEC);
         return (StringUtils.isEmpty(envBuildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : envBuildSpec;
     }
 
@@ -117,8 +117,12 @@ public class KlocworkUtil {
         return (new FilePath(workspace, getBuildSpecFile(envVars))).getRemote();
     }
 
-    public static String getKwtablesDir(String tablesDir) {
+    public static String getDefaultKwtablesDir(String tablesDir) {
         return (StringUtils.isEmpty(tablesDir)) ? KlocworkConstants.DEFAULT_TABLES_DIR : tablesDir;
+    }
+
+    public static String getDefaultKwcheckReportFile(String reportFile) {
+        return (StringUtils.isEmpty(reportFile)) ? KlocworkConstants.DEFAULT_KWCHECK_REPORT_FILE : reportFile;
     }
 
     public static int executeCommand(Launcher launcher, TaskListener listener,

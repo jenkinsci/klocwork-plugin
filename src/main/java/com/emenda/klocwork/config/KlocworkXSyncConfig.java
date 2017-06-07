@@ -92,7 +92,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         String projectList = getProjectList(envVars, launcher);
         String lastSyncArg = getLastSyncDateDiff();
 
-        xsyncCmd.add("--url", KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL));
+        xsyncCmd.add("--url", envVars.get(KlocworkConstants.KLOCWORK_URL));
         xsyncCmd.add("--last-sync", lastSyncArg);
 
         if (dryRun) {
@@ -147,7 +147,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         try {
             String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
             KlocworkApiConnection kwService = new KlocworkApiConnection(
-                            KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
+                            envVars.get(KlocworkConstants.KLOCWORK_URL),
                             ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
                             ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
             response = kwService.sendRequest(request);
@@ -169,7 +169,7 @@ public class KlocworkXSyncConfig extends AbstractDescribableImpl<KlocworkXSyncCo
         }
         if (StringUtils.isEmpty(projectList)) {
             throw new AbortException("Could not match any projects on server " +
-                KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL) +
+                envVars.get(KlocworkConstants.KLOCWORK_URL) +
                 " with regular expression \"" + projectRegexp + "\"");
         }
 

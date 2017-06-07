@@ -104,7 +104,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 try {
                     String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
                     KlocworkApiConnection kwService = new KlocworkApiConnection(
-                                    KlocworkUtil.getAndExpandEnvVar(envVars, KlocworkConstants.KLOCWORK_URL),
+                                    envVars.get(KlocworkConstants.KLOCWORK_URL),
                                     ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
                                     ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
                     response = kwService.sendRequest(request);
@@ -130,8 +130,8 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         if (gatewayConfig.getEnableDesktopGateway()) {
 			logger.logMessage("Performing Klocwork Desktop Gateway");
 
-            String xmlReport = KlocworkUtil.getAndExpandEnvVar(envVars,
-                gatewayConfig.getGatewayDesktopConfig().getReportFile());
+            String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
+                gatewayConfig.getGatewayDesktopConfig().getReportFile()));
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {

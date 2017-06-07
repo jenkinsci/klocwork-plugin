@@ -31,7 +31,7 @@
             </td>
             <td style="width:10%">
                 <label>Threshold:</label>
-                <f:textbox field="threshold" default="0"/>
+                <f:textbox field="threshold" default="1"/>
             </td>
         </tr>
     </table>
