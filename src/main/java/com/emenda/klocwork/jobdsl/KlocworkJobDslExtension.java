@@ -11,7 +11,8 @@ import com.emenda.klocwork.config.KlocworkDiffAnalysisConfig;
 import com.emenda.klocwork.config.KlocworkServerAnalysisConfig;
 import com.emenda.klocwork.config.KlocworkServerLoadConfig;
 import com.emenda.klocwork.config.KlocworkXSyncConfig;
-import com.emenda.klocwork.config.KlocworkDesktopGateway;
+import com.emenda.klocwork.config.KlocworkGatewayDesktopConfig;
+import com.emenda.klocwork.config.KlocworkGatewayConfig;
 
 import hudson.Extension;
 import javaposse.jobdsl.dsl.RequiresPlugin;
@@ -106,8 +107,9 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
 		KlocworkGatewayJobDslContext context = new KlocworkGatewayJobDslContext();
 		executeInContext(closure, context);
 
-		return new KlocworkQualityGateway(enableServerGateway, context.passFailConfigs,
-											enableDesktopGateway, context.klocworkDesktopGateway);
+		return new KlocworkGatewayPublisher(
+            new KlocworkGatewayConfig(enableServerGateway, context.passFailConfigs,
+											enableDesktopGateway, context.klocworkDesktopGateway));
 	}
 
 }
