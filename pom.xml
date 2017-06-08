@@ -20,7 +20,7 @@
 
   <artifactId>klocwork</artifactId>
   <version>2.0-SNAPSHOT</version>
-  <name>Jenkins Klocwork Plug-in</name>
+  <name>Klocwork Community Plug-in</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
   <packaging>hpi</packaging>
 
@@ -185,13 +185,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.5</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>job-dsl</artifactId>
-            <version>1.58</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- Pipeline dependencies -->
