@@ -1,3 +1,4 @@
+build
 target
 work
 *.iml
@@ -6,3 +7,4 @@ work
 .classpath
 .project
 .settings
+.bak

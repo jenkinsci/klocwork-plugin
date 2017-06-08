@@ -1,0 +1,42 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+
+    <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
+        <f:textbox default="kwinject.out"/>
+    </f:entry>
+
+    <f:optionalBlock field="incrementalAnalysis" title="${%Perform Diff Analysis}" checked="${instance.incrementalAnalysis}" inline="true">
+        <f:property field="diffAnalysisConfig"/>
+    </f:optionalBlock>
+
+    <f:advanced>
+        <f:entry title="${%Local Project Directory}" field="projectDirConfig">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:60%">
+                        <f:textbox field="projectDir"/>
+                    </td>
+                    <td style="width:40%">
+                        <f:checkbox field="cleanupProject" checked="${instance.cleanupProject=='true'}" value="cleanupProject"/>
+                        <f:label for="cleanupProject">Cleanup Existing Project</f:label>
+                    </td>
+                </tr>
+            </table>
+        </f:entry>
+        <f:entry title="${%XML Report File}" field="reportFile">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+            <f:textbox/>
+        </f:entry>
+        <!-- KWDTAGENT FOR FUTURE VERSIONS - not sure on how to kill process yet... -->
+        <!-- <f:block>
+            <f:optionalBlock name="setupKwdtagent" title="${%Start Remote Desktop Agent}" checked="${instance.setupKwdtagent}" inline="true">
+                <f:entry title="${%kwdtagent Port}" field="kwdtagentPort">
+                    <f:textbox default="9011"/>
+                </f:entry>
+            </f:optionalBlock>
+        </f:block> -->
+    </f:advanced>
+</j:jelly>

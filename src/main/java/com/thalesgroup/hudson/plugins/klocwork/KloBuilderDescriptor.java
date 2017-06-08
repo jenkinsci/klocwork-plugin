@@ -60,7 +60,7 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
     }
 
     public String getDisplayName() {
-        return "Invoke klocwork command";
+        return "Klocwork - Invoke klocwork command (deprecated)";
     }
 
     public KloInstallation[] getInstallations() {
@@ -102,7 +102,7 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
             return FormValidation.ok();
         }
     }
-	
+
 	public FormValidation doCheckBuildName(@QueryParameter String value) {
         String buildName = Util.fixEmptyAndTrim(value);
         if (buildName == null || buildName.isEmpty()) {
@@ -112,7 +112,7 @@ public class KloBuilderDescriptor extends BuildStepDescriptor<Builder> {
 			Matcher matcher = pattern.matcher(value);
 			while (matcher.find()) {
 				return FormValidation.ok();
-				
+
 			}
             return FormValidation.warning("Warning: Cannot overwrite Klocwork build names on server. Please use environment variable such as ${BUILD_NUMBER} to ensure different name across different builds.");
         }
