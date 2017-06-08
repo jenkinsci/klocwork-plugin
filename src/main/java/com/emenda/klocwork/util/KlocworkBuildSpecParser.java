@@ -46,7 +46,7 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
         if (Files.exists(diffFileListPath)) {
           try (Scanner scanner = new Scanner(diffFileListPath)) {
               while (scanner.hasNextLine()) {
-                  fileList.add(diffFileListPath.resolveSibling(scanner.nextLine()).normalize().toString());
+                  fileList.add(diffFileListPath.resolveSibling(scanner.nextLine().trim()).normalize().toString());
               }
           }
         }
