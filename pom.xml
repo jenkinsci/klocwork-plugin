@@ -187,6 +187,13 @@
             <version>3.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>job-dsl</artifactId>
+            <version>1.58</version>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Pipeline dependencies -->
         <dependency>
           <groupId>org.jenkins-ci.plugins.workflow</groupId>
