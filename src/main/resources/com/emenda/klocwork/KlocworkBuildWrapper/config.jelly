@@ -8,9 +8,6 @@
     <f:entry title="${%Klocwork Server Project}" field="serverProject">
         <f:textbox/>
     </f:entry>
-    <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
-        <f:textbox default="kwinject.out"/>
-    </f:entry>
 
     <f:advanced>
         <f:entry title="${%Klocwork Install Configuration}" field="installConfig">

@@ -53,11 +53,6 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
         this.analysisSkipped = false;
     }
 
-    // @DataBoundSetter
-    // public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
-    //     this.desktopConfig = desktopConfig;
-    // }
-
     public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
     public boolean isAnalysisSkipped() { return analysisSkipped; }
 

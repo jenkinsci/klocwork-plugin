@@ -24,7 +24,6 @@ public class KlocworkConstants {
     public static final String KLOCWORK_LICENSE_HOST = "KLOCWORK_LICENSE_HOST";
     public static final String KLOCWORK_LICENSE_PORT = "KLOCWORK_LICENSE_PORT";
     public static final String KLOCWORK_PROJECT = "KLOCWORK_PROJECT";
-    public static final String KLOCWORK_BUILD_SPEC = "KLOCWORK_BUILD_SPEC";
 
     public static final int LTOKEN_HOST_INDEX = 0;
     public static final int LTOKEN_PORT_INDEX = 1;

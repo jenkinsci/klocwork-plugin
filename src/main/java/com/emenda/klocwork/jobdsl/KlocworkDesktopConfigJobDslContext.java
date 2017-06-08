@@ -9,7 +9,7 @@ class KlocworkDesktopConfigJobDslContext implements Context {
 
 	KlocworkDesktopConfig klocworkDesktopConfig;
 
-	public void analysisConfig(String projectDir, boolean cleanupProject,
+	public void analysisConfig(String buildSpec, String projectDir, boolean cleanupProject,
                                         String reportFile, String additionalOptions,
                                         boolean incrementalAnalysis, Runnable closure){
 
@@ -17,7 +17,7 @@ class KlocworkDesktopConfigJobDslContext implements Context {
 		KlocworkDiffAnalysisConfigJobDslContext context = new KlocworkDiffAnalysisConfigJobDslContext();
 		executeInContext(closure, context);
 
-		klocworkDesktopConfig = new KlocworkDesktopConfig(projectDir, cleanupProject, reportFile,
+		klocworkDesktopConfig = new KlocworkDesktopConfig(buildSpec, projectDir, cleanupProject, reportFile,
                 additionalOptions, incrementalAnalysis, context.klocworkDiffAnalysisConfig);
 	}
 

@@ -106,15 +106,19 @@ public class KlocworkUtil {
         }
     }
 
-    public static String getBuildSpecFile(EnvVars envVars)
+    // public static String getBuildSpecFile(EnvVars envVars)
+    //                 throws AbortException {
+    //     String envBuildSpec = envVars.get(KlocworkConstants.KLOCWORK_BUILD_SPEC);
+    //     return (StringUtils.isEmpty(envBuildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : envBuildSpec;
+    // }
+
+    public static String getBuildSpecPath(String buildSpec, FilePath workspace)
                     throws AbortException {
-        String envBuildSpec = envVars.get(KlocworkConstants.KLOCWORK_BUILD_SPEC);
-        return (StringUtils.isEmpty(envBuildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : envBuildSpec;
+        return (new FilePath(workspace, getDefaultBuildSpec(buildSpec))).getRemote();
     }
 
-    public static String getBuildSpecPath(EnvVars envVars, FilePath workspace)
-                    throws AbortException {
-        return (new FilePath(workspace, getBuildSpecFile(envVars))).getRemote();
+    public static String getDefaultBuildSpec(String buildSpec) {
+        return (StringUtils.isEmpty(buildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : buildSpec;
     }
 
     public static String getDefaultKwtablesDir(String tablesDir) {

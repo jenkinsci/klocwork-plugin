@@ -25,20 +25,20 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 /*
 job("DSL-KW-Test") {
   wrappers {
-    klocworkWrapper("KlocworkServerConfigName","KlocworkInstallationName","KlocworkProjectName","BuildSpecificationFileName")
+    klocworkWrapper("KlocworkServerConfigName","KlocworkInstallationName","KlocworkProjectName")
   }
   steps {
     shell("kwinject make")
 
     klocworkIncremental(){
-      analysisConfig("LocalProjectDirectory", true, "ReportFile", "AdditionalOptions", true){
+      analysisConfig("BuildSpecification", "LocalProjectDirectory", true, "ReportFile", "AdditionalOptions", true){
         diffConfig("DiffFileListFileName", "git", "GitPreviousCommit")
       }
     }
 
-    klocworkIntegrationStep1("TablesDirectory", true, true, "ImportConfig", "AdditionalOptions")
+    klocworkIntegrationStep1("BuildSpecification", "TablesDirectory", true, true, "ImportConfig", "AdditionalOptions")
 
-    klocworkIntegrationStep1("TablesDirectory", "BuildName", "AdditionalOptions")
+    klocworkIntegrationStep2("TablesDirectory", "BuildName", "AdditionalOptions")
 
     klocworkIssueSync(true, "03-00-0000 00:00:00", "ProjectFilter", true, true, true, true, true, true, true, true,"AdditionalOptions")
   }
@@ -56,9 +56,9 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
 
     @DslExtensionMethod(context = WrapperContext.class)
     public Object klocworkWrapper(String serverConfig, String installConfig,
-                    String serverProject, String buildSpec) {
+                    String serverProject) {
         return new KlocworkBuildWrapper(serverConfig, installConfig,
-                        serverProject, buildSpec);
+                        serverProject);
     }
 
     @DslExtensionMethod(context = StepContext.class)
@@ -70,11 +70,11 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
     }
 
     @DslExtensionMethod(context = StepContext.class)
-    public Object klocworkIntegrationStep1(String tablesDir,
+    public Object klocworkIntegrationStep1(String buildSpec, String tablesDir,
             boolean incrementalAnalysis, boolean ignoreCompileErrors,
             String importConfig, String additionalOptions) {
         return new KlocworkServerAnalysisBuilder(
-            new KlocworkServerAnalysisConfig(tablesDir,
+            new KlocworkServerAnalysisConfig(buildSpec, tablesDir,
                 incrementalAnalysis, ignoreCompileErrors, importConfig,
                 additionalOptions));
     }

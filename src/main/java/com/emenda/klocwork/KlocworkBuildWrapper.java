@@ -53,15 +53,13 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
     private final String serverConfig;
     private final String installConfig;
     private final String serverProject;
-    private final String buildSpec;
 
     @DataBoundConstructor
     public KlocworkBuildWrapper(String serverConfig, String installConfig,
-                    String serverProject, String buildSpec) {
+                    String serverProject) {
         this.serverConfig = serverConfig;
         this.installConfig = installConfig;
         this.serverProject = serverProject;
-        this.buildSpec = buildSpec;
     }
 
     @Override
@@ -117,12 +115,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             } else {
                 context.env(KlocworkConstants.KLOCWORK_PROJECT, serverProject);
             }
-            if (StringUtils.isEmpty(buildSpec)) {
-                context.env(KlocworkConstants.KLOCWORK_BUILD_SPEC,
-                    KlocworkConstants.DEFAULT_BUILD_SPEC);
-            } else {
-                context.env(KlocworkConstants.KLOCWORK_BUILD_SPEC, buildSpec);
-            }
 
             if (install != null) {
                 logger.logMessage("Adding Klocwork paths. Using install \""
@@ -136,7 +128,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
     public String getServerConfig() { return serverConfig; }
     public String getInstallConfig() { return installConfig; }
     public String getServerProject() { return serverProject; }
-    public String getBuildSpec() { return buildSpec; }
 
     public final static String getNoneValue() { return "-- none --"; }
 
@@ -237,16 +228,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
             if (StringUtils.isEmpty(value)) {
                 return FormValidation.warning("Server Project is required for server builds, cross synchronisation and desktop analysis synchronisation");
-            } else {
-                return FormValidation.ok();
-            }
-        }
-
-        public FormValidation doCheckBuildSpec(@QueryParameter String value)
-            throws IOException, ServletException {
-
-            if (StringUtils.isEmpty(value)) {
-                return FormValidation.ok("Default is " + KlocworkConstants.DEFAULT_BUILD_SPEC);
             } else {
                 return FormValidation.ok();
             }

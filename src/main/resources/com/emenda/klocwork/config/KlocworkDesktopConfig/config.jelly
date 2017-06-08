@@ -1,6 +1,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
+
+    <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
+        <f:textbox default="kwinject.out"/>
+    </f:entry>
+
     <f:optionalBlock field="incrementalAnalysis" title="${%Perform Diff Analysis}" checked="${instance.incrementalAnalysis}" inline="true">
         <f:property field="diffAnalysisConfig"/>
     </f:optionalBlock>

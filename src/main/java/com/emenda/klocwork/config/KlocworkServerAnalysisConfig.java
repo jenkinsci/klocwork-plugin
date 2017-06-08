@@ -25,6 +25,7 @@ import java.util.List;
 
 public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<KlocworkServerAnalysisConfig> {
 
+    private final String buildSpec;
     private final String tablesDir;
     private final boolean incrementalAnalysis;
     private final boolean ignoreCompileErrors;
@@ -32,10 +33,10 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     private final String additionalOpts;
 
     @DataBoundConstructor
-    public KlocworkServerAnalysisConfig(String tablesDir,
+    public KlocworkServerAnalysisConfig(String buildSpec, String tablesDir,
             boolean incrementalAnalysis, boolean ignoreCompileErrors,
             String importConfig, String additionalOpts) {
-
+        this.buildSpec = buildSpec;
         this.tablesDir = tablesDir;
         this.incrementalAnalysis = incrementalAnalysis;
         this.ignoreCompileErrors = ignoreCompileErrors;
@@ -95,7 +96,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         }
         // Note: this has to be final step, because the build spec always comes
         // last!
-        kwbuildprojectCmd.add(KlocworkUtil.getBuildSpecFile(envVars));
+        kwbuildprojectCmd.add(envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));
         return kwbuildprojectCmd;
     }
 
@@ -103,6 +104,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         return !StringUtils.isEmpty(importConfig);
     }
 
+    public String getBuildSpec() { return buildSpec; }
     public String getTablesDir() { return tablesDir; }
     public boolean getIncrementalAnalysis() { return incrementalAnalysis; }
     public boolean getIgnoreCompileErrors() { return ignoreCompileErrors; }

@@ -26,6 +26,7 @@ import java.util.List;
 
 public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDesktopConfig> {
 
+    private final String buildSpec;
     private final String projectDir;
     private final boolean cleanupProject;
     private final String reportFile;
@@ -36,10 +37,10 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     private final KlocworkDiffAnalysisConfig diffAnalysisConfig;
 
     @DataBoundConstructor
-    public KlocworkDesktopConfig(String projectDir, boolean cleanupProject, String reportFile, String additionalOpts,
+    public KlocworkDesktopConfig(String buildSpec, String projectDir, boolean cleanupProject, String reportFile, String additionalOpts,
     // boolean setupKwdtagent, String kwdtagentPort,
     boolean incrementalAnalysis, KlocworkDiffAnalysisConfig diffAnalysisConfig) {
-
+        this.buildSpec = buildSpec;
         this.projectDir = projectDir;
         this.cleanupProject = cleanupProject;
         this.reportFile = reportFile;
@@ -69,7 +70,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         }
         kwcheckCreateCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
         kwcheckCreateCmd.add("--settings-dir", getKwpsDir(workspace, envVars).getRemote());
-        kwcheckCreateCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
+        kwcheckCreateCmd.add("--build-spec", envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));
         return kwcheckCreateCmd;
     }
 
@@ -136,7 +137,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
 
         String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
         kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
-        kwcheckRunCmd.add("--build-spec", KlocworkUtil.getBuildSpecFile(envVars));
+        kwcheckRunCmd.add("--build-spec", envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));
         if (!StringUtils.isEmpty(additionalOpts)) {
             kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
         }
@@ -229,7 +230,9 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     public String getKwcheckDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
         try {
             List<String> fileList = launcher.getChannel().call(
-                new KlocworkBuildSpecParser(workspace.getRemote(), envVars.expand(getDiffFileList(envVars)), KlocworkUtil.getBuildSpecPath(envVars, workspace)));
+                new KlocworkBuildSpecParser(workspace.getRemote(),
+                    envVars.expand(getDiffFileList(envVars)),
+                    envVars.expand(KlocworkUtil.getBuildSpecPath(buildSpec, workspace))));
             return String.join(" ", fileList); // TODO: is Java 8 OK?
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
@@ -246,6 +249,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         return diffAnalysisConfig.isGitDiffType();
     }
 
+    public String getBuildSpec() { return buildSpec; }
     public String getProjectDir() { return projectDir; }
     public boolean getCleanupProject() { return cleanupProject; }
     public String getReportFile() { return reportFile; }
