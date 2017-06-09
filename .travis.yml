@@ -1,4 +1,11 @@
 language: java
 jdk:
   - oraclejdk8
-  
+notifications:
+  email:
+    recipients:
+      - michael.baron@emenda.com
+      - andreas.larfors@emenda.com
+      - jacob.larfors@emenda.com
+    on_success: never
+    on_failure: always
