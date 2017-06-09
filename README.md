@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Emenda/klocwork-plugin.png)](https://travis-ci.org/Emenda/klocwork-plugin)
+
 # Jenkins Klocwork Community Plugin
 
 The Klocwork Community Plugin for Jenkins enables automated Klocwork analyses within Jenkins.
