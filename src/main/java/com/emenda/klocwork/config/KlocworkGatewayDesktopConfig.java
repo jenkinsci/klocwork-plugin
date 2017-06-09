@@ -25,11 +25,10 @@ public class KlocworkGatewayDesktopConfig extends AbstractDescribableImpl<Klocwo
     private final String threshold;
     private final String reportFile;
 
-
     @DataBoundConstructor
-    public KlocworkGatewayDesktopConfig(String reportFile, String threshold) {
-        this.reportFile = reportFile;
+    public KlocworkGatewayDesktopConfig(String threshold, String reportFile) {
         this.threshold = threshold;
+        this.reportFile = reportFile;
     }
     public String getThreshold() {
         return threshold;
