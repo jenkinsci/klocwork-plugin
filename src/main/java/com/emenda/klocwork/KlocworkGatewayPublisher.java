@@ -115,6 +115,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
 
 
                 logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
+                logger.logMessage("Configured Threshold : " + pfConfig.getThreshold());
                 if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(pfConfig.getResultValue());

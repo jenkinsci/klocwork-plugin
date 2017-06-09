@@ -59,7 +59,8 @@ public class KlocworkUtil {
         try {
             String[] ltokenLine = launcher.getChannel().call(
                 new KlocworkLtokenFetcher(
-                envVars.get(KlocworkConstants.KLOCWORK_URL)));
+                    envVars.get(KlocworkConstants.KLOCWORK_URL),
+                    envVars.get(KlocworkConstants.KLOCWORK_LTOKEN)));
 
             if (ltokenLine.length < 4) {
                 throw new IOException("Error: ltoken string returned is too short: " +

@@ -10,6 +10,9 @@
     </f:entry>
 
     <f:advanced>
+        <f:entry title="${%Klocwork Ltoken Location}" field="ltoken">
+            <f:textbox/>
+        </f:entry>
         <f:entry title="${%Klocwork Install Configuration}" field="installConfig">
             <f:select style="width:30%"/>
             <!-- <select name="installConfig" style="width:30%">

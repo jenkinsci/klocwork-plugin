@@ -25,7 +25,7 @@ import javaposse.jobdsl.plugin.DslExtensionMethod;
 /*
 job("DSL-KW-Test") {
   wrappers {
-    klocworkWrapper("KlocworkServerConfigName","KlocworkInstallationName","KlocworkProjectName")
+    klocworkWrapper("KlocworkServerConfigName","KlocworkInstallationName","KlocworkProjectName", "KlocworkLtoken")
   }
   steps {
     shell("kwinject make")
@@ -56,9 +56,9 @@ public class KlocworkJobDslExtension extends ContextExtensionPoint {
 
     @DslExtensionMethod(context = WrapperContext.class)
     public Object klocworkWrapper(String serverConfig, String installConfig,
-                    String serverProject) {
+                    String serverProject, String ltoken) {
         return new KlocworkBuildWrapper(serverConfig, installConfig,
-                        serverProject);
+                        serverProject, ltoken);
     }
 
     @DslExtensionMethod(context = StepContext.class)

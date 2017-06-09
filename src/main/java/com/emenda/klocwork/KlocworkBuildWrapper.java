@@ -53,13 +53,15 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
     private final String serverConfig;
     private final String installConfig;
     private final String serverProject;
+    private final String ltoken;
 
     @DataBoundConstructor
     public KlocworkBuildWrapper(String serverConfig, String installConfig,
-                    String serverProject) {
+                    String serverProject, String ltoken) {
         this.serverConfig = serverConfig;
         this.installConfig = installConfig;
         this.serverProject = serverProject;
+        this.ltoken = ltoken;
     }
 
     @Override
@@ -123,11 +125,23 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
                 String paths = separator + install.getPaths();
                 context.env("PATH+KW", paths);
             }
+
+            if (StringUtils.isEmpty(ltoken)) {
+                logger.logMessage("No ltoken file specified. KLOCWORK_LTOKEN will not be set.");
+            } else {
+                logger.logMessage("Detected ltoken file. Setting KLOCWORK_LTOKEN to \"" +
+                    ltoken + "\"");
+                // expand ltoken as this is referenced directly by the Klocwork tools.
+                // Other environment variables the plugin expands and passes to the Klocwork
+                // command line tools
+                context.env(KlocworkConstants.KLOCWORK_LTOKEN, initialEnvironment.expand(ltoken));
+            }
     }
 
     public String getServerConfig() { return serverConfig; }
     public String getInstallConfig() { return installConfig; }
     public String getServerProject() { return serverProject; }
+    public String getLtoken() { return ltoken; }
 
     public final static String getNoneValue() { return "-- none --"; }
 

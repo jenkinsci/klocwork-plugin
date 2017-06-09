@@ -2,6 +2,8 @@ package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
 
+import org.apache.commons.lang3.StringUtils;
+
 import hudson.remoting.VirtualChannel;
 import jenkins.security.MasterToSlaveCallable;
 
@@ -15,24 +17,33 @@ import java.util.Scanner;
 public class KlocworkLtokenFetcher extends MasterToSlaveCallable<String[],IOException>  {
 
     private String url;
+    private String ltoken;
 
-    public KlocworkLtokenFetcher(String url) {
+    public KlocworkLtokenFetcher(String url, String ltoken) {
         this.url = url;
+        this.ltoken = ltoken;
     }
 
     public String[] call() throws IOException {
         URL urlObj = new URL(url);
         String host = urlObj.getHost();
         String port = Integer.toString(urlObj.getPort());
-        File ltoken = new File(System.getProperty("user.home") + File.separator +
-             ".klocwork" + File.separator + "ltoken");
+        File ltokenFile = null;
 
-         if (!ltoken.exists()) {
+        if (StringUtils.isEmpty(ltoken)) {
+            ltokenFile = new File(System.getProperty("user.home") + File.separator +
+                 ".klocwork" + File.separator + "ltoken");
+        } else {
+            ltokenFile = new File(ltoken);
+        }
+
+
+         if (!ltokenFile.exists()) {
              throw new IOException("Error: could not find Klocwork ltoken at \"" +
-                 ltoken.getAbsolutePath() + "\"");
+                 ltokenFile.getAbsolutePath() + "\"");
          }
 
-         Scanner scanner =  new Scanner(ltoken);
+         Scanner scanner =  new Scanner(ltokenFile);
          String[] splitLine;
          while (scanner.hasNextLine()){
              splitLine = scanner.nextLine().split(KlocworkConstants.LTOKEN_SEPARATOR);
@@ -44,7 +55,7 @@ public class KlocworkLtokenFetcher extends MasterToSlaveCallable<String[],IOExce
          // if we reach this point, we could not find the correct ltoken entry...
          // throw exception to indicate error
          throw new IOException("Error: could not find a matching ltoken entry in " +
-             "\"" + ltoken.getAbsolutePath() + "\" for host \"" + host +
+             "\"" + ltokenFile.getAbsolutePath() + "\" for host \"" + host +
              " and port \"" + port);
     }
 
