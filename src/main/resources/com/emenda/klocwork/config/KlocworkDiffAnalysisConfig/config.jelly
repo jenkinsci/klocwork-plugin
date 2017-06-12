@@ -9,7 +9,7 @@
         </f:entry>
 
         <!-- set default diffType to "manual" -->
-        <j:set var="diffTypeValue" value="${instance.diffType==null ? 'manual' : instance.diffType}" />
+        <j:set var="diffTypeValue" value="${instance.diffType==null ? 'git' : instance.diffType}" />
 
         <f:entry title="" description="">
             <table width="100%">
