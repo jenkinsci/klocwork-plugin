@@ -1,0 +1,26 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:entry title="${%Name}" field="name">
+        <f:textbox/>
+    </f:entry>
+    <f:entry title="${%URL}" field="url">
+        <f:textbox/>
+    </f:entry>
+
+    <f:block>
+        <f:optionalBlock name="specificLicense" title="${%Use specific License Settings for this Klocwork Server}" inline="true" checked="${instance.specificLicense}">
+            <f:entry title="${%License Host}" field="licenseHost">
+                <f:textbox/>
+            </f:entry>
+            <f:entry title="${%License Port}" field="licensePort" default="27000">
+                <f:textbox/>
+            </f:entry>
+        </f:optionalBlock>
+    </f:block>
+    <f:entry title="">
+        <div align="right">
+            <f:repeatableDeleteButton/>
+        </div>
+    </f:entry>
+
+</j:jelly>

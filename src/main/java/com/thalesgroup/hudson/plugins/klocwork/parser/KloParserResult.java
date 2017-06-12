@@ -31,6 +31,7 @@ import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.jenkinsci.remoting.RoleChecker;
 
 import java.io.File;
 import java.io.IOException;
@@ -141,6 +142,11 @@ public class KloParserResult implements FilePath.FileCallable<KloReport> {
         DirectoryScanner ds = fs.getDirectoryScanner();
         String[] kloFiles = ds.getIncludedFiles();
         return kloFiles;
+    }
+
+    public void checkRoles(RoleChecker checker)
+                throws SecurityException {
+        // added for support with newer Jenkins v1.6+
     }
 
     public double getNewIssues() {
