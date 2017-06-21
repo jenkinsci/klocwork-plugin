@@ -79,6 +79,8 @@ public class KloPublisher extends Recorder implements Serializable {
         String localPort = kloConfig.getPort();
         String localProject = kloConfig.getProject();
         String localUser = kloConfig.getUser();
+        String ltokenlocation = null;
+        
         if (localHost == null) {
             localHost = "";
         }
@@ -94,6 +96,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         EnvVars env = build.getEnvironment(listener);
         if (env != null) {
+            ltokenlocation = env.get("KLOCWORK_LTOKEN");
             Iterator it = env.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
@@ -215,6 +218,7 @@ public class KloPublisher extends Recorder implements Serializable {
                     it.remove(); // avoids a ConcurrentModificationException
                 }
             }
+            env = build.getEnvironment(listener);
             if (env != null) {
                 Iterator it = env.entrySet().iterator();
                 while (it.hasNext()) {
@@ -240,7 +244,8 @@ public class KloPublisher extends Recorder implements Serializable {
                             build.getWorkspace().getRemote() + FS + "klocwork_result.xml",
                             listener,
                             queryEncrypted,
-                            localUser));
+                            localUser,
+                            ltokenlocation));
         }
 
         if (this.canContinue(build.getResult())) {
