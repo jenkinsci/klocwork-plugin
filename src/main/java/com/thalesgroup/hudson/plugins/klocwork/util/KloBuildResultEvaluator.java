@@ -54,44 +54,52 @@ public class KloBuildResultEvaluator {
             Iterator it = matrixBuildVars.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
-                if (failureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
-                    failureThreshold = failureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
-                }
-                if (failureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
-                    failureThreshold = failureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
-                }
-                if (failureThreshold.contains("$" + pairs.getKey().toString())) {
-                    failureThreshold = failureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
-                }
-                
-                if (newFailureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
-                    newFailureThreshold = newFailureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
-                }
-                if (newFailureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
-                    newFailureThreshold = newFailureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
-                }
-                if (newFailureThreshold.contains("$" + pairs.getKey().toString())) {
-                    newFailureThreshold = newFailureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                if (failureThreshold != null && failureThreshold.length() > 0){
+                    if (failureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                        failureThreshold = failureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (failureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                        failureThreshold = failureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (failureThreshold.contains("$" + pairs.getKey().toString())) {
+                        failureThreshold = failureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
                 }
                 
-                if (unstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
-                    unstableThreshold = unstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
-                }
-                if (unstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
-                    unstableThreshold = unstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
-                }
-                if (unstableThreshold.contains("$" + pairs.getKey().toString())) {
-                    unstableThreshold = unstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                if (newFailureThreshold != null && newFailureThreshold.length() > 0){
+                    if (newFailureThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                        newFailureThreshold = newFailureThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (newFailureThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                        newFailureThreshold = newFailureThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (newFailureThreshold.contains("$" + pairs.getKey().toString())) {
+                        newFailureThreshold = newFailureThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
                 }
                 
-                if (newUnstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
-                    newUnstableThreshold = newUnstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                if (unstableThreshold != null && unstableThreshold.length() > 0){
+                    if (unstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                        unstableThreshold = unstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (unstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                        unstableThreshold = unstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (unstableThreshold.contains("$" + pairs.getKey().toString())) {
+                        unstableThreshold = unstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
                 }
-                if (newUnstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
-                    newUnstableThreshold = newUnstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
-                }
-                if (newUnstableThreshold.contains("$" + pairs.getKey().toString())) {
-                    newUnstableThreshold = newUnstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                
+                if (newUnstableThreshold != null && newUnstableThreshold.length() > 0){
+                    if (newUnstableThreshold.contains("%" + pairs.getKey().toString() + "%")) {
+                        newUnstableThreshold = newUnstableThreshold.replace("%" + pairs.getKey().toString() + "%", pairs.getValue().toString());
+                    }
+                    if (newUnstableThreshold.contains("${" + pairs.getKey().toString() + "}")) {
+                        newUnstableThreshold = newUnstableThreshold.replace("${" + pairs.getKey().toString() + "}", pairs.getValue().toString());
+                    }
+                    if (newUnstableThreshold.contains("$" + pairs.getKey().toString())) {
+                        newUnstableThreshold = newUnstableThreshold.replace("$" + pairs.getKey().toString(), pairs.getValue().toString());
+                    }
                 }
                 it.remove(); // avoids a ConcurrentModificationException
             }
