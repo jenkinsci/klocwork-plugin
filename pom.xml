@@ -21,7 +21,7 @@
   <artifactId>klocwork</artifactId>
   <version>2.1-SNAPSHOT</version>
   <name>Klocwork Community Plug-in</name>
-  <url>http://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Community+Plugin</url>
   <packaging>hpi</packaging>
 
   <licenses>
