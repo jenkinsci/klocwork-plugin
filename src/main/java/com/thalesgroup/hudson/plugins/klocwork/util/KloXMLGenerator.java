@@ -19,7 +19,7 @@
  */
 package com.thalesgroup.hudson.plugins.klocwork.util;
 
-import eu.emenda.kwjlib.KWApi;
+import com.emenda.kwjlib.KWApi;
 import hudson.model.BuildListener;
 import hudson.remoting.Callable;
 import java.io.BufferedWriter;
@@ -52,9 +52,10 @@ public class KloXMLGenerator implements Serializable {
         BuildListener listener = null;
         String a_query = "";
         String a_user = "";
+        String ltokenlocation = null;
 
         public callGenerateXMLFromIssues(String a_host, String a_port, boolean useSSL,
-                String a_projectname, String a_filename, BuildListener listener, String a_query, String a_user) {
+                String a_projectname, String a_filename, BuildListener listener, String a_query, String a_user, String ltokenlocation) {
             this.a_host = a_host;
             this.a_port = a_port;
             this.useSSL = useSSL;
@@ -63,10 +64,11 @@ public class KloXMLGenerator implements Serializable {
             this.listener = listener;
             this.a_query = a_query;
             this.a_user = a_user;
+            this.ltokenlocation = ltokenlocation;
         }
 
         public String call() throws RuntimeException {
-            return GenerateXMLFromIssues(a_host, a_port, useSSL, a_projectname, a_filename, listener, a_query, a_user);
+            return GenerateXMLFromIssues(a_host, a_port, useSSL, a_projectname, a_filename, listener, a_query, a_user, ltokenlocation);
         }
 
         public void checkRoles(RoleChecker checker)
@@ -77,7 +79,7 @@ public class KloXMLGenerator implements Serializable {
 
     public static String GenerateXMLFromIssues(String a_host, String a_port,
             boolean useSSL,
-            String a_projectname, String a_filename, BuildListener listener, String a_query, String a_user) {
+            String a_projectname, String a_filename, BuildListener listener, String a_query, String a_user, String ltokenlocation) {
         String kwurl = "";
         if (useSSL) {
             kwurl = "https://" + a_host + ":" + a_port;
@@ -85,7 +87,7 @@ public class KloXMLGenerator implements Serializable {
             kwurl = "http://" + a_host + ":" + a_port;
         }
         listener.getLogger().println("Connecting to Klocwork Web API service... " + kwurl);
-        KWApi KWservice = new KWApi(kwurl);
+        KWApi KWservice = new KWApi(kwurl, ltokenlocation);
 
         try {
             listener.getLogger().println("creating XML document");
