@@ -84,14 +84,24 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
         scanner.useDelimiter(";");
         if (scanner.hasNext()){
           String tag = scanner.next();
-          if (!tag.equals("compile")) {
-              return;
+          Path workingDir;
+            String sourceFile;
+          switch (tag){
+              case "compile":
+                  workingDir = Paths.get(scanner.next());
+                  scanner.next(); scanner.next(); // skip compiler and output file
+                  sourceFile = scanner.next();
+                  buildSpecFiles.add(workingDir.resolve(sourceFile).normalize().toString());
+                  break;
+              case "jcompile":
+                  scanner.next();
+                  workingDir = Paths.get(scanner.next());
+                  sourceFile = scanner.next();
+                  buildSpecFiles.add(workingDir.resolve(sourceFile).normalize().toString());
+                  break;
+              default:
+                  return;
           }
-          Path workingDir = Paths.get(scanner.next());
-          scanner.next(); scanner.next(); // skip compiler and output file
-          String sourceFile = scanner.next();
-
-          buildSpecFiles.add(workingDir.resolve(sourceFile).normalize().toString());
         }
     }
 }
