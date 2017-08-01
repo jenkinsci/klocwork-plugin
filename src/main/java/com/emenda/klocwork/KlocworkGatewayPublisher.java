@@ -91,7 +91,12 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 String request = "action=search&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
                 if (!StringUtils.isEmpty(pfConfig.getQuery())) {
                     try {
-                        request += "&query=grouping:off " + URLEncoder.encode(pfConfig.getQuery(), "UTF-8");
+                        request += "&query=";
+                        if(!pfConfig.getQuery().toLowerCase().contains("grouping:off")
+                                && !pfConfig.getQuery().toLowerCase().contains("grouping:on")){
+                            request += "grouping:off ";
+                        }
+                        request += URLEncoder.encode(pfConfig.getQuery(), "UTF-8");
                     } catch (UnsupportedEncodingException ex) {
                         throw new AbortException(ex.getMessage());
                     }
