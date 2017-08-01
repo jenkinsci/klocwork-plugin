@@ -79,12 +79,16 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         ArgumentListBuilder kwbuildprojectCmd =
             new ArgumentListBuilder("kwbuildproject");
         kwbuildprojectCmd.add("--tables-directory", envVars.expand(KlocworkUtil.getDefaultKwtablesDir(tablesDir)));
-        kwbuildprojectCmd.add("--license-host");
-        kwbuildprojectCmd.add(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST));
-        kwbuildprojectCmd.add("--license-port");
-        kwbuildprojectCmd.add(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
         kwbuildprojectCmd.add("--url");
         kwbuildprojectCmd.add(KlocworkUtil.getKlocworkProjectUrl(envVars));
+
+        if(!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST))){
+            kwbuildprojectCmd.add("--license-host", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST));
+
+            if(!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT))) {
+                kwbuildprojectCmd.add("--license-port", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
+            }
+        }
 
         if (incrementalAnalysis) {
             kwbuildprojectCmd.add("--incremental");
