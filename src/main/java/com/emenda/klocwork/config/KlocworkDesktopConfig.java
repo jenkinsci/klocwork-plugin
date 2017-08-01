@@ -125,14 +125,12 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         ArgumentListBuilder kwcheckRunCmd =
             new ArgumentListBuilder("kwcheck", "run");
         kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-        String licenseHost = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST);
-        if (!StringUtils.isEmpty(licenseHost)) {
-            kwcheckRunCmd.add("--license-host", licenseHost);
-        }
 
-        String licensePort = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT);
-        if (!StringUtils.isEmpty(licensePort)) {
-            kwcheckRunCmd.add("--license-port", licensePort);
+        if (!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST))) {
+            kwcheckRunCmd.add("--license-host", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST));
+            if (!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT))) {
+                kwcheckRunCmd.add("--license-port", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
+            }
         }
 
         String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
