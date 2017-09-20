@@ -210,9 +210,13 @@ public class KloBuilder extends Builder {
         KloInstallation currentInstall = getKlo();
         // JL : get list of environment variables for build
         EnvVars envVars = null;
+        String nextBuildName = "";
         try {
             envVars = build.getEnvironment(listener);
             if (envVars != null) {
+                if (!this.buildName.isEmpty()) {
+                    nextBuildName = envVars.expand(this.buildName);
+                }
                 Iterator it = envVars.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry pairs = (Map.Entry) it.next();
@@ -298,10 +302,17 @@ public class KloBuilder extends Builder {
             Combination currentAxes = matrix.getCombination();
             suffix = "_" + currentAxes.digest();
         }
-        String lastBuildNo = "build_ci_" + build.getId() + suffix;
-        lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
-        listener.getLogger().println("buildName = \"" + buildName + "\"");
-        listener.getLogger().println("lastBuildName = \"" + lastBuildNo + "\"");
+
+        String lastBuildNo;
+        if (!nextBuildName.isEmpty()) {
+            lastBuildNo = nextBuildName;    //IP : Yes, I know these are badly named (lastBuildNo for current build name?)
+        } else {
+            lastBuildNo = "build_ci_" + build.getId() + suffix;
+            lastBuildNo = lastBuildNo.replaceAll("[^a-zA-Z0-9_]", "");
+        }
+        //listener.getLogger().println("buildName = \"" + buildName + "\"");
+        //listener.getLogger().println("lastBuildName = \"" + lastBuildNo + "\"");
+        listener.getLogger().println("Build Name = \"" + lastBuildNo + "\"");
 
         //AM : Since version 0.2.1, fileOut doesn't exist anymore
         //AM : changing the way to add the arguments
