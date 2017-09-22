@@ -107,8 +107,8 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
             kwcheckRunCmd.add("--license-port", licensePort);
         }
 
-        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
-        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
+        kwcheckRunCmd.add("-F", "xml");
+
         if (!StringUtils.isEmpty(additionalOpts)) {
             kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
         }
@@ -133,8 +133,11 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
             }
         }
 
-        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
-        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
+        //TODO: Clean up here
+//        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
+//        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
+        kwcheckRunCmd.add("-Y", "-L"); // Report nothing
+
         kwcheckRunCmd.add("--build-spec", envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));
         if (!StringUtils.isEmpty(additionalOpts)) {
             kwcheckRunCmd.addTokenized(envVars.expand(additionalOpts));
