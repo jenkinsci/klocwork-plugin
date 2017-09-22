@@ -3,6 +3,7 @@ package com.emenda.klocwork.util;
 import com.emenda.klocwork.KlocworkConstants;
 import com.emenda.klocwork.KlocworkServerAnalysisBuilder;
 
+import jenkins.util.xml.XMLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import hudson.AbortException;
@@ -20,16 +21,26 @@ import hudson.model.Project;
 import hudson.model.TaskListener;
 import hudson.tasks.Builder;
 import hudson.util.ArgumentListBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
 import java.lang.InterruptedException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class KlocworkUtil {
 
@@ -160,11 +171,150 @@ public class KlocworkUtil {
         }
     }
 
+    public static ByteArrayOutputStream executeCommandParseOutput(Launcher launcher,
+                                     FilePath buildDir, EnvVars envVars, ArgumentListBuilder cmds)
+            throws AbortException {
+        if (launcher.isUnix()) {
+            cmds = new ArgumentListBuilder("/bin/sh", "-c", cmds.toString());
+        } else {
+            cmds = cmds.toWindowsCommand();
+        }
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            launcher.launch()
+                    .stdout(outputStream).stderr(outputStream).
+                    pwd(buildDir).envs(envVars).cmds(cmds)
+                    .join();
+            return outputStream;
+        } catch (IOException | InterruptedException ex) {
+            throw new AbortException(ex.getMessage());
+        }
+    }
+
 	public static String getAbsolutePath(EnvVars envVars, String path) {
 		String absolutePath = path;
-
 		return absolutePath;
 	}
 
+	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener){
+        int returnCode = 0;
+        InputStream inputStream = null;
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write()));
+            bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+            bufferedWriter.newLine();
+            bufferedWriter.write("<errorList>");
+            bufferedWriter.newLine();
+            inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line = null;
+            while((line = bufferedReader.readLine()) != null){
+                if(line.trim().startsWith("<problem>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                }
+                else if(line.trim().startsWith("<problemID>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<file>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<method>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<code>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<message>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<citingStatus>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<severity>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("<severitylevel>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                    if (matcher.find())
+                    {
+                        listener.getLogger().print(matcher.group(1)+"\t");
+                    }
+                }
+                else if(line.trim().startsWith("</problem>")){
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                    listener.getLogger().println();
+                }
+            }
+            bufferedWriter.write("</errorList>");
+            bufferedWriter.newLine();
+        } catch (IOException | InterruptedException e) {
+            returnCode = 1;
+            listener.getLogger().println(e.getMessage());
+        } finally {
+            try{
+                if(inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (Exception ex){
+                returnCode = 1;
+            }
+            try{
+                if(bufferedWriter != null) {
+                    bufferedWriter.close();
+                }
+            } catch (Exception ex){
+                returnCode = 1;
+            }
+        }
+        return returnCode;
+    }
 
 }
