@@ -77,9 +77,11 @@ public class KlocworkServerAnalysisBuilder extends Builder implements SimpleBuil
                 workspace, envVars,
                 serverConfig.getVersionCmd());
 
-        KlocworkUtil.executeCommand(launcher, listener,
-                workspace, envVars,
-                serverConfig.getKwdeployCmd(envVars, workspace));
+        if(!serverConfig.getDisableKwdeploy()) {
+            KlocworkUtil.executeCommand(launcher, listener,
+                    workspace, envVars,
+                    serverConfig.getKwdeployCmd(envVars, workspace));
+        }
 
         // check if there are config files to import, then for each...
         if (serverConfig.hasImportConfig()) {

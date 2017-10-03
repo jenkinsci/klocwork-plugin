@@ -18,6 +18,10 @@
           <f:checkbox default="true"/>
         </f:entry>
 
+        <f:entry title="${%Disable kwdeploy Before Analysis}" field="disableKwdeploy">
+          <f:checkbox default="false"/>
+        </f:entry>
+
         <f:entry title="${%Import Config}" field="importConfig">
           <f:textbox/>
         </f:entry>

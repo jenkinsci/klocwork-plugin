@@ -31,17 +31,19 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     private final boolean ignoreCompileErrors;
     private final String importConfig;
     private final String additionalOpts;
+    private final boolean disableKwdeploy;
 
     @DataBoundConstructor
     public KlocworkServerAnalysisConfig(String buildSpec, String tablesDir,
             boolean incrementalAnalysis, boolean ignoreCompileErrors,
-            String importConfig, String additionalOpts) {
+            String importConfig, String additionalOpts, boolean disableKwdeploy) {
         this.buildSpec = buildSpec;
         this.tablesDir = tablesDir;
         this.incrementalAnalysis = incrementalAnalysis;
         this.ignoreCompileErrors = ignoreCompileErrors;
         this.importConfig = importConfig;
         this.additionalOpts = additionalOpts;
+        this.disableKwdeploy = disableKwdeploy;
     }
 
     public ArgumentListBuilder getVersionCmd() {
@@ -114,6 +116,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     public boolean getIgnoreCompileErrors() { return ignoreCompileErrors; }
     public String getImportConfig() { return importConfig; }
     public String getAdditionalOpts() { return additionalOpts; }
+    public boolean getDisableKwdeploy() { return disableKwdeploy; }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkServerAnalysisConfig> {
