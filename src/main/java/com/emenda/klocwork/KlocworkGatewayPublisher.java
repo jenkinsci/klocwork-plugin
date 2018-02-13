@@ -31,6 +31,8 @@ import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
+import hudson.model.Action;
+import java.util.Collection;
 
 import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
@@ -59,10 +61,14 @@ import java.util.Map;
 public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
 
     private final KlocworkGatewayConfig gatewayConfig;
+    private int totalIssuesDesktop;
+    private int thresholdDesktop;
 
     @DataBoundConstructor
     public KlocworkGatewayPublisher(KlocworkGatewayConfig gatewayConfig) {
         this.gatewayConfig = gatewayConfig;
+        this.totalIssuesDesktop = 0;
+        this.thresholdDesktop = 0;
     }
 
     public KlocworkGatewayConfig getGatewayConfig() {
@@ -118,7 +124,6 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                         " web API.\nCause: " + ex.getMessage());
                 }
 
-
                 logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
                 logger.logMessage("Configured Threshold : " + pfConfig.getThreshold());
                 if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
@@ -141,14 +146,15 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {
-                int totalIssueCount = launcher.getChannel().call(
+                totalIssuesDesktop = launcher.getChannel().call(
                     new KlocworkXMLReportParser(
                     workspace.getRemote(), xmlReport));
                 logger.logMessage("Total Desktop Issues : " +
-                    Integer.toString(totalIssueCount));
+                    Integer.toString(totalIssuesDesktop));
                 logger.logMessage("Configured Threshold : " +
                     gatewayConfig.getGatewayDesktopConfig().getThreshold());
-                if (totalIssueCount >= Integer.parseInt(gatewayConfig.getGatewayDesktopConfig().getThreshold())) {
+                thresholdDesktop = Integer.parseInt(gatewayConfig.getGatewayDesktopConfig().getThreshold());
+                if (totalIssuesDesktop >= thresholdDesktop) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(Result.FAILURE);
                 }
@@ -156,6 +162,20 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 throw new AbortException(ex.getMessage());
             }
         }
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
+        List<Action> actions = new ArrayList<>();
+        if (gatewayConfig.getEnableDesktopGateway()) {
+            if (totalIssuesDesktop >= thresholdDesktop) {
+                actions.add(new KlocworkQualityGateBadge("lastBuild","local analysis fail", "/plugin/klocwork/icons/fail.png"));
+            }
+            else{
+                actions.add(new KlocworkQualityGateBadge("lastBuild","local analysis pass", "/plugin/klocwork/icons/pass.png"));
+            }
+        }
+        return actions;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
