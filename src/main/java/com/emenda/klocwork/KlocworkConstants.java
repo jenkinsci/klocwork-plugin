@@ -6,6 +6,8 @@ public class KlocworkConstants {
     public static final String KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME =
         "Klocwork - Build Environment Settings";
 
+    public static final String KLOCWORK_BUILD_SPEC_DISPLAY_NAME =
+            "Klocwork - Capture Build Information (step 0 - capture)";
     public static final String KLOCWORK_SERVER_ANALYSIS_DISPLAY_NAME =
         "Klocwork - Full Integration Analysis (step 1 - analysis)";
     public static final String KLOCWORK_SERVER_LOAD_DISPLAY_NAME =

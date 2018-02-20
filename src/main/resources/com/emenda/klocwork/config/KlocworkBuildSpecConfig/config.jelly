@@ -1,0 +1,35 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+
+    <f:entry title="${%Project Build Command}" field="buildCommand">
+        <f:textbox/>
+    </f:entry>
+
+    <f:advanced>
+        <f:entry title="${%Klocwork Build Spec Generation Tool}" field="tool">
+          <select name="tool">
+              <f:option value="kwinject" selected="${instance.tool.equals('kwinject')? 'true' : null}">kwinject</f:option>
+              <f:option value="kwmaven" selected="${instance.tool.equals('kwmaven')? 'true' : null}">kwmaven</f:option>
+              <f:option value="kwant" selected="${instance.tool.equals('kwant')? 'true' : null}">kwant</f:option>
+              <f:option value="kwvcprojparser" selected="${instance.tool.equals('kwvcprojparser')? 'true' : null}">kwVcprojParser</f:option>
+              <f:option value="kwcsprojparser" selected="${instance.tool.equals('kwcsprojparser')? 'true' : null}">kwcsprojparser</f:option>
+              <f:option value="kwtrace" selected="${instance.tool.equals('kwtrace')? 'true' : null}">create tracefile</f:option>
+          </select>
+        </f:entry>
+
+        <f:entry title="${%Ignore Errors}" field="ignoreErrors">
+          <f:checkbox default="false"/>
+        </f:entry>
+
+        <f:entry title="${%Build Spec Output}" field="output">
+          <f:textbox default="kwinject.out"/>
+        </f:entry>
+
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+          <f:textbox/>
+        </f:entry>
+
+    </f:advanced>
+
+</j:jelly>

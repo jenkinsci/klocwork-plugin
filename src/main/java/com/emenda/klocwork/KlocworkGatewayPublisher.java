@@ -164,20 +164,6 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         }
     }
 
-    @Override
-    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
-        List<Action> actions = new ArrayList<>();
-        if (gatewayConfig.getEnableDesktopGateway()) {
-            if (totalIssuesDesktop >= thresholdDesktop) {
-                actions.add(new KlocworkQualityGateBadge("lastBuild","local analysis fail", "/plugin/klocwork/icons/fail.png"));
-            }
-            else{
-                actions.add(new KlocworkQualityGateBadge("lastBuild","local analysis pass", "/plugin/klocwork/icons/pass.png"));
-            }
-        }
-        return actions;
-    }
-
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
