@@ -189,7 +189,7 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
         }
 
         public String getDisplayName() {
-            return "Klocwork - Incremental Diff Analysis";
+            return KlocworkConstants.KLOCWORK_DESKTOP_BUILDER_NAME;
         }
 
         @Override
