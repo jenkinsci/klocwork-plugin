@@ -1,0 +1,49 @@
+<div>
+    <b>Integration Analysis</b>
+</div>
+<br />
+<div>
+    Use the following steps to perform a Klocwork integration analysis and load the results to the Klocwork server*:
+</div>
+<br />
+<div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - (step 1 - capture) Capture Build Information</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs a Klocwork build specification generation tool to capture compilation information about the project</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - (step 2 - analysis) Full Integration Analysis</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs the Klocwork server analysis engine against the data captured within the build specification</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - (step 3 - DB load) Full Integration Analysis</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs the Klocwork server load tool, which imports analysis data into the Klocwork server database</td>
+    </tr>
+    </table>
+</div>
+<br />
+<div>
+    *Note that these steps now fully replace the deprecated step "Klocwork (deprecated) - Invoke klocwork command"
+</div>
+<br />
+<div>
+    <b>Diff Analysis</b>
+</div>
+<br />
+<div>
+    Use the following steps to perform a diff analysis, which does not publish the results to the Klocwork server and only reports on the new issues detected since the previous integration analysis. Can be used as a quality gate to reduce new issues being added to the Klocwork server and can also be configured to only analyse the changed files from the checkin making the process much quicker:
+</div>
+<br />
+<div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - (step 1 - capture) Capture Build Information</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs a Klocwork build specification generation tool to capture compilation information about the project</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Incremental Diff Analysis</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs an analysis only on the changed files using the Klocwork command line user tool</td>
+    </tr>
+    </table>
+</div>
