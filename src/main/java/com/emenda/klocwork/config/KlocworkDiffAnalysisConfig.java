@@ -2,29 +2,20 @@
 package com.emenda.klocwork.config;
 
 import com.emenda.klocwork.KlocworkConstants;
-import com.emenda.klocwork.util.KlocworkBuildSpecParser;
-import com.emenda.klocwork.util.KlocworkUtil;
 
 import org.apache.commons.lang3.StringUtils;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-import hudson.EnvVars;
 import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
 
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-import hudson.util.ArgumentListBuilder;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.lang.InterruptedException;
-import java.net.URL;
-import java.util.List;
 
 public class KlocworkDiffAnalysisConfig extends AbstractDescribableImpl<KlocworkDiffAnalysisConfig> {
 

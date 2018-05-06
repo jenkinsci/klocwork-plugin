@@ -46,9 +46,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         kwadminCmd.add("load");
 
         // add options such as --name of build
-        if (!StringUtils.isEmpty(buildName)) {
-            kwadminCmd.add("--name", envVars.expand(buildName));
-        }
+        kwadminCmd.add("--name", KlocworkUtil.getDefaultBuildName(buildName, envVars));
 
         kwadminCmd.add(envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
         kwadminCmd.add(envVars.expand(KlocworkUtil.getDefaultKwtablesDir(tablesDir)));

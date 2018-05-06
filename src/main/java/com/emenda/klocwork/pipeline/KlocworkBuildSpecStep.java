@@ -2,9 +2,7 @@ package com.emenda.klocwork.pipeline;
 
 import com.emenda.klocwork.KlocworkBuildSpecBuilder;
 import com.emenda.klocwork.KlocworkConstants;
-import com.emenda.klocwork.KlocworkServerAnalysisBuilder;
 import com.emenda.klocwork.config.KlocworkBuildSpecConfig;
-import com.emenda.klocwork.config.KlocworkServerAnalysisConfig;
 import com.google.inject.Inject;
 import hudson.EnvVars;
 import hudson.Extension;

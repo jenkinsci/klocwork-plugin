@@ -2,6 +2,7 @@ package com.emenda.klocwork.pipeline;
 
 import com.emenda.klocwork.KlocworkServerLoadBuilder;
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.config.KlocworkReportConfig;
 import com.emenda.klocwork.config.KlocworkServerLoadConfig;
 
 import com.google.inject.Inject;
@@ -29,19 +30,17 @@ import hudson.model.TaskListener;
 public class KlocworkServerLoadStep extends AbstractStepImpl {
 
     private KlocworkServerLoadConfig serverConfig;
+    private final KlocworkReportConfig reportConfig;
 
     @DataBoundConstructor
-    public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig) {
+    public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig,
+    KlocworkReportConfig reportConfig) {
         this.serverConfig = serverConfig;
+        this.reportConfig = reportConfig;
     }
 
-    // @DataBoundSetter
-    // public void setServerConfig(KlocworkServerLoadConfig serverConfig) {
-    //     this.serverConfig = serverConfig;
-    // }
-
     public KlocworkServerLoadConfig getServerConfig() { return serverConfig; }
-
+    public KlocworkReportConfig getReportConfig() { return reportConfig; }
 
     private static class KlocworkServerLoadStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
@@ -72,7 +71,8 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
         @Override
         protected Void run() throws Exception {
 
-            KlocworkServerLoadBuilder builder = new KlocworkServerLoadBuilder(step.getServerConfig());
+            KlocworkServerLoadBuilder builder = new KlocworkServerLoadBuilder(
+                step.getServerConfig(), step.getReportConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }

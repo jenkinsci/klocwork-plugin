@@ -1,20 +1,10 @@
 package com.emenda.klocwork.util;
 
-import com.emenda.klocwork.KlocworkConstants;
-
-import hudson.AbortException;
-import hudson.remoting.VirtualChannel;
 import jenkins.security.MasterToSlaveCallable;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.net.URL;
 import java.util.*;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
