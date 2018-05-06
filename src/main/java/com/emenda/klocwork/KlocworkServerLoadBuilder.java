@@ -31,6 +31,7 @@ import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -49,12 +50,22 @@ import java.util.Map;
 public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildStep {
     // TODO - artifact build.log, parse.log, kwloaddb.log if build fails
     private final KlocworkServerLoadConfig serverConfig;
-    private final KlocworkReportConfig reportConfig;
+    private KlocworkReportConfig reportConfig;
 
     @DataBoundConstructor
+    public KlocworkServerLoadBuilder(KlocworkServerLoadConfig serverConfig) {
+        this.serverConfig = serverConfig;
+        this.reportConfig = new KlocworkReportConfig(true);
+    }
+
     public KlocworkServerLoadBuilder(KlocworkServerLoadConfig serverConfig,
     KlocworkReportConfig reportConfig) {
         this.serverConfig = serverConfig;
+        this.reportConfig = reportConfig;
+    }
+
+    @DataBoundSetter
+    public void setReportConfig(KlocworkReportConfig reportConfig) {
         this.reportConfig = reportConfig;
     }
 
@@ -117,12 +128,11 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
                 logger.logMessage(String.format("WARNING: found empty severity %s", severity));
             } else {
                 // increment count
-                logger.logMessage("SERVERITY: " + severity);
                 severityMap.put(severity, severityMap.getOrDefault(severity, 0) + 1);
             }
         }
         
-        build.addAction(new KlocworkBuildAction(build, severityMap, envVars, serverConfig.getBuildName()));
+        build.addAction(new KlocworkBuildAction(build, severityMap, envVars, serverConfig.getBuildName(), reportConfig));
     }
 
     @Override

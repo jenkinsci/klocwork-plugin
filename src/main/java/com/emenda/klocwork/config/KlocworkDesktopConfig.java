@@ -133,9 +133,6 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
             }
         }
 
-        //TODO: Clean up here
-//        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
-//        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
         kwcheckRunCmd.add("-Y", "-L"); // Report nothing
 
         kwcheckRunCmd.add("--build-spec", envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));

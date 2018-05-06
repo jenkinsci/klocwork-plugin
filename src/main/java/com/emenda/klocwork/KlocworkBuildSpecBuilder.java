@@ -1,7 +1,6 @@
 package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkBuildSpecConfig;
-import com.emenda.klocwork.config.KlocworkServerAnalysisConfig;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.model.AbstractProject;
@@ -9,7 +8,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.util.ArgumentListBuilder;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;

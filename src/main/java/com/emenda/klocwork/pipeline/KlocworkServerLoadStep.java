@@ -19,6 +19,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -30,12 +31,16 @@ import hudson.model.TaskListener;
 public class KlocworkServerLoadStep extends AbstractStepImpl {
 
     private KlocworkServerLoadConfig serverConfig;
-    private final KlocworkReportConfig reportConfig;
+    private KlocworkReportConfig reportConfig;
 
     @DataBoundConstructor
-    public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig,
-    KlocworkReportConfig reportConfig) {
+    public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig) {
         this.serverConfig = serverConfig;
+        this.reportConfig = new KlocworkReportConfig(true);
+    }
+
+    @DataBoundSetter
+    public void setReportConfig(KlocworkReportConfig reportConfig) {
         this.reportConfig = reportConfig;
     }
 
@@ -70,6 +75,13 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
 
         @Override
         protected Void run() throws Exception {
+
+            if (step.getServerConfig() == null) {
+                throw new AbortException("Klocwork server configuration is null. " +
+                    "Please update klocworkIntegrationStep2 pipeline step. " +
+                    "This is due to an update to include a Klocwork trend chart. " +
+                    "Sorry for any inconvenience caused! Enjoy the chart :)");
+            }
 
             KlocworkServerLoadBuilder builder = new KlocworkServerLoadBuilder(
                 step.getServerConfig(), step.getReportConfig());

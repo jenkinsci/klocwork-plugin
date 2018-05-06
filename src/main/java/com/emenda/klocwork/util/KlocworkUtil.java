@@ -129,10 +129,11 @@ public class KlocworkUtil {
             url, project);
     }
 
-    public static String getBuildIssueListUrl(String url, String project, String buildName) {
-        // return String.format("%s,searchquery=build%253A%s",
-        //     getIssueListUrl(url, project), buildName);
-        return getIssueListUrl(url, project);
+    public static String getBuildIssueListUrl(String url, String project, String buildName)
+        throws UnsupportedEncodingException {
+        return String.format("%s,searchquery=%s",
+            getIssueListUrl(url, project),
+            URLEncoder.encode(String.format("build:%s", buildName), "UTF-8"));
     }
 
     public static String getBuildSpecPath(String buildSpec, FilePath workspace)
@@ -156,7 +157,7 @@ public class KlocworkUtil {
         if (StringUtils.isEmpty(buildName)) {
             return envVars.get("BUILD_TAG");
         } else {
-            return buildName;
+            return envVars.expand(buildName);
         }
     }
 

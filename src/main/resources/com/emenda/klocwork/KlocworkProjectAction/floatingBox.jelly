@@ -5,24 +5,17 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
     <j:if test="${action.isVisible()}">
 
-        <link href="${rootURL}/plugin/klocwork/css/dist/c3.min.css" rel="stylesheet"></link>
-        <link href="${rootURL}/plugin/klocwork/css/KlocworkTrendChart.css" rel="stylesheet"></link>
-
-        <script type="text/javascript" src="${rootURL}/plugin/klocwork/js/dist/d3.min.js"></script>
-        <script type="text/javascript" src="${rootURL}/plugin/klocwork/js/dist/c3.min.js"></script>
-
         <script type="text/javascript" src="${rootURL}/plugin/klocwork/js/dist/Chart.min-2.7.2.js"></script>
 
         <!-- z-index makes sure the trend chart is on top of the stage view -->
         <div align="right" style="position:relative; z-index:1">
-            <div id="klocworkTrendChart__"></div>
-            <canvas id="klocworkTrendChart" width="800" height="400"></canvas>
+            <canvas id="klocworkTrendChart" width="${action.chartWidth}" height="${action.chartHeight}"></canvas>
         </div>
 
         <script type="text/javascript" src="${rootURL}/plugin/klocwork/js/KlocworkTrendChart.js"></script>
         <script>
             window.onload = function () {
-                renderChart(${from.chartData})
+                renderChart(${action.chartData})
             }
         </script>
     </j:if>
