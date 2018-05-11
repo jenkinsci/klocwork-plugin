@@ -140,7 +140,6 @@
             <compatibleSinceVersion>1.4.0</compatibleSinceVersion>
           </configuration>
         </plugin>
-
         <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -149,7 +148,7 @@
                 <goals>
                   <goal>check</goal>
                 </goals>
-              </execution>
+           </execution>
             </executions>
             <configuration>
               <signature>
@@ -158,6 +157,27 @@
                 <version>1.0</version>
               </signature>
             </configuration>
+        </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-shade-plugin</artifactId>
+              <version>2.4.2</version>
+              <configuration>
+                  <relocations>
+                      <relocation>
+                          <pattern>org.joda.time</pattern>
+                          <shadedPattern>org.emendashaded.joda.time</shadedPattern>
+                      </relocation>
+                  </relocations>
+              </configuration>
+              <executions>
+                  <execution>
+                      <phase>package</phase>
+                      <goals>
+                          <goal>shade</goal>
+                      </goals>
+                  </execution>
+              </executions>
           </plugin>
       </plugins>
   </build>

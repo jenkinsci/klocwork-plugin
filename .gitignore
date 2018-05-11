@@ -8,3 +8,5 @@ work
 .project
 .settings
 .bak
+.idea
+dependency-reduced-pom.xml

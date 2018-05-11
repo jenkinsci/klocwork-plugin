@@ -92,7 +92,7 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
         @Nonnull
         @Override
         public String getDisplayName() {
-            return KlocworkConstants.KLOCWORK_SERVER_ANALYSIS_DISPLAY_NAME;
+            return KlocworkConstants.KLOCWORK_SERVER_LOAD_DISPLAY_NAME;
         }
     }
 }
