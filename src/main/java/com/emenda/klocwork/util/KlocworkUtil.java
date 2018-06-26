@@ -153,7 +153,8 @@ public class KlocworkUtil {
         if (launcher.isUnix()) {
             cmds = new ArgumentListBuilder("/bin/sh", "-c", cmds.toString());
         } else {
-            cmds = cmds.toWindowsCommand();
+            cmds.add("&&", "exit", "%%ERRORLEVEL%%");
+            cmds = new ArgumentListBuilder("cmd.exe", "/C", cmds.toString());
         }
         try {
             int returnCode = launcher.launch().
@@ -177,7 +178,8 @@ public class KlocworkUtil {
         if (launcher.isUnix()) {
             cmds = new ArgumentListBuilder("/bin/sh", "-c", cmds.toString());
         } else {
-            cmds = cmds.toWindowsCommand();
+            cmds.add("&&", "exit", "%%ERRORLEVEL%%");
+            cmds = new ArgumentListBuilder("cmd.exe", "/C", cmds.toString());
         }
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

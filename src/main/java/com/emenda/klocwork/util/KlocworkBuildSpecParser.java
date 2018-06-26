@@ -66,10 +66,13 @@ public class KlocworkBuildSpecParser extends MasterToSlaveCallable<List<String>,
             }
         }
         for (String file : fileList) {
-            // for optimisation we could do String compare, but feels like it is
-            // safer to compare Path(s)
-            if (buildSpecFiles.contains(file)) {
-                validFiles.add(file);
+                //The compare method is case sensitive and on windows should be handled insensitively due to issues were
+                //the diff list returned from the svn has a different case
+                for (String bsFile : buildSpecFiles) {
+                if ((bsFile.contains("\\") && bsFile.toLowerCase().equals(file.toLowerCase()))
+                                || (!bsFile.contains("\\") && bsFile.equals(file))) {
+                    validFiles.add(file);
+                }
             }
         }
         return validFiles;
