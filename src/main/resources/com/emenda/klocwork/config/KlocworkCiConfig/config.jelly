@@ -30,13 +30,5 @@
         <f:entry title="${%Additional Options}" field="additionalOpts">
             <f:textbox/>
         </f:entry>
-        <!-- KWDTAGENT FOR FUTURE VERSIONS - not sure on how to kill process yet... -->
-        <!-- <f:block>
-            <f:optionalBlock name="setupKwdtagent" title="${%Start Remote Desktop Agent}" checked="${instance.setupKwdtagent}" inline="true">
-                <f:entry title="${%kwdtagent Port}" field="kwdtagentPort">
-                    <f:textbox default="9011"/>
-                </f:entry>
-            </f:optionalBlock>
-        </f:block> -->
     </f:advanced>
 </j:jelly>

@@ -1,8 +1,11 @@
 package com.emenda.klocwork;
 
-import com.emenda.klocwork.config.KlocworkDesktopConfig;
+import com.emenda.klocwork.config.KlocworkCiConfig;
 import com.emenda.klocwork.util.KlocworkUtil;
 
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Items;
 import org.apache.commons.lang3.StringUtils;
 
 import hudson.AbortException;
@@ -24,18 +27,21 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.*;
 import java.lang.InterruptedException;
 
-public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
+public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
-    private KlocworkDesktopConfig desktopConfig;
+    private transient KlocworkCiConfig desktopConfig;
+    private KlocworkCiConfig ciConfig;
     private boolean analysisSkipped;
 
     @DataBoundConstructor
-    public KlocworkDesktopBuilder(KlocworkDesktopConfig desktopConfig) {
-        this.desktopConfig = desktopConfig;
+    public KlocworkCiBuilder(/*KlocworkCiConfig desktopConfig, */KlocworkCiConfig ciConfig) {
+//        this.desktopConfig = desktopConfig;
+        this.ciConfig = ciConfig;
         this.analysisSkipped = false;
     }
 
-    public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
+//    public KlocworkCiConfig getDesktopConfig() { return desktopConfig; }
+    public KlocworkCiConfig getCiConfig() { return ciConfig; }
     public boolean isAnalysisSkipped() { return analysisSkipped; }
 
     @Override
@@ -58,32 +64,48 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
         logger.logMessage("Starting Klocwork Desktop Analysis");
         try {
 
-            KlocworkUtil.executeCommand(launcher, listener,
+            if (KlocworkUtil.executeCommand(launcher, listener,
                     workspace, envVars,
-                    desktopConfig.getVersionCmd());
-
-            if (!desktopConfig.hasExistingProject(workspace, envVars)) {
+                    ciConfig.getVersionCiAgentCmd(), true) > 0){
                 KlocworkUtil.executeCommand(launcher, listener,
                         workspace, envVars,
-                        desktopConfig.getKwcheckCreateCmd(envVars, workspace));
+                        ciConfig.getVersionKwCheckCmd());
+                ciConfig.setCiTool("kwcheck");
+                logger.logMessage("");
+                logger.logMessage("*******************************************************************************");
+                logger.logMessage("");
+                logger.logMessage("WARNING USE OF KWCHECK FOR DIFF ANALYSIS HAS BEEN DEPRECATED AND WILL BE ");
+                logger.logMessage("REMOVED IN A FUTURE VERSION, SUPPORT FOR KWCIAGENT IS NOW AVAILABLE, PLEASE ");
+                logger.logMessage("CONTACT YOUR KLOCWORK REPRESENTATIVE FOR MORE DETAILS");
+                logger.logMessage("");
+                logger.logMessage("*******************************************************************************");
+                logger.logMessage("");
+            }
+            else{
+                ciConfig.setCiTool("kwciagent");
+            }
+            if (!ciConfig.hasExistingProject(workspace, envVars)) {
+                KlocworkUtil.executeCommand(launcher, listener,
+                        workspace, envVars,
+                        ciConfig.getCiToolCreateCmd(envVars, workspace));
             } else {
                 // update existing project
                 KlocworkUtil.executeCommand(launcher, listener,
                         workspace, envVars,
-                        desktopConfig.getKwcheckSetCmd(envVars, workspace));
+                        ciConfig.getCiToolSetCmd(envVars, workspace));
             }
             String diffList = "";
             // should we perform incremental analysis?
-            if (desktopConfig.getIncrementalAnalysis()) {
+            if (ciConfig.getIncrementalAnalysis()) {
                 logger.logMessage("Performing incremental analysis using " +
-                "change list specified in " + desktopConfig.getDiffFileList(envVars));
+                "change list specified in " + ciConfig.getDiffFileList(envVars));
                 // check which type of incremental analysis (e.g. git/manual)
                 // check if we need to execute git diff first
-                if (desktopConfig.isGitDiffType()) {
+                if (ciConfig.isGitDiffType()) {
                     logger.logMessage("Executing git diff to get change list");
                     KlocworkUtil.executeCommand(launcher, listener,
                             workspace, envVars,
-                            desktopConfig.getGitDiffCmd(envVars));
+                            ciConfig.getGitDiffCmd(envVars));
                 } else {
                     // manual diff just requires reading from diff file, same as git
                     // so do nothing
@@ -91,12 +113,12 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
 
                 // check diff file list and get list of files to analyse, if none,
                 // diffList will be empty
-                diffList = desktopConfig.getKwcheckDiffList(envVars, workspace, launcher);
+                diffList = ciConfig.getCiToolDiffList(envVars, workspace, launcher);
                 // if there are files to analyse, run kwcheck run
                 if (!StringUtils.isEmpty(diffList)) {
                     KlocworkUtil.executeCommand(launcher, listener,
                             workspace, envVars,
-                            desktopConfig.getKwcheckRunCmd(envVars, workspace, diffList));
+                            ciConfig.getCiToolRunCmd(envVars, workspace, diffList));
                 }
                 else{
                     // we do not need to do anything!
@@ -107,16 +129,16 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
             else{
                 KlocworkUtil.executeCommand(launcher, listener,
                         workspace, envVars,
-                        desktopConfig.getKwcheckRunCmd(envVars, workspace, diffList));
+                        ciConfig.getCiToolRunCmd(envVars, workspace, diffList));
             }
 
             // Output any local issues
             ByteArrayOutputStream kwcheckListOutputStream = KlocworkUtil.executeCommandParseOutput(launcher,
                     workspace, envVars,
-                    desktopConfig.getKwcheckListCmd(envVars, workspace, diffList));
+                    ciConfig.getCiToolListCmd(envVars, workspace, diffList));
             if(kwcheckListOutputStream != null){
                 FilePath xmlReport;
-                String path = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(desktopConfig.getReportFile()));
+                String path = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(ciConfig.getReportFile()));
                 File isAbs = new File(path);
                 if(isAbs.isAbsolute()){
                     xmlReport = new FilePath (launcher.getChannel(), path);
@@ -137,38 +159,13 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
             throw new AbortException(ex.getMessage());
         }
 
-        // TODO: kwdtagent is a pain!
-        // if (desktopConfig.getSetupKwdtagent()) {
-        //     try {
-        //         // int rc_kwdtagent = KlocworkUtil.executeCommand(launcher, listener,
-        //         //         build.getWorkspace(), envVars,
-        //         //         desktopConfig.getKwdtagentCmd(envVars, build.getWorkspace()));
-        //         ArgumentListBuilder cmds = desktopConfig.getKwdtagentCmd(envVars, build.getWorkspace());
-        //         if (launcher.isUnix()) {
-        //             cmds = new ArgumentListBuilder("/bin/sh", "-c", cmds.toString());
-        //         } else {
-        //             cmds = cmds.toWindowsCommand();
-        //         }
-        //         Proc proc = launcher.launch().
-        //             stdout(listener).stderr(listener.getLogger()).
-        //             pwd(build.getWorkspace()).envs(envVars).cmds(cmds)
-        //             .start();
-        //
-        //         // proc.joinWithTimeout(15, TimeUnit.SECONDS, listener);
-        //         // Thread.sleep(15000);
-        //         // proc.kill();
-        //         proc.join();
-        //
-        //         // if (rc_kwdtagent != 0) {
-        //         //     logger.logMessage("kwdtagent return code " + Integer.toString(rc_kwdtagent));
-        //         //     return false;
-        //         // }
-        //     } catch (IOException | InterruptedException ex) {
-        //         // we expect InterruptedException to kill kwdtagent process
-        //         logger.logMessage("Caught Exception from killing " +
-        //         "kwdtagent session, as expected. Continuing build...");
-        //     }
-        // }
+    }
+
+    protected Object readResolve() {
+        if (desktopConfig != null) {
+            ciConfig = desktopConfig;
+        }
+        return this;
     }
 
     @Override
@@ -178,6 +175,12 @@ public class KlocworkDesktopBuilder extends Builder implements SimpleBuildStep {
 
     @Extension
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+
+        @Initializer(before = InitMilestone.PLUGINS_STARTED)
+        public static void addAliases() {
+            Items.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.KlocworkDesktopBuilder", KlocworkCiBuilder.class);
+            Run.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.KlocworkDesktopBuilder", KlocworkCiBuilder.class);
+        }
 
         public DescriptorImpl() {
             load();

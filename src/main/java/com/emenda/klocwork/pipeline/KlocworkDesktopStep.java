@@ -1,20 +1,16 @@
 package com.emenda.klocwork.pipeline;
 
-import com.emenda.klocwork.KlocworkDesktopBuilder;
-import com.emenda.klocwork.config.KlocworkDesktopConfig;
+import com.emenda.klocwork.KlocworkCiBuilder;
+import com.emenda.klocwork.config.KlocworkCiConfig;
 
 import com.google.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
-import org.jenkinsci.plugins.workflow.structs.DescribableHelper;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import hudson.EnvVars;
@@ -27,19 +23,19 @@ import hudson.model.TaskListener;
 
 public class KlocworkDesktopStep extends AbstractStepImpl {
 
-    private KlocworkDesktopConfig desktopConfig;
+    private KlocworkCiConfig desktopConfig;
 
     @DataBoundConstructor
-    public KlocworkDesktopStep(KlocworkDesktopConfig desktopConfig) {
+    public KlocworkDesktopStep(KlocworkCiConfig desktopConfig) {
         this.desktopConfig = desktopConfig;
     }
 
     // @DataBoundSetter
-    // public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
+    // public void setDesktopConfig(KlocworkCiConfig desktopConfig) {
     //     this.desktopConfig = desktopConfig;
     // }
 
-    public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
+    public KlocworkCiConfig getDesktopConfig() { return desktopConfig; }
 
 
     private static class KlocworkDesktopStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
@@ -71,7 +67,7 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
         @Override
         protected Void run() throws Exception {
 
-            KlocworkDesktopBuilder builder = new KlocworkDesktopBuilder(step.getDesktopConfig());
+            KlocworkCiBuilder builder = new KlocworkCiBuilder(step.getDesktopConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }
