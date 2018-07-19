@@ -34,13 +34,11 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
     private boolean analysisSkipped;
 
     @DataBoundConstructor
-    public KlocworkCiBuilder(/*KlocworkCiConfig desktopConfig, */KlocworkCiConfig ciConfig) {
-//        this.desktopConfig = desktopConfig;
+    public KlocworkCiBuilder(KlocworkCiConfig ciConfig) {
         this.ciConfig = ciConfig;
         this.analysisSkipped = false;
     }
 
-//    public KlocworkCiConfig getDesktopConfig() { return desktopConfig; }
     public KlocworkCiConfig getCiConfig() { return ciConfig; }
     public boolean isAnalysisSkipped() { return analysisSkipped; }
 
@@ -60,8 +58,8 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
     public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
         throws AbortException {
-        KlocworkLogger logger = new KlocworkLogger("DesktopBuilder", listener.getLogger());
-        logger.logMessage("Starting Klocwork Desktop Analysis");
+        KlocworkLogger logger = new KlocworkLogger("CiBuilder", listener.getLogger());
+        logger.logMessage("Starting Klocwork Ci Analysis");
         try {
 
             if (KlocworkUtil.executeCommand(launcher, listener,
@@ -192,7 +190,7 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
         }
 
         public String getDisplayName() {
-            return KlocworkConstants.KLOCWORK_DESKTOP_BUILDER_NAME;
+            return KlocworkConstants.KLOCWORK_CI_BUILDER_NAME;
         }
 
         @Override

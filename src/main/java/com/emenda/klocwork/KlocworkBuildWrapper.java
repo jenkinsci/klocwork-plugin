@@ -232,7 +232,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             throws IOException, ServletException {
 
             if (value.equals(getNoneValue())) {
-                return FormValidation.warning("Server Configuration is required for server builds, cross synchronisation and desktop analysis synchronisation");
+                return FormValidation.warning("Server Configuration is required for server builds, cross synchronisation and CI analysis synchronisation");
             } else {
                 return FormValidation.ok();
             }
@@ -242,7 +242,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             throws IOException, ServletException {
 
             if (StringUtils.isEmpty(value)) {
-                return FormValidation.warning("Server Project is required for server builds, cross synchronisation and desktop analysis synchronisation");
+                return FormValidation.warning("Server Project is required for server builds, cross synchronisation and CI analysis synchronisation");
             } else {
                 return FormValidation.ok();
             }

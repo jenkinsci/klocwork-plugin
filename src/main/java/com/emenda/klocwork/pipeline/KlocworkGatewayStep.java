@@ -2,22 +2,16 @@ package com.emenda.klocwork.pipeline;
 
 import com.emenda.klocwork.KlocworkGatewayPublisher;
 import com.emenda.klocwork.KlocworkConstants;
-import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
-import com.emenda.klocwork.config.KlocworkGatewayDesktopConfig;
 import com.emenda.klocwork.config.KlocworkGatewayConfig;
 
 import com.google.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
-import org.jenkinsci.plugins.workflow.structs.DescribableHelper;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import hudson.EnvVars;
@@ -26,8 +20,6 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-
-import java.util.List;
 
 
 public class KlocworkGatewayStep extends AbstractStepImpl {

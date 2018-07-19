@@ -5,6 +5,9 @@ import com.emenda.klocwork.config.KlocworkCiConfig;
 
 import com.google.inject.Inject;
 
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Items;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
@@ -21,29 +24,37 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 
 
-public class KlocworkDesktopStep extends AbstractStepImpl {
+public class KlocworkCiStep extends AbstractStepImpl {
 
-    private KlocworkCiConfig desktopConfig;
+    private transient KlocworkCiConfig desktopConfig;
+    private KlocworkCiConfig ciConfig;
+
+    protected Object readResolve() {
+        if (desktopConfig != null) {
+            ciConfig = desktopConfig;
+        }
+        return this;
+    }
 
     @DataBoundConstructor
-    public KlocworkDesktopStep(KlocworkCiConfig desktopConfig) {
-        this.desktopConfig = desktopConfig;
+    public KlocworkCiStep(KlocworkCiConfig ciConfig) {
+        this.ciConfig = ciConfig;
     }
 
     // @DataBoundSetter
-    // public void setDesktopConfig(KlocworkCiConfig desktopConfig) {
-    //     this.desktopConfig = desktopConfig;
+    // public void setDesktopConfig(KlocworkCiConfig ciConfig) {
+    //     this.ciConfig = ciConfig;
     // }
 
-    public KlocworkCiConfig getDesktopConfig() { return desktopConfig; }
+    public KlocworkCiConfig getCiConfig() { return ciConfig; }
 
 
-    private static class KlocworkDesktopStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
+    private static class KlocworkCiStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
         private static final long serialVersionUID = 1L;
 
         @Inject
-        private transient KlocworkDesktopStep step;
+        private transient KlocworkCiStep step;
 
         @StepContextParameter
         @SuppressWarnings("unused")
@@ -67,7 +78,7 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
         @Override
         protected Void run() throws Exception {
 
-            KlocworkCiBuilder builder = new KlocworkCiBuilder(step.getDesktopConfig());
+            KlocworkCiBuilder builder = new KlocworkCiBuilder(step.getCiConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }
@@ -76,7 +87,13 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
     @Extension(optional = true)
     public static class DescriptorImpl extends AbstractStepDescriptorImpl {
         public DescriptorImpl() {
-            super(KlocworkDesktopStepExecution.class);
+            super(KlocworkCiStepExecution.class);
+        }
+
+        @Initializer(before = InitMilestone.PLUGINS_STARTED)
+        public static void addAliases() {
+            Items.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.pipeline.KlocworkDesktopStep", KlocworkCiStep.class);
+            Run.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.pipeline.KlocworkDesktopStep", KlocworkCiStep.class);
         }
 
         @Override

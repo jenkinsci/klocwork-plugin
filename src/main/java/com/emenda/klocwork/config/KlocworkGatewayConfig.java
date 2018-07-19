@@ -1,23 +1,11 @@
 
 package com.emenda.klocwork.config;
 
-import org.apache.commons.lang3.StringUtils;
-
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.QueryParameter;
 
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
-import hudson.util.FormValidation;
-
-import javax.servlet.ServletException;
-
-import java.io.IOException;
-import java.io.File;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import java.util.List;
 
@@ -26,17 +14,29 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
 
     private final boolean enableServerGateway;
     private final List<KlocworkGatewayServerConfig> gatewayServerConfigs;
-    private final boolean enableDesktopGateway;
-    private final KlocworkGatewayDesktopConfig gatewayDesktopConfig;
+    private transient boolean enableDesktopGateway;
+    private boolean enableCiGateway;
+    private transient KlocworkGatewayCiConfig gatewayDesktopConfig;
+    private KlocworkGatewayCiConfig gatewayCiConfig;
+
+    protected Object readResolve() {
+        if (gatewayDesktopConfig != null) {
+            gatewayCiConfig = gatewayDesktopConfig;
+        }
+        if (enableDesktopGateway) {
+            enableCiGateway = true;
+        }
+        return this;
+    }
 
     @DataBoundConstructor
     public KlocworkGatewayConfig(boolean enableServerGateway,
-        List<KlocworkGatewayServerConfig> gatewayServerConfigs,
-        boolean enableDesktopGateway, KlocworkGatewayDesktopConfig gatewayDesktopConfig) {
+                                 List<KlocworkGatewayServerConfig> gatewayServerConfigs,
+                                 boolean enableCiGateway, KlocworkGatewayCiConfig gatewayCiConfig) {
         this.enableServerGateway = enableServerGateway;
         this.gatewayServerConfigs = gatewayServerConfigs;
-        this.enableDesktopGateway = enableDesktopGateway;
-        this.gatewayDesktopConfig = gatewayDesktopConfig;
+        this.enableCiGateway = enableCiGateway;
+        this.gatewayCiConfig = gatewayCiConfig;
     }
 
     public boolean getEnableServerGateway() {
@@ -47,12 +47,12 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
         return gatewayServerConfigs;
     }
 
-    public boolean getEnableDesktopGateway() {
-        return enableDesktopGateway;
+    public boolean getEnableCiGateway() {
+        return enableCiGateway;
     }
 
-    public KlocworkGatewayDesktopConfig getGatewayDesktopConfig() {
-        return gatewayDesktopConfig;
+    public KlocworkGatewayCiConfig getGatewayCiConfig() {
+        return gatewayCiConfig;
     }
 
     @Extension
