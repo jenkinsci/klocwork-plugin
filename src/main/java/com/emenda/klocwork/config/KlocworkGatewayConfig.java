@@ -1,11 +1,10 @@
 
 package com.emenda.klocwork.config;
 
-import org.kohsuke.stapler.DataBoundConstructor;
-
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.util.List;
 

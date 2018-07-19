@@ -4,27 +4,18 @@ package com.emenda.klocwork.config;
 import com.emenda.klocwork.KlocworkConstants;
 import com.emenda.klocwork.util.KlocworkBuildSpecParser;
 import com.emenda.klocwork.util.KlocworkUtil;
-
+import hudson.*;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.Items;
-import hudson.model.Run;
-import org.apache.commons.lang3.StringUtils;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.model.Items;
+import hudson.model.Run;
 import hudson.util.ArgumentListBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
-import java.lang.InterruptedException;
 import java.net.URL;
 import java.util.List;
 

@@ -1,22 +1,19 @@
 package com.emenda.klocwork.util;
 
-import com.emenda.klocwork.KlocworkConstants;
-
+import hudson.AbortException;
+import jenkins.security.MasterToSlaveCallable;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import hudson.AbortException;;
-import jenkins.security.MasterToSlaveCallable;
-
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
+import java.nio.file.Paths;
+
+;
 
 public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOException>  {
 

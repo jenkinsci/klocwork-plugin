@@ -1,7 +1,6 @@
 package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkBuildSpecConfig;
-import com.emenda.klocwork.config.KlocworkServerAnalysisConfig;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.model.AbstractProject;
@@ -9,7 +8,6 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
-import hudson.util.ArgumentListBuilder;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -47,7 +45,7 @@ public class KlocworkBuildSpecBuilder extends Builder implements SimpleBuildStep
         throws AbortException {
 
         KlocworkLogger logger = new KlocworkLogger("BuildSpecBuilder", listener.getLogger());
-        logger.logMessage("Starting Klocwork Build Specifcation Generation Step");
+        logger.logMessage("Starting Klocwork Build Specification Generation Step");
 
         // validate server settings needed for build-step. AbortException is
         // thrown if URL and server project are not provided as we cannot perform

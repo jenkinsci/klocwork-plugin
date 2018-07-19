@@ -1,44 +1,18 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
-import com.emenda.klocwork.KlocworkServerAnalysisBuilder;
-
-import jenkins.util.xml.XMLUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Job;
-import hudson.model.JobProperty;
-import hudson.model.Run;
-import hudson.model.Project;
 import hudson.model.TaskListener;
-import hudson.tasks.Builder;
 import hudson.util.ArgumentListBuilder;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.lang.InterruptedException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

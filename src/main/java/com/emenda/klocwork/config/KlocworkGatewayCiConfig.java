@@ -1,16 +1,14 @@
 
 package com.emenda.klocwork.config;
 
+import hudson.Extension;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.Items;
-import hudson.model.Run;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.model.Items;
+import hudson.model.Run;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 
 public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGatewayCiConfig> {

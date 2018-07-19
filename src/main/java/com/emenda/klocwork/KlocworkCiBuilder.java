@@ -2,30 +2,24 @@ package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkCiConfig;
 import com.emenda.klocwork.util.KlocworkUtil;
-
+import hudson.*;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.Items;
-import org.apache.commons.lang3.StringUtils;
-
-import hudson.AbortException;
-import hudson.Launcher;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
 import hudson.model.AbstractProject;
+import hudson.model.Items;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
-
+import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
-import java.io.*;
-import java.lang.InterruptedException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 

@@ -2,12 +2,16 @@ package com.emenda.klocwork.pipeline;
 
 import com.emenda.klocwork.KlocworkCiBuilder;
 import com.emenda.klocwork.config.KlocworkCiConfig;
-
 import com.google.inject.Inject;
-
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Items;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
@@ -15,13 +19,6 @@ import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
-
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-import hudson.model.Run;
-import hudson.model.TaskListener;
 
 
 public class KlocworkCiStep extends AbstractStepImpl {
