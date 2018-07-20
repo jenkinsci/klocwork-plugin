@@ -2,73 +2,52 @@ package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkGatewayConfig;
 import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
-import com.emenda.klocwork.config.KlocworkGatewayDesktopConfig;
 import com.emenda.klocwork.services.KlocworkApiConnection;
 import com.emenda.klocwork.util.KlocworkUtil;
 import com.emenda.klocwork.util.KlocworkXMLReportParser;
-
-import org.apache.commons.lang3.StringUtils;
-
-import hudson.AbortException;
-import hudson.Launcher;
-import hudson.Launcher.ProcStarter;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Proc;
-import hudson.util.ArgumentListBuilder;
-import hudson.util.FormValidation;
-import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
+import hudson.*;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Project;
 import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.security.ACL;
-import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
-import hudson.model.Action;
-import java.util.Collection;
-
-import jenkins.model.Jenkins;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.lang.InterruptedException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 
 public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
 
     private final KlocworkGatewayConfig gatewayConfig;
-    private int totalIssuesDesktop;
-    private int thresholdDesktop;
+    private transient int totalIssuesDesktop;
+    private transient int thresholdDesktop;
+    private int totalIssuesCi;
+    private int thresholdCi;
 
     @DataBoundConstructor
     public KlocworkGatewayPublisher(KlocworkGatewayConfig gatewayConfig) {
         this.gatewayConfig = gatewayConfig;
-        this.totalIssuesDesktop = 0;
-        this.thresholdDesktop = 0;
+        this.totalIssuesCi = 0;
+        this.thresholdCi = 0;
+    }
+
+    protected Object readResolve() {
+        if (totalIssuesDesktop <= 0) {
+            totalIssuesCi = totalIssuesDesktop;
+        }
+        if (thresholdDesktop <= 0) {
+            thresholdCi = thresholdDesktop;
+        }
+        return this;
     }
 
     public KlocworkGatewayConfig getGatewayConfig() {
@@ -138,23 +117,23 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         }
 
 
-        if (gatewayConfig.getEnableDesktopGateway()) {
-			logger.logMessage("Performing Klocwork Desktop Gateway");
+        if (gatewayConfig.getEnableCiGateway()) {
+			logger.logMessage("Performing Klocwork Ci Gateway");
 
             String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
-                gatewayConfig.getGatewayDesktopConfig().getReportFile()));
+                gatewayConfig.getGatewayCiConfig().getReportFile()));
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {
-                totalIssuesDesktop = launcher.getChannel().call(
+                totalIssuesCi = launcher.getChannel().call(
                     new KlocworkXMLReportParser(
                     workspace.getRemote(), xmlReport));
-                logger.logMessage("Total Desktop Issues : " +
-                    Integer.toString(totalIssuesDesktop));
+                logger.logMessage("Total Ci Issues : " +
+                    Integer.toString(totalIssuesCi));
                 logger.logMessage("Configured Threshold : " +
-                    gatewayConfig.getGatewayDesktopConfig().getThreshold());
-                thresholdDesktop = Integer.parseInt(gatewayConfig.getGatewayDesktopConfig().getThreshold());
-                if (totalIssuesDesktop >= thresholdDesktop) {
+                    gatewayConfig.getGatewayCiConfig().getThreshold());
+                thresholdCi = Integer.parseInt(gatewayConfig.getGatewayCiConfig().getThreshold());
+                if (totalIssuesCi >= thresholdCi) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(Result.FAILURE);
                 }

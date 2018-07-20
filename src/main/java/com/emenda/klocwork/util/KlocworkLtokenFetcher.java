@@ -1,17 +1,14 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
-
-import org.apache.commons.lang3.StringUtils;
-
-import hudson.remoting.VirtualChannel;
 import jenkins.security.MasterToSlaveCallable;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
 public class KlocworkLtokenFetcher extends MasterToSlaveCallable<String[],IOException>  {

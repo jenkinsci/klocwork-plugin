@@ -4,66 +4,65 @@ package com.emenda.klocwork.config;
 import com.emenda.klocwork.KlocworkConstants;
 import com.emenda.klocwork.util.KlocworkBuildSpecParser;
 import com.emenda.klocwork.util.KlocworkUtil;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.kohsuke.stapler.DataBoundConstructor;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
-
+import hudson.*;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import hudson.model.Items;
+import hudson.model.Run;
 import hudson.util.ArgumentListBuilder;
+import org.apache.commons.lang3.StringUtils;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
-import java.lang.InterruptedException;
 import java.net.URL;
 import java.util.List;
 
-public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDesktopConfig> {
+public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> {
 
     private final String buildSpec;
     private final String projectDir;
     private final boolean cleanupProject;
     private final String reportFile;
     private final String additionalOpts;
-    // private final boolean setupKwdtagent;
-    // private final String kwdtagentPort;
     private final boolean incrementalAnalysis;
     private final KlocworkDiffAnalysisConfig diffAnalysisConfig;
+    private String ciTool;
 
     @DataBoundConstructor
-    public KlocworkDesktopConfig(String buildSpec, String projectDir, boolean cleanupProject, String reportFile, String additionalOpts,
-    // boolean setupKwdtagent, String kwdtagentPort,
-    boolean incrementalAnalysis, KlocworkDiffAnalysisConfig diffAnalysisConfig) {
+    public KlocworkCiConfig(String buildSpec, String projectDir, boolean cleanupProject, String reportFile, String additionalOpts,
+                            boolean incrementalAnalysis, KlocworkDiffAnalysisConfig diffAnalysisConfig, String ciTool) {
         this.buildSpec = buildSpec;
         this.projectDir = projectDir;
         this.cleanupProject = cleanupProject;
         this.reportFile = reportFile;
         this.additionalOpts = additionalOpts;
-        // this.setupKwdtagent = setupKwdtagent;
-        // this.kwdtagentPort = kwdtagentPort;
         this.incrementalAnalysis = incrementalAnalysis;
         this.diffAnalysisConfig = diffAnalysisConfig;
+        this.ciTool = ciTool;
     }
 
-    public ArgumentListBuilder getVersionCmd()
+    public ArgumentListBuilder getVersionCiAgentCmd()
                                         throws IOException, InterruptedException {
+        ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwciagent");
+        versionCmd.add("--version");
+        return versionCmd;
+    }
+
+    public ArgumentListBuilder getVersionKwCheckCmd()
+            throws IOException, InterruptedException {
         ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwcheck");
         versionCmd.add("--version");
         return versionCmd;
     }
 
-    public ArgumentListBuilder getKwcheckCreateCmd(EnvVars envVars, FilePath workspace)
+    public ArgumentListBuilder getCiToolCreateCmd(EnvVars envVars, FilePath workspace)
                                         throws IOException, InterruptedException {
 
         validateParentProjectDir(getKwlpDir(workspace, envVars).getParent());
 
-        ArgumentListBuilder kwcheckCreateCmd = new ArgumentListBuilder("kwcheck", "create");
+        ArgumentListBuilder kwcheckCreateCmd = new ArgumentListBuilder(ciTool, "create");
         String projectUrl = KlocworkUtil.getKlocworkProjectUrl(envVars);
         if (!StringUtils.isEmpty(projectUrl)) {
             kwcheckCreateCmd.add("--url", projectUrl);
@@ -74,12 +73,12 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         return kwcheckCreateCmd;
     }
 
-    public ArgumentListBuilder getKwcheckSetCmd(EnvVars envVars, FilePath workspace)
+    public ArgumentListBuilder getCiToolSetCmd(EnvVars envVars, FilePath workspace)
                                         throws IOException, InterruptedException {
 
         validateParentProjectDir(getKwlpDir(workspace, envVars).getParent());
 
-        ArgumentListBuilder kwcheckSetCmd = new ArgumentListBuilder("kwcheck", "set");
+        ArgumentListBuilder kwcheckSetCmd = new ArgumentListBuilder(ciTool, "set");
         kwcheckSetCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
         String serverUrl = envVars.get(KlocworkConstants.KLOCWORK_URL);
         if (!StringUtils.isEmpty(serverUrl)) {
@@ -91,11 +90,11 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         return kwcheckSetCmd;
     }
 
-    public ArgumentListBuilder getKwcheckListCmd(EnvVars envVars, FilePath workspace,
-        String diffList)
+    public ArgumentListBuilder getCiToolListCmd(EnvVars envVars, FilePath workspace,
+                                                String diffList)
                                         throws IOException, InterruptedException {
         ArgumentListBuilder kwcheckRunCmd =
-            new ArgumentListBuilder("kwcheck", "list");
+            new ArgumentListBuilder(ciTool, "list");
         kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
         String licenseHost = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST);
         if (!StringUtils.isEmpty(licenseHost)) {
@@ -119,11 +118,11 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         return kwcheckRunCmd;
     }
 
-    public ArgumentListBuilder getKwcheckRunCmd(EnvVars envVars, FilePath workspace,
-        String diffList)
+    public ArgumentListBuilder getCiToolRunCmd(EnvVars envVars, FilePath workspace,
+                                               String diffList)
                                         throws IOException, InterruptedException {
         ArgumentListBuilder kwcheckRunCmd =
-            new ArgumentListBuilder("kwcheck", "run");
+            new ArgumentListBuilder(ciTool, "run");
         kwcheckRunCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
 
         if (!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_HOST))) {
@@ -133,9 +132,6 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
             }
         }
 
-        //TODO: Clean up here
-//        String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(reportFile));
-//        kwcheckRunCmd.add("-F", "xml", "--report", xmlReport);
         kwcheckRunCmd.add("-Y", "-L"); // Report nothing
 
         kwcheckRunCmd.add("--build-spec", envVars.expand(KlocworkUtil.getDefaultBuildSpec(buildSpec)));
@@ -148,15 +144,6 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
 
         return kwcheckRunCmd;
     }
-
-    // public ArgumentListBuilder getKwdtagentCmd(EnvVars envVars, FilePath workspace)
-    //                                     throws IOException, InterruptedException {
-    //     ArgumentListBuilder kwdtagentCmd =
-    //         new ArgumentListBuilder("kwdtagent");
-    //     kwdtagentCmd.add("--project-dir", getKwlpDir(workspace, envVars).getRemote());
-    //     kwdtagentCmd.add("--port", kwdtagentPort);
-    //     return kwdtagentCmd;
-    // }
 
     public ArgumentListBuilder getGitDiffCmd(EnvVars envVars) {
         ArgumentListBuilder gitDiffCmd = new ArgumentListBuilder("git");
@@ -228,7 +215,7 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
         }
     }
 
-    public String getKwcheckDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
+    public String getCiToolDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
         try {
             List<String> fileList = launcher.getChannel().call(
                 new KlocworkBuildSpecParser(workspace.getRemote(),
@@ -255,13 +242,26 @@ public class KlocworkDesktopConfig extends AbstractDescribableImpl<KlocworkDeskt
     public boolean getCleanupProject() { return cleanupProject; }
     public String getReportFile() { return reportFile; }
     public String getAdditionalOpts() { return additionalOpts; }
-    // public boolean getSetupKwdtagent() { return setupKwdtagent; }
-    // public String getKwdtagentPort() { return kwdtagentPort; }
     public boolean getIncrementalAnalysis() { return incrementalAnalysis; }
     public KlocworkDiffAnalysisConfig getDiffAnalysisConfig() { return diffAnalysisConfig; }
+    public String getCiTool() { return ciTool; }
+
+    public void setCiTool(String tool) {
+        if(tool.equalsIgnoreCase("kwciagent")){
+            ciTool = "kwciagent";
+        }
+        else if (tool.equalsIgnoreCase("kwcheck")){
+            ciTool = "kwcheck";
+        }
+    }
 
     @Extension
-    public static class DescriptorImpl extends Descriptor<KlocworkDesktopConfig> {
+    public static class DescriptorImpl extends Descriptor<KlocworkCiConfig> {
+        @Initializer(before = InitMilestone.PLUGINS_STARTED)
+        public static void addAliases() {
+            Items.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.config.KlocworkDesktopConfig", KlocworkCiConfig.class);
+            Run.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.config.KlocworkDesktopConfig", KlocworkCiConfig.class);
+        }
         public String getDisplayName() { return null; }
     }
 

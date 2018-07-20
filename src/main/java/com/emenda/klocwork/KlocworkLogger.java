@@ -2,7 +2,6 @@
 package com.emenda.klocwork;
 
 import java.io.PrintStream;
-import hudson.model.TaskListener;
 
 public class KlocworkLogger {
 

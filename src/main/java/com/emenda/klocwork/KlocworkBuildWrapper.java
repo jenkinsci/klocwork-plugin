@@ -2,51 +2,27 @@ package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkInstallConfig;
 import com.emenda.klocwork.config.KlocworkServerConfig;
-
-import org.apache.commons.lang3.StringUtils;
-
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
-import hudson.Launcher.DecoratedLauncher;
-import hudson.Proc;
-import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
-import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Computer;
-import hudson.model.Item;
-import hudson.model.Node;
 import hudson.model.Run;
-import hudson.model.Run.RunnerAbortedException;
 import hudson.model.TaskListener;
-import hudson.security.ACL;
-import hudson.tasks.Builder;
-import hudson.tasks.BuildWrapper;
-import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildWrapperDescriptor;
 import hudson.util.CopyOnWriteList;
-
-import jenkins.model.Jenkins;
+import hudson.util.FormValidation;
+import hudson.util.ListBoxModel;
 import jenkins.tasks.SimpleBuildWrapper;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
-import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerRequest;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.collect.Lists.newArrayList;
 
 public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
@@ -232,7 +208,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             throws IOException, ServletException {
 
             if (value.equals(getNoneValue())) {
-                return FormValidation.warning("Server Configuration is required for server builds, cross synchronisation and desktop analysis synchronisation");
+                return FormValidation.warning("Server Configuration is required for server builds, cross synchronisation and CI analysis synchronisation");
             } else {
                 return FormValidation.ok();
             }
@@ -242,7 +218,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             throws IOException, ServletException {
 
             if (StringUtils.isEmpty(value)) {
-                return FormValidation.warning("Server Project is required for server builds, cross synchronisation and desktop analysis synchronisation");
+                return FormValidation.warning("Server Project is required for server builds, cross synchronisation and CI analysis synchronisation");
             } else {
                 return FormValidation.ok();
             }

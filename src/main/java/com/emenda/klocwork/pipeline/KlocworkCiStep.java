@@ -1,53 +1,57 @@
 package com.emenda.klocwork.pipeline;
 
-import com.emenda.klocwork.KlocworkDesktopBuilder;
-import com.emenda.klocwork.config.KlocworkDesktopConfig;
-
+import com.emenda.klocwork.KlocworkCiBuilder;
+import com.emenda.klocwork.config.KlocworkCiConfig;
 import com.google.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
-import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
-import org.jenkinsci.plugins.workflow.structs.DescribableHelper;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.init.InitMilestone;
+import hudson.init.Initializer;
+import hudson.model.Items;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
+import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
+import org.kohsuke.stapler.DataBoundConstructor;
+
+import javax.annotation.Nonnull;
 
 
-public class KlocworkDesktopStep extends AbstractStepImpl {
+public class KlocworkCiStep extends AbstractStepImpl {
 
-    private KlocworkDesktopConfig desktopConfig;
+    private transient KlocworkCiConfig desktopConfig;
+    private KlocworkCiConfig ciConfig;
+
+    protected Object readResolve() {
+        if (desktopConfig != null) {
+            ciConfig = desktopConfig;
+        }
+        return this;
+    }
 
     @DataBoundConstructor
-    public KlocworkDesktopStep(KlocworkDesktopConfig desktopConfig) {
-        this.desktopConfig = desktopConfig;
+    public KlocworkCiStep(KlocworkCiConfig ciConfig) {
+        this.ciConfig = ciConfig;
     }
 
     // @DataBoundSetter
-    // public void setDesktopConfig(KlocworkDesktopConfig desktopConfig) {
-    //     this.desktopConfig = desktopConfig;
+    // public void setDesktopConfig(KlocworkCiConfig ciConfig) {
+    //     this.ciConfig = ciConfig;
     // }
 
-    public KlocworkDesktopConfig getDesktopConfig() { return desktopConfig; }
+    public KlocworkCiConfig getCiConfig() { return ciConfig; }
 
 
-    private static class KlocworkDesktopStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
+    private static class KlocworkCiStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
         private static final long serialVersionUID = 1L;
 
         @Inject
-        private transient KlocworkDesktopStep step;
+        private transient KlocworkCiStep step;
 
         @StepContextParameter
         @SuppressWarnings("unused")
@@ -71,7 +75,7 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
         @Override
         protected Void run() throws Exception {
 
-            KlocworkDesktopBuilder builder = new KlocworkDesktopBuilder(step.getDesktopConfig());
+            KlocworkCiBuilder builder = new KlocworkCiBuilder(step.getCiConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }
@@ -80,7 +84,13 @@ public class KlocworkDesktopStep extends AbstractStepImpl {
     @Extension(optional = true)
     public static class DescriptorImpl extends AbstractStepDescriptorImpl {
         public DescriptorImpl() {
-            super(KlocworkDesktopStepExecution.class);
+            super(KlocworkCiStepExecution.class);
+        }
+
+        @Initializer(before = InitMilestone.PLUGINS_STARTED)
+        public static void addAliases() {
+            Items.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.pipeline.KlocworkDesktopStep", KlocworkCiStep.class);
+            Run.XSTREAM2.addCompatibilityAlias("com.emenda.klocwork.pipeline.KlocworkDesktopStep", KlocworkCiStep.class);
         }
 
         @Override
