@@ -6,7 +6,7 @@
         <f:textbox default="kwinject.out"/>
     </f:entry>
 
-    <f:optionalBlock field="incrementalAnalysis" title="${%Perform Diff Analysis}" checked="${instance.incrementalAnalysis}" inline="true">
+    <f:optionalBlock field="incrementalAnalysis" title="${%Analyse Changed Files Only}" checked="${instance.incrementalAnalysis}" inline="true">
         <f:property field="diffAnalysisConfig"/>
     </f:optionalBlock>
 
