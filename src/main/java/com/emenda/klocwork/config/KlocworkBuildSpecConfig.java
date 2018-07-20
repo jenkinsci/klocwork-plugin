@@ -51,7 +51,7 @@ public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBui
             toolCmd.addTokenized(envVars.expand(getAdditionalOpts()));
         }
         if (!StringUtils.isEmpty(getBuildCommand())) {
-            toolCmd.add(getBuildCommand());
+            toolCmd.addTokenized(envVars.expand(getBuildCommand()));
         }
         return toolCmd;
     }

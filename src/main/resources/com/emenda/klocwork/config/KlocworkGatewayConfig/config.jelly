@@ -9,9 +9,9 @@
       </f:advanced>
   </f:optionalBlock>
 
-  <f:optionalBlock name="enableDesktopGateway" title="${%Perform Incremental Diff Analysis Gateway}" checked="${instance.enableDesktopGateway}" inline="true" field="enableDesktopGateway">
+  <f:optionalBlock name="enableCiGateway" title="${%Perform Incremental Diff Analysis Gateway}" checked="${instance.enableCiGateway}" inline="true" field="enableCiGateway">
       <f:advanced title="${%Condition}">
-          <f:property field="gatewayDesktopConfig" />
+          <f:property field="gatewayCiConfig" />
       </f:advanced>
   </f:optionalBlock>
 </j:jelly>
