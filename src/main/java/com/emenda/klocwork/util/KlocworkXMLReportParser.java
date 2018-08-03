@@ -2,6 +2,8 @@ package com.emenda.klocwork.util;
 
 import hudson.AbortException;
 import jenkins.security.MasterToSlaveCallable;
+
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -11,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Paths;
 
 ;
@@ -37,9 +40,12 @@ public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOExc
 				xmlInput = new FileInputStream(new File(workspace, xmlReport));
 			}
 
+			InputSource inputSource = new InputSource(new InputStreamReader(xmlInput, "UTF-8"));
+			inputSource.setEncoding("UTF-8");
+
 			SAXParser saxParser = factory.newSAXParser();
 			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler();
-			saxParser.parse(xmlInput, handler);
+			saxParser.parse(inputSource, handler);
 
 			return handler.getTotalIssueCount();
 
