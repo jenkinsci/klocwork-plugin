@@ -178,7 +178,7 @@ public class KlocworkUtil {
         BufferedReader bufferedReader = null;
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write()));
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write(), "UTF-8"));
             bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
             bufferedWriter.newLine();
             bufferedWriter.write("<errorList>");
