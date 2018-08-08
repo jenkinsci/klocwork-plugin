@@ -70,6 +70,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
     public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
     throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkGatewayPublisher", listener.getLogger());
+        boolean stopBuild = false;
         if (gatewayConfig.getEnableServerGateway()) {
             logger.logMessage("Performing Klocwork Server Gateway");
             for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
@@ -108,6 +109,9 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(pfConfig.getResultValue());
+                    if(pfConfig.getStopBuild()){
+                        stopBuild = true;
+                    }
                 }
                 for (int i = 0; i < response.size(); i++) {
                       JSONObject jObj = response.getJSONObject(i);
@@ -136,10 +140,17 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 if (totalIssuesCi >= thresholdCi) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(Result.FAILURE);
+                    if(gatewayConfig.getGatewayCiConfig().getStopBuild()){
+                        stopBuild = true;
+                    }
                 }
             } catch (InterruptedException | IOException ex) {
                 throw new AbortException(ex.getMessage());
             }
+        }
+
+        if(stopBuild){
+            throw new AbortException("Stopping build due to configuration");
         }
     }
 

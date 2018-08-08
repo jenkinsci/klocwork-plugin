@@ -26,6 +26,11 @@
                 </label>
             </td>
             <td>
+                <f:entry title="${%Stop Build If Failed/Unstable:}" field="stopBuild">
+                    <f:checkbox default="false"/>
+                </f:entry>
+            </td>
+            <td>
                 <f:label for="query">${%Search Query}</f:label>
                 <f:textbox field="query" default="state:+New status:Analyze severity:1,2"/>
             </td>
