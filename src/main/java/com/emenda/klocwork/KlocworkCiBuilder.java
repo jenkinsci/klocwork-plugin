@@ -141,7 +141,8 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                 KlocworkUtil.generateKwListOutput(
                         xmlReport,
                         kwcheckListOutputStream,
-                        listener
+                        listener,
+                        launcher
                 );
             }
             else{
