@@ -172,7 +172,7 @@ public class KlocworkUtil {
 		return absolutePath;
 	}
 
-	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener){
+	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, Launcher launcher){
         int returnCode = 0;
         InputStream inputStream = null;
         BufferedReader bufferedReader = null;
@@ -184,7 +184,11 @@ public class KlocworkUtil {
             bufferedWriter.write("<errorList>");
             bufferedWriter.newLine();
             inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            if (launcher.isUnix()) {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            }
             String line = null;
             while((line = bufferedReader.readLine()) != null){
                 if(line.trim().startsWith("<problem>")){
