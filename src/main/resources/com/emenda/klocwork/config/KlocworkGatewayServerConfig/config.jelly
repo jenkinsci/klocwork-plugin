@@ -35,11 +35,14 @@
             </td>
         </tr>
     </table>
-
+<f:entry title="${%Stop Build If Failed/Unstable:}" field="stopBuild">
+    <f:checkbox default="false"/>
+</f:entry>
 </f:entry>
 <f:entry title="${%Condition Name}" field="conditionName">
     <f:textbox />
 </f:entry>
+
 <f:entry title="">
     <div align="right">
         <f:repeatableDeleteButton value="${%Delete}"/>

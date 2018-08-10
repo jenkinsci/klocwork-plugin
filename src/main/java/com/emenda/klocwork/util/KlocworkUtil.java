@@ -172,122 +172,178 @@ public class KlocworkUtil {
 		return absolutePath;
 	}
 
-	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener){
+	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, String ciTool){
         int returnCode = 0;
-        InputStream inputStream = null;
-        BufferedReader bufferedReader = null;
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write()));
-            bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
-            bufferedWriter.newLine();
-            bufferedWriter.write("<errorList>");
-            bufferedWriter.newLine();
-            inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = null;
-            while((line = bufferedReader.readLine()) != null){
-                if(line.trim().startsWith("<problem>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                }
-                else if(line.trim().startsWith("<problemID>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
+        if(ciTool.equalsIgnoreCase("kwciagent")){
+            try {
+                outputStream.writeTo(xmlReport.write());
+            } catch (IOException | InterruptedException e) {
+                returnCode = 1;
+                listener.getLogger().println(e.getMessage());
+            }
+            InputStream inputStream = null;
+            BufferedReader bufferedReader = null;
+            try {
+                inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.trim().startsWith("<problemID>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<file>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<method>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<code>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<message>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<citingStatus>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<severity>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<severitylevel>")) {
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("</problem>")) {
+                        listener.getLogger().println();
                     }
                 }
-                else if(line.trim().startsWith("<file>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
+            } catch (IOException e) {
+                returnCode = 1;
+                listener.getLogger().println(e.getMessage());
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
                     }
-                }
-                else if(line.trim().startsWith("<method>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("<code>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("<message>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("<citingStatus>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("<severity>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("<severitylevel>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                    if (matcher.find())
-                    {
-                        listener.getLogger().print(matcher.group(1)+"\t");
-                    }
-                }
-                else if(line.trim().startsWith("</problem>")){
-                    bufferedWriter.write(line);
-                    bufferedWriter.newLine();
-                    listener.getLogger().println();
+                } catch (Exception ex) {
+                    returnCode = 1;
                 }
             }
-            bufferedWriter.write("</errorList>");
-            bufferedWriter.newLine();
-        } catch (IOException | InterruptedException e) {
-            returnCode = 1;
-            listener.getLogger().println(e.getMessage());
-        } finally {
-            try{
-                if(inputStream != null) {
-                    inputStream.close();
+        }
+        else {
+            InputStream inputStream = null;
+            BufferedReader bufferedReader = null;
+            BufferedWriter bufferedWriter = null;
+            try {
+                bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write()));
+                bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
+                bufferedWriter.newLine();
+                bufferedWriter.write("<errorList>");
+                bufferedWriter.newLine();
+                inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = null;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.trim().startsWith("<problem>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                    } else if (line.trim().startsWith("<problemID>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<file>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<method>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<code>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<message>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<citingStatus>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<severity>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("<severitylevel>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
+                        if (matcher.find()) {
+                            listener.getLogger().print(matcher.group(1) + "\t");
+                        }
+                    } else if (line.trim().startsWith("</problem>")) {
+                        bufferedWriter.write(line);
+                        bufferedWriter.newLine();
+                        listener.getLogger().println();
+                    }
                 }
-            } catch (Exception ex){
+                bufferedWriter.write("</errorList>");
+                bufferedWriter.newLine();
+            } catch (IOException | InterruptedException e) {
                 returnCode = 1;
-            }
-            try{
-                if(bufferedWriter != null) {
-                    bufferedWriter.close();
+                listener.getLogger().println(e.getMessage());
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (Exception ex) {
+                    returnCode = 1;
                 }
-            } catch (Exception ex){
-                returnCode = 1;
+                try {
+                    if (bufferedWriter != null) {
+                        bufferedWriter.close();
+                    }
+                } catch (Exception ex) {
+                    returnCode = 1;
+                }
             }
         }
         return returnCode;

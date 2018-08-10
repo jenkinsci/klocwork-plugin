@@ -32,7 +32,6 @@ public class KlocworkGatewayStep extends AbstractStepImpl {
         return gatewayConfig;
     }
 
-
     private static class KlocworkGatewayStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
         private static final long serialVersionUID = 1L;
