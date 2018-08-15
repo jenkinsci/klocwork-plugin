@@ -88,7 +88,7 @@ public class KlocworkApiConnection {
                 }
 
     			BufferedReader buf = new BufferedReader(new InputStreamReader(
-                            httpUrlConnection.getInputStream()));
+                            httpUrlConnection.getInputStream(),"UTF-8"));
 
                 String line;
                 while (null != (line = buf.readLine())) {

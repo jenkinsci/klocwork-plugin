@@ -142,7 +142,8 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                         xmlReport,
                         kwcheckListOutputStream,
                         listener,
-                        ciConfig.getCiTool()
+                        ciConfig.getCiTool(),
+                        launcher
                 );
             }
             else{
