@@ -172,7 +172,7 @@ public class KlocworkUtil {
 		return absolutePath;
 	}
 
-	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, String ciTool){
+	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, String ciTool, Launcher launcher){
         int returnCode = 0;
         if(ciTool.equalsIgnoreCase("kwciagent")){
             try {
@@ -185,7 +185,11 @@ public class KlocworkUtil {
             BufferedReader bufferedReader = null;
             try {
                 inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                if (launcher.isUnix()) {
+                	bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                } else {
+                	bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                }
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (line.trim().startsWith("<problemID>")) {
@@ -250,13 +254,17 @@ public class KlocworkUtil {
             BufferedReader bufferedReader = null;
             BufferedWriter bufferedWriter = null;
             try {
-                bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write()));
+                bufferedWriter = new BufferedWriter(new OutputStreamWriter(xmlReport.write(), "UTF-8"));
                 bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
                 bufferedWriter.newLine();
                 bufferedWriter.write("<errorList>");
                 bufferedWriter.newLine();
                 inputStream = new ByteArrayInputStream(outputStream.toByteArray());
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                if (launcher.isUnix()) {
+                	bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+                } else {
+                	bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                }
                 String line = null;
                 while ((line = bufferedReader.readLine()) != null) {
                     if (line.trim().startsWith("<problem>")) {
