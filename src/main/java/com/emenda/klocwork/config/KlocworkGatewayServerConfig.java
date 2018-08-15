@@ -14,16 +14,18 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
     private final String query;
     private final String threshold;
     private final String conditionName;
+    private final boolean stopBuild;
 
 
     @DataBoundConstructor
     public KlocworkGatewayServerConfig(String jobResult, String query,
-                           String threshold, String conditionName) {
+                           String threshold, String conditionName, boolean stopBuild) {
 
         this.jobResult = jobResult;
         this.query = query;
         this.threshold = threshold;
         this.conditionName = conditionName;
+        this.stopBuild = stopBuild;
     }
 
     public String getJobResult() {
@@ -59,6 +61,8 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
             }
         }
     }
+
+    public boolean getStopBuild() { return stopBuild; }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkGatewayServerConfig> {
