@@ -1,0 +1,54 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+
+  <st:documentation>
+
+    Page layout for UI samples and variable bindings that emulate the form environment.
+
+    <st:attribute name="title" use="required">
+
+      Page title
+
+    </st:attribute>
+
+  </st:documentation>
+
+  <j:set var="instance" value="${it}" />
+
+  <j:set var="descriptor" value="${it.descriptor}" />
+
+  <l:layout title="${title}">
+
+    <st:include page="header" optional="true"/>
+
+    <l:main-panel>
+
+        <h1>Total Diff Issues: <j:out value="${instance.localIssuesSize}"/></h1>
+
+        <table style="width:100%">
+            <tr>
+                <td><b>Id</b></td>
+                <td><b>Code</b></td>
+                <td><b>Message</b></td>
+                <td><b>File</b></td>
+                <td><b>Line</b></td>
+            </tr>
+            <j:forEach var="li" items="${instance.localIssues}">
+                <tr>
+                    <td><b><j:out value="${li.id}"/></b></td>
+                    <td><b><j:out value="${li.code}"/></b></td>
+                    <td><b><j:out value="${li.message}"/></b></td>
+                    <td><b><j:out value="${li.file}"/></b></td>
+                    <td><b><j:out value="${li.line}"/></b></td>
+                </tr>
+            </j:forEach>
+        </table>
+
+        <p style="clear: both;"/>
+
+    </l:main-panel>
+
+  </l:layout>
+
+</j:jelly>

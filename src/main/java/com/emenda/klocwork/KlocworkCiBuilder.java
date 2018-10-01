@@ -1,14 +1,14 @@
 package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkCiConfig;
+import com.emenda.klocwork.reporting.KlocworkDashboard;
+import com.emenda.klocwork.reporting.KlocworkProjectRedirectLink;
+import com.emenda.klocwork.util.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.AbstractProject;
-import hudson.model.Items;
-import hudson.model.Run;
-import hudson.model.TaskListener;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
@@ -20,6 +20,9 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
@@ -35,6 +38,13 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
     public KlocworkCiConfig getCiConfig() { return ciConfig; }
     public boolean isAnalysisSkipped() { return analysisSkipped; }
+
+    @Override
+    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
+        List<Action> actions = new ArrayList<>();
+        actions.add(new KlocworkProjectRedirectLink());
+        return actions;
+    }
 
     @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
@@ -138,13 +148,16 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                 else{
                     xmlReport = new FilePath (workspace, path);
                 }
+                ArrayList<KlocworkIssue> localIssues = new ArrayList<>();
                 KlocworkUtil.generateKwListOutput(
                         xmlReport,
                         kwcheckListOutputStream,
                         listener,
                         ciConfig.getCiTool(),
-                        launcher
+                        launcher,
+                        localIssues
                 );
+                build.addAction(new KlocworkDashboard(localIssues));
             }
             else{
                 logger.logMessage("Unable to generate diff analysis output");
