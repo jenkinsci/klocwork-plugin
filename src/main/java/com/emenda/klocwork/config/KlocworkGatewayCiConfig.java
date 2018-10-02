@@ -16,12 +16,14 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     private final String threshold;
     private final String reportFile;
     private final boolean stopBuild;
-
+    private final boolean failUnstable;
+    
     @DataBoundConstructor
-    public KlocworkGatewayCiConfig(String threshold, String reportFile, boolean stopBuild) {
+    public KlocworkGatewayCiConfig(String threshold, String reportFile, boolean stopBuild, boolean failUnstable) {
         this.threshold = threshold;
         this.reportFile = reportFile;
         this.stopBuild = stopBuild;
+        this.failUnstable = failUnstable;
     }
     public String getThreshold() {
         return threshold;
@@ -33,6 +35,11 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
 
     public boolean getStopBuild() {
         return stopBuild;
+    }
+    
+    public boolean getFailUnstable()
+    {
+    	return failUnstable;
     }
 
     @Extension

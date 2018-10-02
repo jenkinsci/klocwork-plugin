@@ -139,7 +139,12 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 thresholdCi = Integer.parseInt(gatewayConfig.getGatewayCiConfig().getThreshold());
                 if (totalIssuesCi >= thresholdCi) {
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
-                    build.setResult(Result.FAILURE);
+                    if(gatewayConfig.getGatewayCiConfig().getFailUnstable())
+                    {
+                    	build.setResult(Result.UNSTABLE);
+                    } else {
+                    	build.setResult(Result.FAILURE);
+                    }
                     if(gatewayConfig.getGatewayCiConfig().getStopBuild()){
                         stopBuild = true;
                     }
