@@ -2,34 +2,29 @@ package com.emenda.klocwork.util;
 
 import hudson.AbortException;
 import jenkins.security.MasterToSlaveCallable;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 ;
 
-public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOException>  {
+public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<ArrayList<KlocworkIssue>,IOException>  {
 
     private final String workspace;
     private final String xmlReport;
 
-    public KlocworkXMLReportParser(String workspace, String xmlReport) {
+    public KlocworkXMLReportParserIssueList(String workspace, String xmlReport) {
         this.workspace = workspace;
         this.xmlReport = xmlReport;
     }
 
-    public Integer call() throws IOException {
+    public ArrayList<KlocworkIssue> call() throws IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
 			//We must handle both relative and absolute paths
@@ -45,10 +40,9 @@ public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOExc
 			inputSource.setEncoding("UTF-8");
 
 			SAXParser saxParser = factory.newSAXParser();
-			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(false);
+			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(true);
 			saxParser.parse(inputSource, handler);
-
-			return handler.getTotalIssueCount();
+			return handler.getIssuesList();
 
        } catch (ParserConfigurationException | SAXException ex) {
            throw new AbortException(ex.getMessage());

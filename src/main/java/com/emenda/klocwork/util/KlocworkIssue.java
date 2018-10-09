@@ -1,8 +1,21 @@
 package com.emenda.klocwork.util;
 
 public class KlocworkIssue {
-    public String id;
-    public String code;
+    private String id;
+    private String code;
+    private String message;
+    private String file;
+    private String line;
+
+    public KlocworkIssue() {}
+
+    public KlocworkIssue(String id, String code, String message, String file, String line) {
+        this.id = id;
+        this.code = code;
+        this.message = message;
+        this.file = file;
+        this.line = line;
+    }
 
     public String getId() {
         return id;
@@ -24,15 +37,23 @@ public class KlocworkIssue {
         return line;
     }
 
-    public String message;
-    public String file;
-    public String line;
-
-    public KlocworkIssue(String id, String code, String message, String file, String line) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public void setCode(String code) {
         this.code = code;
+    }
+
+    public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setFile(String file) {
         this.file = file;
+    }
+
+    public void setLine(String line) {
         this.line = line;
     }
 }

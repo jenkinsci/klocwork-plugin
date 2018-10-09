@@ -18,6 +18,12 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
     private transient KlocworkGatewayCiConfig gatewayDesktopConfig;
     private KlocworkGatewayCiConfig gatewayCiConfig;
 
+    public boolean isEnableHTMLReporting() {
+        return enableHTMLReporting;
+    }
+
+    private final boolean enableHTMLReporting;
+
     protected Object readResolve() {
         if (gatewayDesktopConfig != null) {
             gatewayCiConfig = gatewayDesktopConfig;
@@ -31,7 +37,7 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
     @DataBoundConstructor
     public KlocworkGatewayConfig(boolean enableServerGateway,
                                  List<KlocworkGatewayServerConfig> gatewayServerConfigs,
-                                 boolean enableCiGateway, KlocworkGatewayCiConfig gatewayCiConfig, boolean enableDesktopGateway, KlocworkGatewayCiConfig gatewayDesktopConfig) {
+                                 boolean enableCiGateway, KlocworkGatewayCiConfig gatewayCiConfig, boolean enableDesktopGateway, KlocworkGatewayCiConfig gatewayDesktopConfig, boolean enableHTMLReporting) {
         this.enableServerGateway = enableServerGateway;
         this.gatewayServerConfigs = gatewayServerConfigs;
         this.enableCiGateway = enableCiGateway;
@@ -42,6 +48,7 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
         if(gatewayCiConfig == null && gatewayDesktopConfig != null){
             this.gatewayCiConfig = gatewayDesktopConfig;
         }
+        this.enableHTMLReporting = enableHTMLReporting;
     }
 
     public boolean getEnableServerGateway() {

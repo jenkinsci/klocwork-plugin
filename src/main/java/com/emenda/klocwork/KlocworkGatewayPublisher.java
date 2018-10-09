@@ -2,14 +2,15 @@ package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkGatewayConfig;
 import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
+import com.emenda.klocwork.reporting.KlocworkDashboard;
+import com.emenda.klocwork.reporting.KlocworkProjectRedirectLink;
 import com.emenda.klocwork.services.KlocworkApiConnection;
+import com.emenda.klocwork.util.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import com.emenda.klocwork.util.KlocworkXMLReportParser;
+import com.emenda.klocwork.util.KlocworkXMLReportParserIssueList;
 import hudson.*;
-import hudson.model.AbstractProject;
-import hudson.model.Result;
-import hudson.model.Run;
-import hudson.model.TaskListener;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -23,6 +24,9 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
@@ -38,6 +42,15 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         this.gatewayConfig = gatewayConfig;
         this.totalIssuesCi = 0;
         this.thresholdCi = 0;
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
+        List<Action> actions = new ArrayList<>();
+        if(gatewayConfig.isEnableHTMLReporting()) {
+            actions.add(new KlocworkProjectRedirectLink());
+        }
+        return actions;
     }
 
     protected Object readResolve() {
@@ -71,6 +84,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
     throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkGatewayPublisher", listener.getLogger());
         boolean stopBuild = false;
+        ArrayList<KlocworkIssue> localIssues = new ArrayList<>();
         if (gatewayConfig.getEnableServerGateway()) {
             logger.logMessage("Performing Klocwork Server Gateway");
             for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
@@ -129,9 +143,15 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
 			logger.logMessage("Working with report file: " + xmlReport);
 
             try {
-                totalIssuesCi = launcher.getChannel().call(
-                    new KlocworkXMLReportParser(
-                    workspace.getRemote(), xmlReport));
+                if(gatewayConfig.isEnableHTMLReporting()){
+                    localIssues = launcher.getChannel().call(
+                            new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport));
+                    totalIssuesCi = localIssues.size();
+                }
+                else {
+                    totalIssuesCi = launcher.getChannel().call(
+                            new KlocworkXMLReportParser(workspace.getRemote(), xmlReport));
+                }
                 logger.logMessage("Total Ci Issues : " +
                     Integer.toString(totalIssuesCi));
                 logger.logMessage("Configured Threshold : " +
@@ -147,6 +167,10 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
             } catch (InterruptedException | IOException ex) {
                 throw new AbortException(ex.getMessage());
             }
+        }
+
+        if(gatewayConfig.isEnableHTMLReporting()){
+            build.addAction(new KlocworkDashboard(localIssues));
         }
 
         if(stopBuild){

@@ -40,13 +40,6 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
     public boolean isAnalysisSkipped() { return analysisSkipped; }
 
     @Override
-    public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
-        List<Action> actions = new ArrayList<>();
-        actions.add(new KlocworkProjectRedirectLink());
-        return actions;
-    }
-
-    @Override
     public void perform(Run<?, ?> build, FilePath workspace, Launcher launcher, TaskListener listener)
         throws AbortException {
         EnvVars envVars = new EnvVars();
@@ -157,7 +150,7 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                         launcher,
                         localIssues
                 );
-                build.addAction(new KlocworkDashboard(localIssues));
+
             }
             else{
                 logger.logMessage("Unable to generate diff analysis output");
