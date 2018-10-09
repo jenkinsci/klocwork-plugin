@@ -5,7 +5,7 @@ import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
 import com.emenda.klocwork.reporting.KlocworkDashboard;
 import com.emenda.klocwork.reporting.KlocworkProjectRedirectLink;
 import com.emenda.klocwork.services.KlocworkApiConnection;
-import com.emenda.klocwork.util.KlocworkIssue;
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import com.emenda.klocwork.util.KlocworkXMLReportParser;
 import com.emenda.klocwork.util.KlocworkXMLReportParserIssueList;

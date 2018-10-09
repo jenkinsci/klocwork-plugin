@@ -1,0 +1,34 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+<table>
+<tr>
+<td>
+<f:entry title="${%severity critical:}" field="critical">
+        <f:checkbox default="true"/>
+    </f:entry>
+</td>
+<td>
+<f:entry title="${%error:}" field="error">
+    <f:checkbox default="true"/>
+</f:entry>
+</td>
+<td>
+<f:entry title="${%warning:}" field="warning">
+    <f:checkbox default="true"/>
+</f:entry>
+</td>
+<td>
+<f:entry title="${%review:}" field="review">
+    <f:checkbox default="true"/>
+</f:entry>
+</td>
+<td>
+<f:entry title="${%5-10:}" field="fiveToTen">
+    <f:checkbox default="true"/>
+</f:entry>
+</td>
+</tr>
+</table>
+
+</j:jelly>

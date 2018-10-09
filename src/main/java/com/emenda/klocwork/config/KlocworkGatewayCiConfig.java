@@ -1,6 +1,7 @@
 
 package com.emenda.klocwork.config;
 
+import com.emenda.klocwork.definitions.KlocworkSeverities;
 import hudson.Extension;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
@@ -16,12 +17,14 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     private final String threshold;
     private final String reportFile;
     private final boolean stopBuild;
+    private final KlocworkSeverities enabledSeverites;
 
     @DataBoundConstructor
-    public KlocworkGatewayCiConfig(String threshold, String reportFile, boolean stopBuild) {
+    public KlocworkGatewayCiConfig(String threshold, String reportFile, boolean stopBuild, KlocworkSeverities enabledSeverites) {
         this.threshold = threshold;
         this.reportFile = reportFile;
         this.stopBuild = stopBuild;
+        this.enabledSeverites = enabledSeverites;
     }
     public String getThreshold() {
         return threshold;
@@ -33,6 +36,10 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
 
     public boolean getStopBuild() {
         return stopBuild;
+    }
+
+    public KlocworkSeverities getEnabledSeverites() {
+        return enabledSeverites;
     }
 
     @Extension

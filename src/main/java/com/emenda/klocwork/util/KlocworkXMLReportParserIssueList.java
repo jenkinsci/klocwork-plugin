@@ -1,5 +1,6 @@
 package com.emenda.klocwork.util;
 
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import hudson.AbortException;
 import jenkins.security.MasterToSlaveCallable;
 import org.xml.sax.InputSource;

@@ -1,6 +1,7 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;

@@ -1,9 +1,7 @@
 package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkCiConfig;
-import com.emenda.klocwork.reporting.KlocworkDashboard;
-import com.emenda.klocwork.reporting.KlocworkProjectRedirectLink;
-import com.emenda.klocwork.util.KlocworkIssue;
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.init.InitMilestone;
@@ -21,8 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
