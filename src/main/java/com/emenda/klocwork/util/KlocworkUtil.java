@@ -252,7 +252,7 @@ public class KlocworkUtil {
                     } else if (line.trim().startsWith("</problem>")) {
                         listener.getLogger().println();
                         if(!id.isEmpty()) {
-                            localIssues.add(new KlocworkIssue(id, code, message, file, issueline));
+                            localIssues.add(new KlocworkIssue(id, code, message, file, issueline, severity, status));
                         }
                         id = "";
                         code = "";

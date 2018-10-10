@@ -145,12 +145,12 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
             try {
                 if(gatewayConfig.isEnableHTMLReporting()){
                     localIssues = launcher.getChannel().call(
-                            new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport));
+                            new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, gatewayConfig.getGatewayCiConfig().getEnabledSeverites(), gatewayConfig.getGatewayCiConfig().getEnabledStatuses()));
                     totalIssuesCi = localIssues.size();
                 }
                 else {
                     totalIssuesCi = launcher.getChannel().call(
-                            new KlocworkXMLReportParser(workspace.getRemote(), xmlReport));
+                            new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, gatewayConfig.getGatewayCiConfig().getEnabledSeverites(), gatewayConfig.getGatewayCiConfig().getEnabledStatuses()));
                 }
                 logger.logMessage("Total Ci Issues : " +
                     Integer.toString(totalIssuesCi));

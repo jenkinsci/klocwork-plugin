@@ -5,60 +5,73 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KlocworkSeverities extends AbstractDescribableImpl<KlocworkSeverities> {
-    private boolean critical;
-    private boolean error;
-    private boolean warning;
-    private boolean review;
-    private boolean fiveToTen;
+    private Map<String, Boolean> enabled;
+
+    public KlocworkSeverities(){
+        this.enabled = new HashMap<>();
+        this.enabled.put("critical", true);
+        this.enabled.put("error", true);
+        this.enabled.put("warning", true);
+        this.enabled.put("review", true);
+        this.enabled.put("fiveToTen", true);
+    }
 
     @DataBoundConstructor
     public KlocworkSeverities(boolean critical, boolean error, boolean warning, boolean review, boolean fiveToTen) {
-        this.critical = critical;
-        this.error = error;
-        this.warning = warning;
-        this.review = review;
-        this.fiveToTen = fiveToTen;
+        this.enabled = new HashMap<>();
+        this.enabled.put("critical", critical);
+        this.enabled.put("error", error);
+        this.enabled.put("warning", warning);
+        this.enabled.put("review", review);
+        this.enabled.put("fiveToTen", fiveToTen);
     }
 
     public boolean isCritical() {
-        return critical;
+        return enabled.get("critical");
     }
 
     public void setCritical(boolean critical) {
-        this.critical = critical;
+        this.enabled.put("critical", critical);
     }
 
     public boolean isError() {
-        return error;
+        return enabled.get("error");
     }
 
     public void setError(boolean error) {
-        this.error = error;
+        this.enabled.put("error", error);
     }
 
     public boolean isWarning() {
-        return warning;
+        return enabled.get("warning");
     }
 
     public void setWarning(boolean warning) {
-        this.warning = warning;
+        this.enabled.put("warning", warning);
     }
 
     public boolean isReview() {
-        return review;
+        return enabled.get("review");
     }
 
     public void setReview(boolean review) {
-        this.review = review;
+        this.enabled.put("review", review);
     }
 
     public boolean isFiveToTen() {
-        return fiveToTen;
+        return enabled.get("fiveToTen");
     }
 
     public void setFiveToTen(boolean fiveToTen) {
-        this.fiveToTen = fiveToTen;
+        this.enabled.put("fiveToTen", fiveToTen);
+    }
+
+    public Map<String, Boolean> getEnabled() {
+        return enabled;
     }
 
     @Extension

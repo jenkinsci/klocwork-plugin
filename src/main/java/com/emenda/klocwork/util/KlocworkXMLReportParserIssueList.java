@@ -1,6 +1,8 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.definitions.KlocworkIssue;
+import com.emenda.klocwork.definitions.KlocworkSeverities;
+import com.emenda.klocwork.definitions.KlocworkStatuses;
 import hudson.AbortException;
 import jenkins.security.MasterToSlaveCallable;
 import org.xml.sax.InputSource;
@@ -19,10 +21,14 @@ public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<Arra
 
     private final String workspace;
     private final String xmlReport;
+    private final KlocworkSeverities enabledSeverites;
+    private final KlocworkStatuses enabledStatuses;
 
-    public KlocworkXMLReportParserIssueList(String workspace, String xmlReport) {
+    public KlocworkXMLReportParserIssueList(String workspace, String xmlReport, KlocworkSeverities enabledSeverites, KlocworkStatuses enabledStatuses) {
         this.workspace = workspace;
         this.xmlReport = xmlReport;
+        this.enabledSeverites = enabledSeverites;
+        this.enabledStatuses = enabledStatuses;
     }
 
     public ArrayList<KlocworkIssue> call() throws IOException {
@@ -41,7 +47,7 @@ public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<Arra
 			inputSource.setEncoding("UTF-8");
 
 			SAXParser saxParser = factory.newSAXParser();
-			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(true);
+			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(true, enabledSeverites, enabledStatuses);
 			saxParser.parse(inputSource, handler);
 			return handler.getIssuesList();
 
