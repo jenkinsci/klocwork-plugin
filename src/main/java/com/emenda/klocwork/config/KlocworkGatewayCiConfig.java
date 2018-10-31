@@ -15,6 +15,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGatewayCiConfig> {
 
+    private final String name;
     private final String threshold;
     private final String reportFile;
     private final boolean stopBuild;
@@ -22,13 +23,23 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     private final KlocworkStatuses enabledStatuses;
 
     @DataBoundConstructor
-    public KlocworkGatewayCiConfig(String threshold, String reportFile, boolean stopBuild, KlocworkSeverities enabledSeverites, KlocworkStatuses enabledStatuses) {
+    public KlocworkGatewayCiConfig(String name, String threshold, String reportFile, boolean stopBuild, KlocworkSeverities enabledSeverites, KlocworkStatuses enabledStatuses) {
+        this.name = name;
         this.threshold = threshold;
         this.reportFile = reportFile;
         this.stopBuild = stopBuild;
         this.enabledSeverites = enabledSeverites;
         this.enabledStatuses = enabledStatuses;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isStopBuild() {
+        return stopBuild;
+    }
+
     public String getThreshold() {
         return threshold;
     }

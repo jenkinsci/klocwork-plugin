@@ -58,8 +58,10 @@ public class KlocworkXMLReportHandler extends DefaultHandler  {
                 break;
             case "severity":
                 issue.setSeverity(element.toString());
-            case "status":
+                break;
+            case "citingstatus":
                 issue.setStatus(element.toString());
+                break;
             case "problem":
                 if(((issue.getSeverity().toLowerCase().startsWith("severity") && enabledSeverites.getEnabled().get("fiveToTen"))
                         || enabledSeverites.getEnabled().get(issue.getSeverity().toLowerCase()))

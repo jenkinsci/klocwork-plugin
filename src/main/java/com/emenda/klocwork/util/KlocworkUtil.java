@@ -174,9 +174,8 @@ public class KlocworkUtil {
 		return absolutePath;
 	}
 
-	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, String ciTool, Launcher launcher, ArrayList<KlocworkIssue> localIssues){
+	public static int generateKwListOutput(FilePath xmlReport, ByteArrayOutputStream outputStream, TaskListener listener, String ciTool, Launcher launcher){
         int returnCode = 0;
-        localIssues.clear();
         if(ciTool.equalsIgnoreCase("kwciagent")){
             try {
                 outputStream.writeTo(xmlReport.write());
@@ -194,23 +193,16 @@ public class KlocworkUtil {
                 	bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 }
                 String line = null;
-                String id = "";
-                String code = "";
-                String message = "";
-                String file = "";
-                String issueline = "";
                 while ((line = bufferedReader.readLine()) != null) {
                     if (line.trim().startsWith("<problemID>")) {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
                         if (matcher.find()) {
                             listener.getLogger().print(matcher.group(1) + "\t");
-                            id = matcher.group(1);
                         }
                     } else if (line.trim().startsWith("<file>")) {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
                         if (matcher.find()) {
                             listener.getLogger().print(matcher.group(1) + "\t");
-                            file = matcher.group(1);
                         }
                     } else if (line.trim().startsWith("<method>")) {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
@@ -221,13 +213,11 @@ public class KlocworkUtil {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
                         if (matcher.find()) {
                             listener.getLogger().print(matcher.group(1) + "\t");
-                            code = matcher.group(1);
                         }
                     } else if (line.trim().startsWith("<message>")) {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
                         if (matcher.find()) {
                             listener.getLogger().print(matcher.group(1) + "\t");
-                            message = matcher.group(1);
                         }
                     } else if (line.trim().startsWith("<citingStatus>")) {
                         Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
@@ -244,21 +234,8 @@ public class KlocworkUtil {
                         if (matcher.find()) {
                             listener.getLogger().print(matcher.group(1) + "\t");
                         }
-                    } else if (line.trim().startsWith("<line>")) {
-                        Matcher matcher = Pattern.compile("<.+>(.+)<.+>").matcher(line);
-                        if (matcher.find()) {
-                            issueline = matcher.group(1);
-                        }
                     } else if (line.trim().startsWith("</problem>")) {
                         listener.getLogger().println();
-                        if(!id.isEmpty()) {
-                            localIssues.add(new KlocworkIssue(id, code, message, file, issueline, severity, status));
-                        }
-                        id = "";
-                        code = "";
-                        message = "";
-                        file = "";
-                        issueline = "";
                     }
                 }
             } catch (IOException e) {

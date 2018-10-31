@@ -137,14 +137,12 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                 else{
                     xmlReport = new FilePath (workspace, path);
                 }
-                ArrayList<KlocworkIssue> localIssues = new ArrayList<>();
                 KlocworkUtil.generateKwListOutput(
                         xmlReport,
                         kwcheckListOutputStream,
                         listener,
                         ciConfig.getCiTool(),
-                        launcher,
-                        localIssues
+                        launcher
                 );
 
             }

@@ -35,70 +35,69 @@ public class KlocworkStatuses extends AbstractDescribableImpl<KlocworkStatuses> 
         this.enabled.put("filter", filter);
     }
 
-//    public boolean isAnalyze() {
-//        return enabled.get("analyze;
-//    }
-//
-//    public void setAnalyze(boolean analyze) {
-//        this.analyze = analyze;
-//    }
-//
-//    public boolean isIgnore() {
-//        return ignore;
-//    }
-//
-//    public void setIgnore(boolean ignore) {
-//        this.ignore = ignore;
-//    }
-//
-//    public boolean isNotAProblem() {
-//        return notAProblem;
-//    }
-//
-//    public void setNotAProblem(boolean notAProblem) {
-//        this.notAProblem = notAProblem;
-//    }
-//
-//    public boolean isFix() {
-//        return fix;
-//    }
-//
-//    public void setFix(boolean fix) {
-//        this.fix = fix;
-//    }
-//
-//    public boolean isFixInNextRelease() {
-//        return fixInNextRelease;
-//    }
-//
-//    public void setFixInNextRelease(boolean fixInNextRelease) {
-//        this.fixInNextRelease = fixInNextRelease;
-//    }
-//
-//    public boolean isFixInLaterRelease() {
-//        return fixInLaterRelease;
-//    }
-//
-//    public void setFixInLaterRelease(boolean fixInLaterRelease) {
-//        this.fixInLaterRelease = fixInLaterRelease;
-//    }
-//
-//    public boolean isDefer() {
-//        return defer;
-//    }
-//
-//    public void setDefer(boolean defer) {
-//        this.defer = defer;
-//    }
-//
-//    public boolean isFilter() {
-//        return filter;
-//    }
-//
-//    public void setFilter(boolean filter) {
-//        this.filter = filter;
-//    }
+    public boolean isAnalyze() {
+        return enabled.get("analyze");
+    }
 
+    public void setAnalyze(boolean analyze) {
+        this.enabled.put("analyze", analyze);
+    }
+
+    public boolean isIgnore() {
+        return enabled.get("ignore");
+    }
+
+    public void setIgnore(boolean ignore) {
+        this.enabled.put("ignore", ignore);
+    }
+
+    public boolean isNotAProblem() {
+        return enabled.get("not a problem");
+    }
+
+    public void setNotAProblem(boolean notAProblem) {
+        this.enabled.put("not a problem", notAProblem);
+    }
+
+    public boolean isFix() {
+        return enabled.get("fix");
+    }
+
+    public void setFix(boolean fix) {
+        this.enabled.put("fix", fix);
+    }
+
+    public boolean isFixInNextRelease() {
+        return enabled.get("fix in next release");
+    }
+
+    public void setFixInNextRelease(boolean fixInNextRelease) {
+        this.enabled.put("fix in next release", fixInNextRelease);
+    }
+
+    public boolean isFixInLaterRelease() {
+        return enabled.get("fix in later release");
+    }
+
+    public void setFixInLaterRelease(boolean fixInLaterRelease) {
+        this.enabled.put("fix in later release", fixInLaterRelease);
+    }
+
+    public boolean isDefer() {
+        return enabled.get("defer");
+    }
+
+    public void setDefer(boolean defer) {
+        this.enabled.put("defer", defer);
+    }
+
+    public boolean isFilter() {
+        return enabled.get("filter");
+    }
+
+    public void setFilter(boolean filter) {
+        this.enabled.put("filter", filter);
+    }
 
     public HashMap<String, Boolean> getEnabled() {
         return enabled;

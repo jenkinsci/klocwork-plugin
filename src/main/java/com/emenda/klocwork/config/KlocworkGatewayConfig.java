@@ -16,7 +16,7 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
     private transient boolean enableDesktopGateway;
     private boolean enableCiGateway;
     private transient KlocworkGatewayCiConfig gatewayDesktopConfig;
-    private KlocworkGatewayCiConfig gatewayCiConfig;
+    private List<KlocworkGatewayCiConfig> gatewayCiConfigs;
 
     public boolean isEnableHTMLReporting() {
         return enableHTMLReporting;
@@ -26,7 +26,7 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
 
     protected Object readResolve() {
         if (gatewayDesktopConfig != null) {
-            gatewayCiConfig = gatewayDesktopConfig;
+            gatewayCiConfigs.add(gatewayDesktopConfig);
         }
         if (enableDesktopGateway) {
             enableCiGateway = true;
@@ -37,16 +37,16 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
     @DataBoundConstructor
     public KlocworkGatewayConfig(boolean enableServerGateway,
                                  List<KlocworkGatewayServerConfig> gatewayServerConfigs,
-                                 boolean enableCiGateway, KlocworkGatewayCiConfig gatewayCiConfig, boolean enableDesktopGateway, KlocworkGatewayCiConfig gatewayDesktopConfig, boolean enableHTMLReporting) {
+                                 boolean enableCiGateway, List<KlocworkGatewayCiConfig> gatewayCiConfigs, boolean enableDesktopGateway, KlocworkGatewayCiConfig gatewayDesktopConfig, boolean enableHTMLReporting) {
         this.enableServerGateway = enableServerGateway;
         this.gatewayServerConfigs = gatewayServerConfigs;
         this.enableCiGateway = enableCiGateway;
-        this.gatewayCiConfig = gatewayCiConfig;
+        this.gatewayCiConfigs = gatewayCiConfigs;
         if(!enableCiGateway && enableDesktopGateway ){
             this.enableCiGateway = true;
         }
-        if(gatewayCiConfig == null && gatewayDesktopConfig != null){
-            this.gatewayCiConfig = gatewayDesktopConfig;
+        if(gatewayCiConfigs == null && gatewayDesktopConfig != null){
+            this.gatewayCiConfigs.add(gatewayDesktopConfig);
         }
         this.enableHTMLReporting = enableHTMLReporting;
     }
@@ -67,12 +67,12 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
         return getEnableCiGateway();
     }
 
-    public KlocworkGatewayCiConfig getGatewayCiConfig() {
-        return gatewayCiConfig;
+    public List<KlocworkGatewayCiConfig> getGatewayCiConfigs() {
+        return gatewayCiConfigs;
     }
 
     public KlocworkGatewayCiConfig getGatewayDesktopConfig() {
-        return getGatewayCiConfig();
+        return getGatewayCiConfigs().get(0);
     }
 
     @Extension

@@ -1,5 +1,6 @@
 package com.emenda.klocwork;
 
+import com.emenda.klocwork.config.KlocworkGatewayCiConfig;
 import com.emenda.klocwork.config.KlocworkGatewayConfig;
 import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
 import com.emenda.klocwork.reporting.KlocworkDashboard;
@@ -133,39 +134,38 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 }
             }
         }
-
-
         if (gatewayConfig.getEnableCiGateway()) {
 			logger.logMessage("Performing Klocwork Ci Gateway");
+			for(KlocworkGatewayCiConfig ciConfig : gatewayConfig.getGatewayCiConfigs()) {
+                logger.logMessage("Checking ci gateway: " + ciConfig.getName());
+                String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
+                        ciConfig.getReportFile()));
+                logger.logMessage("Working with report file: " + xmlReport);
 
-            String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
-                gatewayConfig.getGatewayCiConfig().getReportFile()));
-			logger.logMessage("Working with report file: " + xmlReport);
-
-            try {
-                if(gatewayConfig.isEnableHTMLReporting()){
-                    localIssues = launcher.getChannel().call(
-                            new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, gatewayConfig.getGatewayCiConfig().getEnabledSeverites(), gatewayConfig.getGatewayCiConfig().getEnabledStatuses()));
-                    totalIssuesCi = localIssues.size();
-                }
-                else {
-                    totalIssuesCi = launcher.getChannel().call(
-                            new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, gatewayConfig.getGatewayCiConfig().getEnabledSeverites(), gatewayConfig.getGatewayCiConfig().getEnabledStatuses()));
-                }
-                logger.logMessage("Total Ci Issues : " +
-                    Integer.toString(totalIssuesCi));
-                logger.logMessage("Configured Threshold : " +
-                    gatewayConfig.getGatewayCiConfig().getThreshold());
-                thresholdCi = Integer.parseInt(gatewayConfig.getGatewayCiConfig().getThreshold());
-                if (totalIssuesCi >= thresholdCi) {
-                    logger.logMessage("Threshold exceeded. Marking build as failed.");
-                    build.setResult(Result.FAILURE);
-                    if(gatewayConfig.getGatewayCiConfig().getStopBuild()){
-                        stopBuild = true;
+                try {
+                    if (gatewayConfig.isEnableHTMLReporting()) {
+                        localIssues = launcher.getChannel().call(
+                                new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
+                        totalIssuesCi = localIssues.size();
+                    } else {
+                        totalIssuesCi = launcher.getChannel().call(
+                                new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
                     }
+                    logger.logMessage("Total Ci Issues : " +
+                            Integer.toString(totalIssuesCi));
+                    logger.logMessage("Configured Threshold : " +
+                            ciConfig.getThreshold());
+                    thresholdCi = Integer.parseInt(ciConfig.getThreshold());
+                    if (totalIssuesCi >= thresholdCi) {
+                        logger.logMessage("Threshold exceeded. Marking build as failed.");
+                        build.setResult(Result.FAILURE);
+                        if (ciConfig.getStopBuild()) {
+                            stopBuild = true;
+                        }
+                    }
+                } catch (InterruptedException | IOException ex) {
+                    throw new AbortException(ex.getMessage());
                 }
-            } catch (InterruptedException | IOException ex) {
-                throw new AbortException(ex.getMessage());
             }
         }
 
