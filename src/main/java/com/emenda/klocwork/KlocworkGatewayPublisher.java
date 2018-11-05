@@ -36,20 +36,37 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
     private transient int totalIssuesDesktop;
     private transient int thresholdDesktop;
     private int totalIssuesCi;
+    private int totalIssuesServer;
     private int thresholdCi;
 
     @DataBoundConstructor
     public KlocworkGatewayPublisher(KlocworkGatewayConfig gatewayConfig) {
         this.gatewayConfig = gatewayConfig;
         this.totalIssuesCi = 0;
+        this.totalIssuesServer = 0;
         this.thresholdCi = 0;
     }
 
     @Override
     public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
         List<Action> actions = new ArrayList<>();
-        if(gatewayConfig.isEnableHTMLReporting()) {
-            actions.add(new KlocworkProjectRedirectLink());
+        boolean actionAdded = false;
+        if(gatewayConfig.getGatewayCiConfigs() != null) {
+            for (KlocworkGatewayCiConfig config : gatewayConfig.getGatewayCiConfigs()) {
+                if (config.isEnableHTMLReporting()) {
+                    actions.add(new KlocworkProjectRedirectLink());
+                    actionAdded = true;
+                    break;
+                }
+            }
+        }
+        if(gatewayConfig.getGatewayServerConfigs() != null && !actionAdded) {
+            for (KlocworkGatewayServerConfig config : gatewayConfig.getGatewayServerConfigs()) {
+                if (config.isEnableHTMLReporting()) {
+                    actions.add(new KlocworkProjectRedirectLink());
+                    break;
+                }
+            }
         }
         return actions;
     }
@@ -85,7 +102,10 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
     throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkGatewayPublisher", listener.getLogger());
         boolean stopBuild = false;
+        boolean shouldDashboardLocal = false;
+        boolean shouldDashboardServer = false;
         ArrayList<KlocworkIssue> localIssues = new ArrayList<>();
+        ArrayList<KlocworkIssue> serverIssues = new ArrayList<>();
         if (gatewayConfig.getEnableServerGateway()) {
             logger.logMessage("Performing Klocwork Server Gateway");
             for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
@@ -129,34 +149,58 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                     }
                 }
                 for (int i = 0; i < response.size(); i++) {
-                      JSONObject jObj = response.getJSONObject(i);
-                      logger.logMessage(jObj.toString());
+                    JSONObject jObj = response.getJSONObject(i);
+                    if(pfConfig.isEnableHTMLReporting()) {
+                        shouldDashboardServer = true;
+                        if (!isIssueInList(jObj.getString("id"), serverIssues)) {
+                            String line = "";
+                            if (jObj.containsKey("line")) {
+                                line = jObj.getString("line");
+                            }
+                            serverIssues.add(new KlocworkIssue(jObj.getString("id"),
+                                    jObj.getString("code"), jObj.getString("message"), jObj.getString("file"),
+                                    line, jObj.getString("severity"), jObj.getString("status")
+                            ));
+                        }
+                    }
+                    else {
+                        logger.logMessage(jObj.toString());
+                    }
                 }
             }
+            totalIssuesServer = serverIssues.size();
         }
         if (gatewayConfig.getEnableCiGateway()) {
 			logger.logMessage("Performing Klocwork Ci Gateway");
 			for(KlocworkGatewayCiConfig ciConfig : gatewayConfig.getGatewayCiConfigs()) {
+                ArrayList<KlocworkIssue> qgate_issues = new ArrayList<>();
                 logger.logMessage("Checking ci gateway: " + ciConfig.getName());
                 String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
                         ciConfig.getReportFile()));
                 logger.logMessage("Working with report file: " + xmlReport);
 
                 try {
-                    if (gatewayConfig.isEnableHTMLReporting()) {
-                        localIssues = launcher.getChannel().call(
+                    int qualityGateIssues;
+                    if (ciConfig.isEnableHTMLReporting()) {
+                        shouldDashboardLocal = true;
+                        qgate_issues = launcher.getChannel().call(
                                 new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
-                        totalIssuesCi = localIssues.size();
+                        qualityGateIssues = qgate_issues.size();
                     } else {
-                        totalIssuesCi = launcher.getChannel().call(
+                        qualityGateIssues = launcher.getChannel().call(
                                 new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
                     }
+                    for(KlocworkIssue qgate_issue : qgate_issues){
+                        if(!isIssueInList(qgate_issue.getId(), localIssues)){
+                            localIssues.add(qgate_issue);
+                        }
+                    }
                     logger.logMessage("Total Ci Issues : " +
-                            Integer.toString(totalIssuesCi));
+                            Integer.toString(qualityGateIssues));
                     logger.logMessage("Configured Threshold : " +
                             ciConfig.getThreshold());
                     thresholdCi = Integer.parseInt(ciConfig.getThreshold());
-                    if (totalIssuesCi >= thresholdCi) {
+                    if (qualityGateIssues >= thresholdCi) {
                         logger.logMessage("Threshold exceeded. Marking build as failed.");
                         build.setResult(Result.FAILURE);
                         if (ciConfig.getStopBuild()) {
@@ -167,15 +211,25 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                     throw new AbortException(ex.getMessage());
                 }
             }
+            totalIssuesCi = localIssues.size();
         }
 
-        if(gatewayConfig.isEnableHTMLReporting()){
-            build.addAction(new KlocworkDashboard(localIssues));
+        if(shouldDashboardLocal || shouldDashboardServer){
+            build.addAction(new KlocworkDashboard(localIssues, serverIssues, shouldDashboardLocal, shouldDashboardServer));
         }
 
         if(stopBuild){
             throw new AbortException("Stopping build due to configuration");
         }
+    }
+
+    private boolean isIssueInList(String issue_id, ArrayList<KlocworkIssue> issues) {
+        for(KlocworkIssue issue : issues) {
+            if (issue.getId().equals(issue_id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public BuildStepMonitor getRequiredMonitorService() {

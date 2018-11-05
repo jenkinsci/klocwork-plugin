@@ -13,12 +13,18 @@ public class KlocworkDashboard implements Action {
     public final String text;
     public final String icon;
     public final ArrayList<KlocworkIssue> localIssues;
+    public final ArrayList<KlocworkIssue> serverIssues;
+    public final boolean shouldDashboardLocal;
+    public final boolean shouldDashboardServer;
 
-    public KlocworkDashboard(ArrayList<KlocworkIssue> localIssues) {
+    public KlocworkDashboard(ArrayList<KlocworkIssue> localIssues, ArrayList<KlocworkIssue> serverIssues, boolean shouldDashboardLocal, boolean shouldDashboardServer) {
+        this.shouldDashboardLocal = shouldDashboardLocal;
+        this.shouldDashboardServer = shouldDashboardServer;
         this.url = "KlocworkDashboard";
         this.text = "Klocwork Dashboard";
         this.icon = "/plugin/klocwork/icons/klocwork-24.gif";
         this.localIssues = localIssues;
+        this.serverIssues = serverIssues;
     }
 
     @Override
@@ -52,5 +58,21 @@ public class KlocworkDashboard implements Action {
 
     public String getLocalIssuesSize() {
         return String.valueOf(localIssues.size());
+    }
+
+    public ArrayList<KlocworkIssue> getServerIssues() {
+        return serverIssues;
+    }
+
+    public String getServerIssuesSize() {
+        return String.valueOf(serverIssues.size());
+    }
+
+    public boolean isShouldDashboardLocal() {
+        return shouldDashboardLocal;
+    }
+
+    public boolean isShouldDashboardServer() {
+        return shouldDashboardServer;
     }
 }

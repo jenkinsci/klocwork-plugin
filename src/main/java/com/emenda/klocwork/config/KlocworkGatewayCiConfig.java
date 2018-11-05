@@ -21,15 +21,21 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     private final boolean stopBuild;
     private final KlocworkSeverities enabledSeverites;
     private final KlocworkStatuses enabledStatuses;
+    public boolean isEnableHTMLReporting() {
+        return enableHTMLReporting;
+    }
+
+    private final boolean enableHTMLReporting;
 
     @DataBoundConstructor
-    public KlocworkGatewayCiConfig(String name, String threshold, String reportFile, boolean stopBuild, KlocworkSeverities enabledSeverites, KlocworkStatuses enabledStatuses) {
+    public KlocworkGatewayCiConfig(String name, String threshold, String reportFile, boolean stopBuild, KlocworkSeverities enabledSeverites, KlocworkStatuses enabledStatuses, boolean enableHTMLReporting) {
         this.name = name;
         this.threshold = threshold;
         this.reportFile = reportFile;
         this.stopBuild = stopBuild;
         this.enabledSeverites = enabledSeverites;
         this.enabledStatuses = enabledStatuses;
+        this.enableHTMLReporting = enableHTMLReporting;
     }
 
     public String getName() {
