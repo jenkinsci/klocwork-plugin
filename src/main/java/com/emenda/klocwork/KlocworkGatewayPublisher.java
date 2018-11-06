@@ -160,7 +160,6 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                     String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
                             ciConfig.getReportFile()));
                     logger.logMessage("Working with report file: " + xmlReport);
-
                     try {
                         int qualityGateIssues;
                         if (ciConfig.isEnableHTMLReporting()) {
@@ -183,7 +182,11 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                                 ciConfig.getThreshold());
                         if (qualityGateIssues >= Integer.parseInt(ciConfig.getThreshold())) {
                             logger.logMessage("Threshold exceeded. Marking build as failed.");
-                            build.setResult(Result.FAILURE);
+                            if(gatewayConfig.getGatewayCiConfig().getFailUnstable()){
+                              build.setResult(Result.UNSTABLE);
+                            } else {
+                              build.setResult(Result.FAILURE);
+                            }
                             if (ciConfig.getStopBuild()) {
                                 stopBuild = true;
                             }

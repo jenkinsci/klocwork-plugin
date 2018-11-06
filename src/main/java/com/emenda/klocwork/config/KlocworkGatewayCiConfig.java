@@ -23,6 +23,7 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     private KlocworkSeverities enabledSeverites;
     private KlocworkStatuses enabledStatuses;
     private boolean enableHTMLReporting;
+    private boolean failUnstable;
 
     protected Object readResolve() {
         if(this.name == null){
@@ -80,6 +81,11 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
     public void setStopBuild(boolean stopBuild) {
         this.stopBuild = stopBuild;
     }
+  
+    @DataBoundSetter
+    public void setFailUnstable(boolean failUnstable) {
+        this.failUnstable = failUnstable;
+    }
 
     @DataBoundSetter
     public void setEnabledSeverites(KlocworkSeverities enabledSeverites) {
@@ -114,6 +120,11 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
 
     public boolean getStopBuild() {
         return stopBuild;
+    }
+    
+    public boolean getFailUnstable()
+    {
+    	return failUnstable;
     }
 
     public KlocworkSeverities getEnabledSeverites() {
