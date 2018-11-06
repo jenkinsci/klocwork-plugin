@@ -1,10 +1,11 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     <f:entry title="">
-        <table>
+        <table cellpadding="10">
             <tr>
+                <td><b>severity</b></td>
                 <td>
-                    <f:label for="critical">${%severity critical:}</f:label>
+                    <f:label for="critical">${%critical:}</f:label>
                     <f:checkbox default="true" field="critical"/>
                 </td>
                 <td>

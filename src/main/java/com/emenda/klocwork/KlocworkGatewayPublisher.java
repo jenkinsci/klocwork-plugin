@@ -33,18 +33,10 @@ import java.util.List;
 public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
 
     private final KlocworkGatewayConfig gatewayConfig;
-    private transient int totalIssuesDesktop;
-    private transient int thresholdDesktop;
-    private int totalIssuesCi;
-    private int totalIssuesServer;
-    private int thresholdCi;
 
     @DataBoundConstructor
     public KlocworkGatewayPublisher(KlocworkGatewayConfig gatewayConfig) {
         this.gatewayConfig = gatewayConfig;
-        this.totalIssuesCi = 0;
-        this.totalIssuesServer = 0;
-        this.thresholdCi = 0;
     }
 
     @Override
@@ -69,16 +61,6 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
             }
         }
         return actions;
-    }
-
-    protected Object readResolve() {
-        if (totalIssuesDesktop <= 0) {
-            totalIssuesCi = totalIssuesDesktop;
-        }
-        if (thresholdDesktop <= 0) {
-            thresholdCi = thresholdDesktop;
-        }
-        return this;
     }
 
     public KlocworkGatewayConfig getGatewayConfig() {
@@ -168,50 +150,53 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                     }
                 }
             }
-            totalIssuesServer = serverIssues.size();
         }
         if (gatewayConfig.getEnableCiGateway()) {
 			logger.logMessage("Performing Klocwork Ci Gateway");
-			for(KlocworkGatewayCiConfig ciConfig : gatewayConfig.getGatewayCiConfigs()) {
-                ArrayList<KlocworkIssue> qgate_issues = new ArrayList<>();
-                logger.logMessage("Checking ci gateway: " + ciConfig.getName());
-                String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
-                        ciConfig.getReportFile()));
-                logger.logMessage("Working with report file: " + xmlReport);
+			if (gatewayConfig.getGatewayCiConfigs() != null) {
+                for (KlocworkGatewayCiConfig ciConfig : gatewayConfig.getGatewayCiConfigs()) {
+                    ArrayList<KlocworkIssue> qgate_issues = new ArrayList<>();
+                    logger.logMessage("Checking ci gateway: " + ciConfig.getName());
+                    String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
+                            ciConfig.getReportFile()));
+                    logger.logMessage("Working with report file: " + xmlReport);
 
-                try {
-                    int qualityGateIssues;
-                    if (ciConfig.isEnableHTMLReporting()) {
-                        shouldDashboardLocal = true;
-                        qgate_issues = launcher.getChannel().call(
-                                new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
-                        qualityGateIssues = qgate_issues.size();
-                    } else {
-                        qualityGateIssues = launcher.getChannel().call(
-                                new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
-                    }
-                    for(KlocworkIssue qgate_issue : qgate_issues){
-                        if(!isIssueInList(qgate_issue.getId(), localIssues)){
-                            localIssues.add(qgate_issue);
+                    try {
+                        int qualityGateIssues;
+                        if (ciConfig.isEnableHTMLReporting()) {
+                            shouldDashboardLocal = true;
+                            qgate_issues = launcher.getChannel().call(
+                                    new KlocworkXMLReportParserIssueList(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
+                            qualityGateIssues = qgate_issues.size();
+                        } else {
+                            qualityGateIssues = launcher.getChannel().call(
+                                    new KlocworkXMLReportParser(workspace.getRemote(), xmlReport, ciConfig.getEnabledSeverites(), ciConfig.getEnabledStatuses()));
                         }
-                    }
-                    logger.logMessage("Total Ci Issues : " +
-                            Integer.toString(qualityGateIssues));
-                    logger.logMessage("Configured Threshold : " +
-                            ciConfig.getThreshold());
-                    thresholdCi = Integer.parseInt(ciConfig.getThreshold());
-                    if (qualityGateIssues >= thresholdCi) {
-                        logger.logMessage("Threshold exceeded. Marking build as failed.");
-                        build.setResult(Result.FAILURE);
-                        if (ciConfig.getStopBuild()) {
-                            stopBuild = true;
+                        for (KlocworkIssue qgate_issue : qgate_issues) {
+                            if (!isIssueInList(qgate_issue.getId(), localIssues)) {
+                                localIssues.add(qgate_issue);
+                            }
                         }
+                        logger.logMessage("Total Ci Issues : " +
+                                Integer.toString(qualityGateIssues));
+                        logger.logMessage("Configured Threshold : " +
+                                ciConfig.getThreshold());
+                        if (qualityGateIssues >= Integer.parseInt(ciConfig.getThreshold())) {
+                            logger.logMessage("Threshold exceeded. Marking build as failed.");
+                            build.setResult(Result.FAILURE);
+                            if (ciConfig.getStopBuild()) {
+                                stopBuild = true;
+                            }
+                        }
+                    } catch (InterruptedException | IOException ex) {
+                        throw new AbortException(ex.getMessage());
                     }
-                } catch (InterruptedException | IOException ex) {
-                    throw new AbortException(ex.getMessage());
                 }
             }
-            totalIssuesCi = localIssues.size();
+            else{
+			    logger.logMessage("WARNING: Quality gate enabled, but could not find configuration");
+                build.setResult(Result.UNSTABLE);
+            }
         }
 
         if(shouldDashboardLocal || shouldDashboardServer){

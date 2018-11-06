@@ -60,7 +60,6 @@ public class KlocworkGatewayStep extends AbstractStepImpl {
 
         @Override
         protected Void run() throws Exception {
-
             KlocworkGatewayPublisher gateway = new KlocworkGatewayPublisher(
                 step.getGatewayConfig());
             gateway.perform(build, env, workspace, launcher, listener);
