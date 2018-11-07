@@ -1,9 +1,8 @@
 package com.emenda.klocwork.pipeline;
 
-import com.emenda.klocwork.KlocworkGatewayPublisher;
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.KlocworkGatewayPublisher;
 import com.emenda.klocwork.config.KlocworkGatewayConfig;
-
 import com.google.inject.Inject;
 
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
@@ -21,8 +20,13 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
+import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
+import org.kohsuke.stapler.DataBoundConstructor;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 
 public class KlocworkGatewayStep extends AbstractStepImpl {
@@ -37,7 +41,6 @@ public class KlocworkGatewayStep extends AbstractStepImpl {
     public KlocworkGatewayConfig getGatewayConfig() {
         return gatewayConfig;
     }
-
 
     private static class KlocworkGatewayStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
@@ -67,7 +70,6 @@ public class KlocworkGatewayStep extends AbstractStepImpl {
 
         @Override
         protected Void run() throws Exception {
-
             KlocworkGatewayPublisher gateway = new KlocworkGatewayPublisher(
                 step.getGatewayConfig());
             gateway.perform(build, env, workspace, launcher, listener);

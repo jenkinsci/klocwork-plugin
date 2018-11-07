@@ -1,11 +1,16 @@
 <div>
-  <h3>Klocwork Quality Gateway</h3>
+  <h3>Analyse Changed Files Only</h3>
   <p>
       This feature allows for quick, incremental analyses of changed source files
       to enable pre/post-checkin/commit like behaviour.
       The idea is that only changed files are analysed using the Klocwork
-      Desktop/User tools to replicate the analysis developers would perform using
+      kwciagent tool to replicate the analysis developers would perform using
       Visual Studio, Eclipse or the command line utility.
+
+      To enable this the plugin takes a list of the changed files from the SCM,
+      this enables the ability to analyse only the changed files when the workspace
+      isn’t kept. Leave this unticked to analyse the whole project or if the
+      workspace is kept then a standard incremental analysis.
   </p>
   <h4>Diff File List</h4>
   <p>

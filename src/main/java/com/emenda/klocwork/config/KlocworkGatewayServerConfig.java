@@ -7,6 +7,8 @@ import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.model.Result;
+import org.kohsuke.stapler.DataBoundConstructor;
+
 
 public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<KlocworkGatewayServerConfig> {
 
@@ -14,16 +16,25 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
     private final String query;
     private final String threshold;
     private final String conditionName;
+    private final boolean stopBuild;
+
+    public boolean isEnableHTMLReporting() {
+        return enableHTMLReporting;
+    }
+
+    private final boolean enableHTMLReporting;
 
 
     @DataBoundConstructor
     public KlocworkGatewayServerConfig(String jobResult, String query,
-                           String threshold, String conditionName) {
+                                       String threshold, String conditionName, boolean stopBuild, boolean enableHTMLReporting) {
 
         this.jobResult = jobResult;
         this.query = query;
         this.threshold = threshold;
         this.conditionName = conditionName;
+        this.stopBuild = stopBuild;
+        this.enableHTMLReporting = enableHTMLReporting;
     }
 
     public String getJobResult() {
@@ -59,6 +70,8 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
             }
         }
     }
+
+    public boolean getStopBuild() { return stopBuild; }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkGatewayServerConfig> {

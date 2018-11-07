@@ -17,14 +17,12 @@ import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
 import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
+import hudson.*;
 import hudson.model.AbstractProject;
-import hudson.model.BuildListener;
-import hudson.model.Project;
 import hudson.model.Run;
 import hudson.model.TaskListener;
-import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
-
+import hudson.tasks.Builder;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -33,11 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.QueryParameter;
 
-import javax.servlet.ServletException;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.InterruptedException;
@@ -131,7 +125,7 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
                 severityMap.put(severity, severityMap.getOrDefault(severity, 0) + 1);
             }
         }
-        
+
         build.addAction(new KlocworkBuildAction(build, severityMap, envVars, serverConfig.getBuildName(), reportConfig));
     }
 

@@ -45,7 +45,7 @@ public class KlocworkBuildSpecBuilder extends Builder implements SimpleBuildStep
         throws AbortException {
 
         KlocworkLogger logger = new KlocworkLogger("BuildSpecBuilder", listener.getLogger());
-        logger.logMessage("Starting Klocwork Build Specifcation Generation Step");
+        logger.logMessage("Starting Klocwork Build Specification Generation Step");
 
         // validate server settings needed for build-step. AbortException is
         // thrown if URL and server project are not provided as we cannot perform

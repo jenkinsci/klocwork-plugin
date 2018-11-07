@@ -19,9 +19,7 @@ public class KlocworkConstants {
         "Klocwork - Cross-Project Issue Sync";
     public static final String KLOCWORK_QUALITY_GATEWAY_DISPLAY_NAME =
         "Klocwork - Quality Gateway";
-    public static final String KLOCWORK_REPORT_PUBLISHER_DISPLAY_NAME =
-        "Klocwork - Report Publisher";
-    public static final String KLOCWORK_DESKTOP_BUILDER_NAME =
+    public static final String KLOCWORK_CI_BUILDER_NAME =
             "Klocwork - Incremental Diff Analysis";
 
     public static final String KLOCWORK_ISSUE_CRITICAL = "Critical";

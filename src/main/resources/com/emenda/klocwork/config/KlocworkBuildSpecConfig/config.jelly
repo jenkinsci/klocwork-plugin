@@ -15,6 +15,8 @@
               <f:option value="kwvcprojparser" selected="${instance.tool.equals('kwvcprojparser')? 'true' : null}">kwVcprojParser</f:option>
               <f:option value="kwcsprojparser" selected="${instance.tool.equals('kwcsprojparser')? 'true' : null}">kwcsprojparser</f:option>
               <f:option value="kwtrace" selected="${instance.tool.equals('kwtrace')? 'true' : null}">create tracefile</f:option>
+              <f:option value="kwgradle" selected="${instance.tool.equals('kwgradle')? 'true' : null}">kwgradle</f:option>
+              <f:option value="kwgradlew" selected="${instance.tool.equals('kwgradlew')? 'true' : null}">kwgradlew</f:option>
           </select>
         </f:entry>
 
