@@ -16,16 +16,23 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
     private final String conditionName;
     private final boolean stopBuild;
 
+    public boolean isEnableHTMLReporting() {
+        return enableHTMLReporting;
+    }
+
+    private final boolean enableHTMLReporting;
+
 
     @DataBoundConstructor
     public KlocworkGatewayServerConfig(String jobResult, String query,
-                           String threshold, String conditionName, boolean stopBuild) {
+                                       String threshold, String conditionName, boolean stopBuild, boolean enableHTMLReporting) {
 
         this.jobResult = jobResult;
         this.query = query;
         this.threshold = threshold;
         this.conditionName = conditionName;
         this.stopBuild = stopBuild;
+        this.enableHTMLReporting = enableHTMLReporting;
     }
 
     public String getJobResult() {
