@@ -1,14 +1,12 @@
 package com.emenda.klocwork;
 
 import com.emenda.klocwork.config.KlocworkCiConfig;
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.AbstractProject;
-import hudson.model.Items;
-import hudson.model.Run;
-import hudson.model.TaskListener;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
@@ -20,6 +18,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
@@ -145,6 +144,7 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                         ciConfig.getCiTool(),
                         launcher
                 );
+
             }
             else{
                 logger.logMessage("Unable to generate diff analysis output");

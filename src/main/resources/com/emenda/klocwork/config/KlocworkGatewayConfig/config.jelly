@@ -10,8 +10,10 @@
   </f:optionalBlock>
 
   <f:optionalBlock name="enableCiGateway" title="${%Perform Incremental Diff Analysis Gateway}" checked="${instance.enableCiGateway}" inline="true" field="enableCiGateway">
-      <f:advanced title="${%Condition}">
-          <f:property field="gatewayCiConfig" />
+      <f:advanced title="${%Conditions}">
+        <f:entry title="">
+          <f:repeatableProperty field="gatewayCiConfigs" header="${%Condition}" add="${%Add Condition}"/>
+          </f:entry>
       </f:advanced>
   </f:optionalBlock>
 </j:jelly>

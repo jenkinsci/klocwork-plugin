@@ -1,6 +1,7 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.definitions.KlocworkIssue;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
