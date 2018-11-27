@@ -43,6 +43,12 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
                                    String reportFile) {
         this.threshold = threshold;
         this.reportFile = reportFile;
+        if(this.enabledSeverites == null){
+            this.enabledSeverites = new KlocworkSeverities();
+        }
+        if(this.enabledStatuses == null){
+            this.enabledStatuses = new KlocworkStatuses();
+        }
     }
 
     @Deprecated

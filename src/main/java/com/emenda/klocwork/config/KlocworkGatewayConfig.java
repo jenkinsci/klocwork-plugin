@@ -20,6 +20,7 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
     private List<KlocworkGatewayCiConfig> gatewayCiConfigs;
     private List<KlocworkGatewayServerConfig> gatewayServerConfigs;
 
+    /* These are old member vars maintained for backwards compatibility */
     private transient boolean enableDesktopGateway;
     private transient KlocworkGatewayCiConfig gatewayDesktopConfig;
     private transient KlocworkGatewayCiConfig gatewayCiConfig;
@@ -104,10 +105,17 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
         }
     }
 
+    public boolean isEnableServerGateway() {
+        return getEnableServerGateway();
+    }
+
+    public boolean isEnableCiGateway() {
+        return getEnableCiGateway();
+    }
+
     public boolean getEnableServerGateway() {
         return enableServerGateway;
     }
-
 
     public List<KlocworkGatewayServerConfig> getGatewayServerConfigs() {
         return gatewayServerConfigs;
@@ -117,16 +125,28 @@ public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatew
         return enableCiGateway;
     }
 
-    public boolean getEnableDesktopGateway() {
-        return getEnableCiGateway();
-    }
-
     public List<KlocworkGatewayCiConfig> getGatewayCiConfigs() {
         return gatewayCiConfigs;
     }
 
+    /* Should not be used but is here to ensure the pipeline snippet generator works whilst the member var exists */
+    public Boolean getEnableDesktopGateway() {
+        return null;
+    }
+
+    /* Should not be used but is here to ensure the pipeline snippet generator works whilst the member var exists */
+    public Boolean isEnableDesktopGateway() {
+        return null;
+    }
+
+    /* Should not be used but is here to ensure the pipeline snippet generator works whilst the member var exists */
+    public KlocworkGatewayCiConfig getGatewayCiConfig() {
+        return null;
+    }
+
+    /* Should not be used but is here to ensure the pipeline snippet generator works whilst the member var exists */
     public KlocworkGatewayCiConfig getGatewayDesktopConfig() {
-        return getGatewayCiConfigs().get(0);
+        return null;
     }
 
     @Extension
