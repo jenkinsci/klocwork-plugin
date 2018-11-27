@@ -81,11 +81,9 @@ public class KlocworkXMLReportHandler extends DefaultHandler  {
 
     public void characters(char ch[], int start, int length)
         throws SAXException {
-        if(enableHTMLReport) {
-            String text = new String(ch, start, length);
-            if (!text.trim().isEmpty()) {
-                element.append(text);
-            }
+        String text = new String(ch, start, length);
+        if (!text.trim().isEmpty()) {
+            element.append(text);
         }
     }
 
