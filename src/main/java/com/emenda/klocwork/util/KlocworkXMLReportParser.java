@@ -11,16 +11,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Paths;
 
-;
-
-public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOException>  {
+public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOException> implements Serializable {
 
     private final String workspace;
     private final String xmlReport;

@@ -15,9 +15,7 @@ import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-;
-
-public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<ArrayList<KlocworkIssue>,IOException>  {
+public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<ArrayList<KlocworkIssue>,IOException> implements Serializable {
 
     private final String workspace;
     private final String xmlReport;
