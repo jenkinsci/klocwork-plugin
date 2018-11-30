@@ -5,10 +5,11 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KlocworkSeverities extends AbstractDescribableImpl<KlocworkSeverities> {
+public class KlocworkSeverities extends AbstractDescribableImpl<KlocworkSeverities> implements Serializable {
     private Map<String, Boolean> enabled;
 
     public KlocworkSeverities(){
