@@ -1,6 +1,8 @@
 package com.emenda.klocwork.definitions;
 
-public class KlocworkIssue {
+import java.io.Serializable;
+
+public class KlocworkIssue implements Serializable {
     private String id;
     private String code;
     private String message;
