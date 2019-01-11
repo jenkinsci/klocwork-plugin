@@ -88,8 +88,8 @@ public class KlocworkBuildAction implements Action, SimpleBuildStep.LastBuildAct
         return klocworkProject;
     }
 
-    public boolean getDisplayChart() {
-        return reportConfig.getDisplayChart();
+    public boolean isDisplayChart() {
+        return reportConfig.isDisplayChart();
     }
 
     public String getChartWidth() {

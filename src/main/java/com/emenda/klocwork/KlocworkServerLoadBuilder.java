@@ -43,13 +43,20 @@ import java.util.Map;
 
 public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildStep {
     // TODO - artifact build.log, parse.log, kwloaddb.log if build fails
-    private final KlocworkServerLoadConfig serverConfig;
+    private KlocworkServerLoadConfig serverConfig;
     private KlocworkReportConfig reportConfig;
+
+    protected Object readResolve() {
+        if(this.reportConfig == null){
+            this.reportConfig = new KlocworkReportConfig(false);
+        }
+        return this;
+    }
 
     @DataBoundConstructor
     public KlocworkServerLoadBuilder(KlocworkServerLoadConfig serverConfig) {
         this.serverConfig = serverConfig;
-        this.reportConfig = new KlocworkReportConfig(true);
+        this.reportConfig = new KlocworkReportConfig(false);
     }
 
     public KlocworkServerLoadBuilder(KlocworkServerLoadConfig serverConfig,
@@ -61,6 +68,11 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
     @DataBoundSetter
     public void setReportConfig(KlocworkReportConfig reportConfig) {
         this.reportConfig = reportConfig;
+    }
+
+    @DataBoundSetter
+    public void setServerConfig(KlocworkServerLoadConfig serverConfig) {
+        this.serverConfig = serverConfig;
     }
 
     public KlocworkServerLoadConfig getServerConfig() {
@@ -104,7 +116,9 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
                 workspace, envVars,
                 serverConfig.getKwadminLoadCmd(envVars, workspace));
 
-        createBuildAction(logger, build, envVars, launcher);
+        if(reportConfig != null && reportConfig.isDisplayChart()) {
+            createBuildAction(logger, build, envVars, launcher);
+        }
 
     }
 

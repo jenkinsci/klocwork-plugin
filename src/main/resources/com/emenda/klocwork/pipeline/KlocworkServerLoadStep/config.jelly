@@ -4,8 +4,8 @@
   <f:section title="Klocwork DB Load Options (kwadmin)">
     <f:property field="serverConfig" />
   </f:section>
+
   <f:section title="Klocwork Chart Options">
     <f:property field="reportConfig" />
   </f:section>
-
 </j:jelly>

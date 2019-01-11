@@ -26,10 +26,10 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
     private String additionalOpts;
 
     @DataBoundConstructor
-    public KlocworkServerLoadConfig(String tablesDir) {
+    public KlocworkServerLoadConfig(String tablesDir, String buildName, String additionalOpts) {
         this.tablesDir = tablesDir;
-        this.buildName = "";
-        this.additionalOpts = "";
+        this.buildName = buildName;
+        this.additionalOpts = additionalOpts;
     }
 
     public ArgumentListBuilder getVersionCmd() {

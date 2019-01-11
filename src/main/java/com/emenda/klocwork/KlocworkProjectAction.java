@@ -96,7 +96,7 @@ public class KlocworkProjectAction implements Action {
     public boolean isVisible() {
         KlocworkBuildAction kwBuildAction = getLatestBuildAction();
         if (kwBuildAction != null) {
-            return kwBuildAction.getDisplayChart();
+            return kwBuildAction.isDisplayChart();
         }
         return false;
     }

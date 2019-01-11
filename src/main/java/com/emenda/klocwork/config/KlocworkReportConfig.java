@@ -29,8 +29,13 @@ public class KlocworkReportConfig extends AbstractDescribableImpl<KlocworkReport
         this.chartWidth = DEFAULT_CHART_WIDTH;
     }
 
-    public boolean getDisplayChart() {
+    public boolean isDisplayChart() {
         return displayChart;
+    }
+
+    @DataBoundSetter
+    public void setDisplayChart(boolean displayChart) {
+        this.displayChart = displayChart;
     }
 
     public String getQuery() {

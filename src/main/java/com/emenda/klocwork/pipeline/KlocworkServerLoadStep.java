@@ -42,7 +42,6 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
     @DataBoundConstructor
     public KlocworkServerLoadStep(KlocworkServerLoadConfig serverConfig) {
         this.serverConfig = serverConfig;
-        this.reportConfig = new KlocworkReportConfig(true);
     }
 
     @DataBoundSetter
@@ -50,8 +49,13 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
         this.reportConfig = reportConfig;
     }
 
+//    @DataBoundSetter
+//    public void setServerConfig(KlocworkServerLoadConfig serverConfig) {
+//        this.serverConfig = serverConfig;
+//    }
+
     public KlocworkServerLoadConfig getServerConfig() { return serverConfig; }
-    public KlocworkReportConfig getReportConfig() { return reportConfig; }
+//    public KlocworkReportConfig getReportConfig() { return reportConfig; }
 
     private static class KlocworkServerLoadStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
@@ -90,7 +94,7 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
             }
 
             KlocworkServerLoadBuilder builder = new KlocworkServerLoadBuilder(
-                step.getServerConfig(), step.getReportConfig());
+                step.getServerConfig());
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }

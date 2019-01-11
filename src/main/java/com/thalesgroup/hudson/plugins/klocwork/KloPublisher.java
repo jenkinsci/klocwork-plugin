@@ -409,7 +409,7 @@ public class KloPublisher extends Recorder implements Serializable {
 
         @Override
         public String getDisplayName() {
-            return "Klocwork - Publish Klocwork test result report";
+            return "Klocwork (deprecated) - Publish Klocwork test result report";
         }
 
         @Override
