@@ -3,20 +3,27 @@ package com.emenda.klocwork.config;
 
 import com.emenda.klocwork.KlocworkConstants;
 import com.emenda.klocwork.util.KlocworkUtil;
+
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import org.apache.commons.lang3.StringUtils;
+
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.ArgumentListBuilder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkServerLoadConfig> {
 
-    private final String tablesDir;
-    private final String buildName;
-    private final String additionalOpts;
+    private String tablesDir;
+    private String buildName;
+    private String additionalOpts;
 
     @DataBoundConstructor
     public KlocworkServerLoadConfig(String tablesDir, String buildName, String additionalOpts) {
@@ -38,9 +45,7 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
         kwadminCmd.add("load");
 
         // add options such as --name of build
-        if (!StringUtils.isEmpty(buildName)) {
-            kwadminCmd.add("--name", envVars.expand(buildName));
-        }
+        kwadminCmd.add("--name", KlocworkUtil.getDefaultBuildName(buildName, envVars));
 
         kwadminCmd.add(envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
         kwadminCmd.add(envVars.expand(KlocworkUtil.getDefaultKwtablesDir(tablesDir)));
@@ -48,6 +53,21 @@ public class KlocworkServerLoadConfig extends AbstractDescribableImpl<KlocworkSe
             kwadminCmd.addTokenized(envVars.expand(additionalOpts));
         }
         return kwadminCmd;
+    }
+
+    @DataBoundSetter
+    public void setTablesDir(String tablesDir) {
+        this.tablesDir = tablesDir;
+    }
+
+    @DataBoundSetter
+    public void setBuildName(String buildName) {
+        this.buildName = buildName;
+    }
+
+    @DataBoundSetter
+    public void setAdditionalOpts(String additionalOpts) {
+        this.additionalOpts = additionalOpts;
     }
 
     public String getTablesDir() { return tablesDir; }

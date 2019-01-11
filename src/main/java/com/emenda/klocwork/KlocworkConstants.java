@@ -3,6 +3,9 @@ package com.emenda.klocwork;
 
 public class KlocworkConstants {
 
+    public static final String ICON_URL = "/plugin/klocwork/icons/klocwork-24.gif";
+    public static final String DISPLAY_NAME = "Klocwork Server";
+
     public static final String KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME =
         "Klocwork - Build Environment Settings";
 
@@ -18,6 +21,12 @@ public class KlocworkConstants {
         "Klocwork - Quality Gateway";
     public static final String KLOCWORK_CI_BUILDER_NAME =
             "Klocwork - Incremental Diff Analysis";
+
+    public static final String KLOCWORK_ISSUE_CRITICAL = "Critical";
+    public static final String KLOCWORK_ISSUE_ERROR = "Error";
+    public static final String KLOCWORK_ISSUE_WARNING = "Warning";
+    public static final String KLOCWORK_ISSUE_REVIEW = "Review";
+    public static final int MAX_CHART_HISTORY = 20;
 
     public static final String DEFAULT_BUILD_SPEC = "kwinject.out";
     public static final String DEFAULT_TABLES_DIR = "kwtables";

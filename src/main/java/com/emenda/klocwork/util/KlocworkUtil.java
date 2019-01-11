@@ -1,6 +1,12 @@
 package com.emenda.klocwork.util;
 
 import com.emenda.klocwork.KlocworkConstants;
+import com.emenda.klocwork.services.KlocworkApiConnection;
+
+import net.sf.json.JSONArray;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.emenda.klocwork.definitions.KlocworkIssue;
 import hudson.AbortException;
 import hudson.EnvVars;
@@ -14,6 +20,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,9 +91,7 @@ public class KlocworkUtil {
     public static String getKlocworkProjectUrl(EnvVars envVars) throws AbortException {
         try {
             // handle URLs ending with "/", e.g. http://kwserver:8080/
-            String urlStr = envVars.get(KlocworkConstants.KLOCWORK_URL);
-            String separator = (urlStr.endsWith("/")) ? "" : "/";
-            URL url = new URL(urlStr + separator +
+            URL url = new URL(getNormalizedKlocworkUrl(envVars) +
                 envVars.get(KlocworkConstants.KLOCWORK_PROJECT));
             return url.toString();
         } catch (MalformedURLException ex) {
@@ -94,11 +99,23 @@ public class KlocworkUtil {
         }
     }
 
-    // public static String getBuildSpecFile(EnvVars envVars)
-    //                 throws AbortException {
-    //     String envBuildSpec = envVars.get(KlocworkConstants.KLOCWORK_BUILD_SPEC);
-    //     return (StringUtils.isEmpty(envBuildSpec)) ? KlocworkConstants.DEFAULT_BUILD_SPEC : envBuildSpec;
-    // }
+    // handle URLs ending with "/", e.g. http://kwserver:8080/
+    public static String getNormalizedKlocworkUrl(EnvVars envVars) {
+        String urlStr = envVars.get(KlocworkConstants.KLOCWORK_URL);
+        return (urlStr.endsWith("/")) ? urlStr : urlStr + "/";
+    }
+
+    public static String getIssueListUrl(String url, String project) {
+        return String.format("%sreview/insight-review.html#issuelist_goto:project=%s",
+            url, project);
+    }
+
+    public static String getBuildIssueListUrl(String url, String project, String buildName)
+        throws UnsupportedEncodingException {
+        return String.format("%s,searchquery=%s",
+            getIssueListUrl(url, project),
+            URLEncoder.encode(String.format("build:%s", buildName), "UTF-8"));
+    }
 
     public static String getBuildSpecPath(String buildSpec, FilePath workspace)
                     throws AbortException {
@@ -115,6 +132,14 @@ public class KlocworkUtil {
 
     public static String getDefaultKwcheckReportFile(String reportFile) {
         return (StringUtils.isEmpty(reportFile)) ? KlocworkConstants.DEFAULT_KWCHECK_REPORT_FILE : reportFile;
+    }
+
+    public static String getDefaultBuildName(String buildName, EnvVars envVars) {
+        if (StringUtils.isEmpty(buildName)) {
+            return envVars.get("BUILD_TAG");
+        } else {
+            return envVars.expand(buildName);
+        }
     }
 
     public static int executeCommand(Launcher launcher, TaskListener listener,
@@ -357,6 +382,48 @@ public class KlocworkUtil {
             }
         }
         return returnCode;
+    }
+
+    public static String createKlocworkAPIRequest(String action,
+        String query, EnvVars envVars) throws AbortException {
+
+        String request = "action=" + action + "&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
+        if (!StringUtils.isEmpty(query)) {
+            try {
+                request += "&query=" +
+                    KlocworkUtil.getQueryDefaultGroupingOff(query);
+                request += URLEncoder.encode(query, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                throw new AbortException(ex.getMessage());
+            }
+        }
+
+        return request;
+    }
+
+    public static JSONArray getJSONRespose(String request,
+        EnvVars envVars, Launcher launcher) throws AbortException {
+        JSONArray response;
+        try {
+            String[] ltokenLine = KlocworkUtil.getLtokenValues(envVars, launcher);
+            KlocworkApiConnection kwService = new KlocworkApiConnection(
+                            envVars.get(KlocworkConstants.KLOCWORK_URL),
+                            ltokenLine[KlocworkConstants.LTOKEN_USER_INDEX],
+                            ltokenLine[KlocworkConstants.LTOKEN_HASH_INDEX]);
+            response = kwService.sendRequest(request);
+        } catch (IOException ex) {
+            throw new AbortException("Error: failed to connect to the Klocwork" +
+                " web API.\nCause: " + ex.getMessage());
+        }
+        return response;
+    }
+
+    private static String getQueryDefaultGroupingOff(String query) {
+        if(!query.toLowerCase().contains("grouping:off")
+                && !query.toLowerCase().contains("grouping:on")){
+            return query += "grouping:off";
+        }
+        return query;
     }
 
 }
