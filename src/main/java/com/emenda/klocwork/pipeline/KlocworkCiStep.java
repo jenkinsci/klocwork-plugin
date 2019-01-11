@@ -20,7 +20,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 
-
 public class KlocworkCiStep extends AbstractStepImpl {
 
     private transient KlocworkCiConfig desktopConfig;

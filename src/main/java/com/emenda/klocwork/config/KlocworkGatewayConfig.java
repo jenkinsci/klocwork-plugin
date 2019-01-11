@@ -1,17 +1,19 @@
 
 package com.emenda.klocwork.config;
 
+import org.kohsuke.stapler.DataBoundConstructor;
+
 import com.emenda.klocwork.definitions.KlocworkSeverities;
 import com.emenda.klocwork.definitions.KlocworkStatuses;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class KlocworkGatewayConfig extends AbstractDescribableImpl<KlocworkGatewayConfig> {
 
