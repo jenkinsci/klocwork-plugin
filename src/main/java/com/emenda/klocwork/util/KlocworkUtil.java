@@ -390,9 +390,14 @@ public class KlocworkUtil {
         String request = "action=" + action + "&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
         if (!StringUtils.isEmpty(query)) {
             try {
-                request += "&query=" +
-                    KlocworkUtil.getQueryDefaultGroupingOff(query);
-                request += URLEncoder.encode(query, "UTF-8");
+                request += "&query=";
+                //Build the query value
+                String queryEncoded = KlocworkUtil.getQueryDefaultGroupingOff(query);
+                queryEncoded += query;
+                //Encode the query value
+                queryEncoded = URLEncoder.encode(queryEncoded, "UTF-8");
+                //Add the query value to the request
+                request += queryEncoded;
             } catch (UnsupportedEncodingException ex) {
                 throw new AbortException(ex.getMessage());
             }
@@ -421,9 +426,9 @@ public class KlocworkUtil {
     private static String getQueryDefaultGroupingOff(String query) {
         if(!query.toLowerCase().contains("grouping:off")
                 && !query.toLowerCase().contains("grouping:on")){
-            return query += "grouping:off";
+            return "grouping:off ";
         }
-        return query;
+        return "";
     }
 
 }
