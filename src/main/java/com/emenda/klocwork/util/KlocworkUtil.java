@@ -391,8 +391,8 @@ public class KlocworkUtil {
         if (!StringUtils.isEmpty(query)) {
             try {
                 request += "&query=" +
-                    KlocworkUtil.getQueryDefaultGroupingOff(query);
-                request += URLEncoder.encode(query, "UTF-8");
+                    KlocworkUtil.getQueryDefaultGroupingOff(query) + query;
+                request += URLEncoder.encode(request, "UTF-8");
             } catch (UnsupportedEncodingException ex) {
                 throw new AbortException(ex.getMessage());
             }
