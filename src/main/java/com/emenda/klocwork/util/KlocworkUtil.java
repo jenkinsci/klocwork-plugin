@@ -421,9 +421,9 @@ public class KlocworkUtil {
     private static String getQueryDefaultGroupingOff(String query) {
         if(!query.toLowerCase().contains("grouping:off")
                 && !query.toLowerCase().contains("grouping:on")){
-            return query += "grouping:off";
+            return "grouping:off ";
         }
-        return query;
+        return "";
     }
 
 }
