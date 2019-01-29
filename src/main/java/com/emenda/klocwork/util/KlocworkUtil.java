@@ -390,11 +390,14 @@ public class KlocworkUtil {
         String request = "action=" + action + "&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
         if (!StringUtils.isEmpty(query)) {
             try {
-				//Build the request, applying grouping:off (unless query contains grouping:on)
-                request += "&query=" +
-                    KlocworkUtil.getQueryDefaultGroupingOff(query) + query;
-				//Encode the request in UTF-8
-                request = URLEncoder.encode(request, "UTF-8");
+                request += "&query=";
+				//Build the query value
+				String queryEncoded = KlocworkUtil.getQueryDefaultGroupingOff(query);
+                queryEncoded += query;
+				//Encode the query value
+				queryEncoded = URLEncoder.encode(queryEncoded, "UTF-8");
+				//Add the query value to the request
+                request += queryEncoded;
             } catch (UnsupportedEncodingException ex) {
                 throw new AbortException(ex.getMessage());
             }
