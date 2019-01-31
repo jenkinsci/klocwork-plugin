@@ -39,13 +39,13 @@ public class KlocworkLtokenFetcher extends MasterToSlaveCallable<String[],IOExce
              throw new IOException("Error: could not find Klocwork ltoken at \"" +
                  ltokenFile.getAbsolutePath() + "\"");
          }
-
-         Scanner scanner =  new Scanner(ltokenFile);
          String[] splitLine;
-         while (scanner.hasNextLine()){
-             splitLine = scanner.nextLine().split(KlocworkConstants.LTOKEN_SEPARATOR);
-             if (isCorrectLtokenLine(splitLine, host, port)) {
-                 return splitLine;
+         try(Scanner scanner =  new Scanner(ltokenFile)) {
+             while (scanner.hasNextLine()) {
+                 splitLine = scanner.nextLine().split(KlocworkConstants.LTOKEN_SEPARATOR);
+                 if (isCorrectLtokenLine(splitLine, host, port)) {
+                     return splitLine;
+                 }
              }
          }
 
