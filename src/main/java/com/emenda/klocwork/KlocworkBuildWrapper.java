@@ -18,6 +18,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -150,23 +151,41 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            serverConfigs.replaceBy(req.bindJSONToList(KlocworkServerConfig.class, formData.get("serverConfigs")));
-            installConfigs.replaceBy(req.bindJSONToList(KlocworkInstallConfig.class, formData.get("installConfigs")));
-            globalLicenseHost = formData.getString("globalLicenseHost");
-            globalLicensePort = formData.getString("globalLicensePort");
+            req.bindJSON(this, formData);
             save();
             return super.configure(req,formData);
         }
 
         public String getGlobalLicenseHost() { return globalLicenseHost; }
+
+        @DataBoundSetter
+        public void setGlobalLicenseHost(String globalLicenseHost) {
+            this.globalLicenseHost = globalLicenseHost;
+        }
+
         public String getGlobalLicensePort() { return globalLicensePort; }
+
+        @DataBoundSetter
+        public void setGlobalLicensePort(String globalLicensePort) {
+            this.globalLicensePort = globalLicensePort;
+        }
 
         public KlocworkServerConfig[] getServerConfigs() {
             return serverConfigs.toArray(new KlocworkServerConfig[0]);
         }
 
+        @DataBoundSetter
+        public void setServerConfigs(CopyOnWriteList<KlocworkServerConfig> serverConfigs) {
+            this.serverConfigs = serverConfigs;
+        }
+
         public KlocworkInstallConfig[] getInstallConfigs() {
             return installConfigs.toArray(new KlocworkInstallConfig[0]);
+        }
+
+        @DataBoundSetter
+        public void setInstallConfigs(CopyOnWriteList<KlocworkInstallConfig> installConfigs) {
+            this.installConfigs = installConfigs;
         }
 
         public KlocworkServerConfig getServerConfig(String name) {

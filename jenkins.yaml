@@ -1,0 +1,8 @@
+jenkins:
+  systemMessage: "klocwork"
+
+unclassified:
+  klocworkWrapper:
+    globalLicenseHost: abc.com
+    globalLicensePort: 111
+
