@@ -10,7 +10,6 @@ import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildWrapperDescriptor;
-import hudson.util.CopyOnWriteList;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.tasks.SimpleBuildWrapper;
@@ -24,6 +23,8 @@ import org.kohsuke.stapler.StaplerRequest;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
@@ -134,8 +135,8 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
          private String globalLicenseHost;
          private String globalLicensePort;
-         private CopyOnWriteList<KlocworkServerConfig> serverConfigs = new CopyOnWriteList<KlocworkServerConfig>();
-         private CopyOnWriteList<KlocworkInstallConfig> installConfigs = new CopyOnWriteList<KlocworkInstallConfig>();
+         private List<KlocworkServerConfig> serverConfigs = new ArrayList<KlocworkServerConfig>();
+         private List<KlocworkInstallConfig> installConfigs = new ArrayList<KlocworkInstallConfig>();
 
         public DescriptorImpl() {
             load();
@@ -175,7 +176,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
         }
 
         @DataBoundSetter
-        public void setServerConfigs(CopyOnWriteList<KlocworkServerConfig> serverConfigs) {
+        public void setServerConfigs(ArrayList<KlocworkServerConfig> serverConfigs) {
             this.serverConfigs = serverConfigs;
         }
 
@@ -184,7 +185,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
         }
 
         @DataBoundSetter
-        public void setInstallConfigs(CopyOnWriteList<KlocworkInstallConfig> installConfigs) {
+        public void setInstallConfigs(ArrayList<KlocworkInstallConfig> installConfigs) {
             this.installConfigs = installConfigs;
         }
 

@@ -6,6 +6,7 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import org.apache.commons.lang3.StringUtils;
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -55,7 +56,7 @@ public class KlocworkServerConfig extends AbstractDescribableImpl<KlocworkServer
     public String getLicensePort() {
         return licensePort;
     }
-
+    @Symbol("serverConfigs")
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkServerConfig> {
         public String getDisplayName() { return null; }
