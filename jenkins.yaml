@@ -1,0 +1,21 @@
+jenkins:
+  systemMessage: "klocwork"
+
+unclassified:
+  klocworkWrapper:
+    globalLicenseHost: abc.com
+    globalLicensePort: 111
+    serverConfigs:
+      - name: KW_SERVER_1
+        url: http://klocworkServer2:8080
+        specificLicense: true
+        licenseHost: licenseHost
+        licensePort: 27000
+      - name: KW_SERVER_2
+        url: http://klocworkServer1:8082
+    installConfigs:
+      - name: WindowsBuildSlaves
+        paths: C:\Klocwork\Server\bin;C:\Klocwork\kwciagent\bin
+
+
+
