@@ -1,6 +1,7 @@
 
 package com.emenda.klocwork.config;
 
+import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import hudson.Extension;
@@ -24,6 +25,7 @@ public class KlocworkInstallConfig extends AbstractDescribableImpl<KlocworkInsta
     public String getName() { return name; }
     public String getPaths() { return paths; }
 
+    @Symbol("installConfigs")
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkInstallConfig> {
         public String getDisplayName() { return null; }

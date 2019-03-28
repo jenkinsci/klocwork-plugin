@@ -10,7 +10,6 @@ import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildWrapperDescriptor;
-import hudson.util.CopyOnWriteList;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.tasks.SimpleBuildWrapper;
@@ -18,11 +17,14 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
@@ -133,8 +135,8 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
          private String globalLicenseHost;
          private String globalLicensePort;
-         private CopyOnWriteList<KlocworkServerConfig> serverConfigs = new CopyOnWriteList<KlocworkServerConfig>();
-         private CopyOnWriteList<KlocworkInstallConfig> installConfigs = new CopyOnWriteList<KlocworkInstallConfig>();
+         private List<KlocworkServerConfig> serverConfigs = new ArrayList<KlocworkServerConfig>();
+         private List<KlocworkInstallConfig> installConfigs = new ArrayList<KlocworkInstallConfig>();
 
         public DescriptorImpl() {
             load();
@@ -150,23 +152,41 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
-            serverConfigs.replaceBy(req.bindJSONToList(KlocworkServerConfig.class, formData.get("serverConfigs")));
-            installConfigs.replaceBy(req.bindJSONToList(KlocworkInstallConfig.class, formData.get("installConfigs")));
-            globalLicenseHost = formData.getString("globalLicenseHost");
-            globalLicensePort = formData.getString("globalLicensePort");
+            req.bindJSON(this, formData);
             save();
             return super.configure(req,formData);
         }
 
         public String getGlobalLicenseHost() { return globalLicenseHost; }
+
+        @DataBoundSetter
+        public void setGlobalLicenseHost(String globalLicenseHost) {
+            this.globalLicenseHost = globalLicenseHost;
+        }
+
         public String getGlobalLicensePort() { return globalLicensePort; }
+
+        @DataBoundSetter
+        public void setGlobalLicensePort(String globalLicensePort) {
+            this.globalLicensePort = globalLicensePort;
+        }
 
         public KlocworkServerConfig[] getServerConfigs() {
             return serverConfigs.toArray(new KlocworkServerConfig[0]);
         }
 
+        @DataBoundSetter
+        public void setServerConfigs(ArrayList<KlocworkServerConfig> serverConfigs) {
+            this.serverConfigs = serverConfigs;
+        }
+
         public KlocworkInstallConfig[] getInstallConfigs() {
             return installConfigs.toArray(new KlocworkInstallConfig[0]);
+        }
+
+        @DataBoundSetter
+        public void setInstallConfigs(ArrayList<KlocworkInstallConfig> installConfigs) {
+            this.installConfigs = installConfigs;
         }
 
         public KlocworkServerConfig getServerConfig(String name) {
