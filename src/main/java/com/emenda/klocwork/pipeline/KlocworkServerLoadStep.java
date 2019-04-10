@@ -55,7 +55,7 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
 //    }
 
     public KlocworkServerLoadConfig getServerConfig() { return serverConfig; }
-//    public KlocworkReportConfig getReportConfig() { return reportConfig; }
+    public KlocworkReportConfig getReportConfig() { return reportConfig; }
 
     private static class KlocworkServerLoadStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
 
@@ -93,8 +93,16 @@ public class KlocworkServerLoadStep extends AbstractStepImpl {
                     "Sorry for any inconvenience caused! Enjoy the chart :)");
             }
 
-            KlocworkServerLoadBuilder builder = new KlocworkServerLoadBuilder(
-                step.getServerConfig());
+            KlocworkServerLoadBuilder builder;
+            if (step.getReportConfig() == null) {
+                builder = new KlocworkServerLoadBuilder(
+                        step.getServerConfig());
+            }
+            else{
+                builder = new KlocworkServerLoadBuilder(
+                        step.getServerConfig(), step.getReportConfig());
+            }
+
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }
