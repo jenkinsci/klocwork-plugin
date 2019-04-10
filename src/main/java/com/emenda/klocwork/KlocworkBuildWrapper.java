@@ -156,7 +156,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             serverConfigs.addAll(req.bindJSONToList(KlocworkServerConfig.class,
                     formData.get("serverConfigs")));
             installConfigs.clear();
-            installConfigs.addAll(req.bindJSONToList(KlocworkInstallConfig.class,
+            installConfigs.addAll(req.bindJSONToList(KlocworkInstallConfig.class, 
                     formData.get("installConfigs")));
             req.bindJSON(this, formData);
             save();
