@@ -152,6 +152,12 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+            serverConfigs.clear();
+            serverConfigs.addAll(req.bindJSONToList(KlocworkServerConfig.class,
+                    formData.get("serverConfigs")));
+            installConfigs.clear();
+            installConfigs.addAll(req.bindJSONToList(KlocworkInstallConfig.class, 
+                    formData.get("installConfigs")));
             req.bindJSON(this, formData);
             save();
             return super.configure(req,formData);
