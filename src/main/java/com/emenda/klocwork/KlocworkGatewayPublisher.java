@@ -132,7 +132,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                             }
                             serverIssues.add(new KlocworkIssue(jObj.getString("id"),
                                     jObj.getString("code"), jObj.getString("message"), jObj.getString("file"),
-                                    line, jObj.getString("severity"), jObj.getString("status")
+                                    line, jObj.getString("severity"), jObj.getString("severityCode"), jObj.getString("status")
                             ));
                         }
                     }
