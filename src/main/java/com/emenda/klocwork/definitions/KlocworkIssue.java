@@ -9,17 +9,19 @@ public class KlocworkIssue implements Serializable {
     private String file;
     private String line;
     private String severity;
+    private String severitylevel;
     private String status;
 
     public KlocworkIssue() {}
 
-    public KlocworkIssue(String id, String code, String message, String file, String line, String severity, String status) {
+    public KlocworkIssue(String id, String code, String message, String file, String line, String severity, String severitylevel, String status) {
         this.id = id;
         this.code = code;
         this.message = message;
         this.file = file;
         this.line = line;
         this.severity = severity;
+        this.severitylevel = severitylevel;
         this.status = status;
     }
 
@@ -71,7 +73,15 @@ public class KlocworkIssue implements Serializable {
         this.severity = severity;
     }
 
-    public String getStatus() {
+    public String getSeveritylevel() {
+		return severitylevel;
+	}
+
+	public void setSeveritylevel(String severitylevel) {
+		this.severitylevel = severitylevel;
+	}
+
+	public String getStatus() {
         return status;
     }
 

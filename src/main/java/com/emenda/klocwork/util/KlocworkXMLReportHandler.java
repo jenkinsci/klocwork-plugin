@@ -59,12 +59,15 @@ public class KlocworkXMLReportHandler extends DefaultHandler  {
             case "severity":
                 issue.setSeverity(element.toString());
                 break;
+            case "severitylevel":
+            	issue.setSeveritylevel(element.toString());
+            	break;
             case "citingstatus":
                 issue.setStatus(element.toString());
                 break;
             case "problem":
-                if(((issue.getSeverity().toLowerCase().startsWith("severity") && enabledSeverites.getEnabled().get("fiveToTen"))
-                        || enabledSeverites.getEnabled().get(issue.getSeverity().toLowerCase()))
+            	if(((enabledSeverites.getEnabled().get("fiveToTen") && 10 - Integer.parseInt(issue.getSeveritylevel()) < 6 )
+                        || enabledSeverites.getEnabled().get(getSeverity_en(Integer.parseInt(issue.getSeveritylevel()))))
                         && enabledStatuses.getEnabled().get(issue.getStatus().toLowerCase())) {
                     this.totalIssueCount++;
                     if (enableHTMLReport) {
@@ -85,6 +88,33 @@ public class KlocworkXMLReportHandler extends DefaultHandler  {
         if (!text.trim().isEmpty()) {
             element.append(text);
         }
+    }
+    
+    private String getSeverity_en(int severityLevel) {
+    	String severity_en = "";
+    	switch(severityLevel) {
+    	case 1:
+    		severity_en = "critical";
+    		break;
+    	case 2:
+    		severity_en = "error";
+    		break;
+    	case 3:
+    		severity_en = "warning";
+    		break;
+    	case 4:
+    		severity_en = "review";
+    		break;
+    	case 5:
+    	case 6:
+    	case 7:
+    	case 8:
+    	case 9:
+    	case 10:
+    		severity_en = "fiveToTen";
+    		break;
+    	}
+    	return severity_en;
     }
 
     private String currentElement() {

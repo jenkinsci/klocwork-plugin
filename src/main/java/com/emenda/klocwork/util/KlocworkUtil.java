@@ -203,7 +203,11 @@ public class KlocworkUtil {
         int returnCode = 0;
         if(ciTool.equalsIgnoreCase("kwciagent")){
             try {
-                outputStream.writeTo(xmlReport.write());
+            	if (launcher.isUnix()) {
+            		outputStream.writeTo(xmlReport.write());
+            	} else {
+            		xmlReport.write().write(outputStream.toString().replaceFirst("MS932", "UTF-8").getBytes("UTF-8"));
+            	}
             } catch (IOException | InterruptedException e) {
                 returnCode = 1;
                 listener.getLogger().println(e.getMessage());
