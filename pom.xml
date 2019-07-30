@@ -14,7 +14,6 @@
         <jenkins.version>1.614</jenkins.version>
         <hpi-plugin.version>1.115</hpi-plugin.version>
         <jenkins-test-harness.version>${jenkins.version}</jenkins-test-harness.version>
-        <findbugs.failOnError>false</findbugs.failOnError>
         <java.level>8</java.level>
     </properties>
 
@@ -91,6 +90,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>3.0.4</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.3</version>
