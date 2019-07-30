@@ -131,12 +131,12 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
 
         Map<String, Integer> severityMap = new HashMap<String,Integer>();
         for (int i = 0; i < response.size(); i++) {
-            String severity = response.getJSONObject(i).getString("severity");
-            if (StringUtils.isEmpty(severity)) {
+            String severity = response.getJSONObject(i).getString("severityCode");
+            if (StringUtils.isEmpty(severity) || StringUtils.isEmpty(getSeverity_en(severity))) {
                 logger.logMessage(String.format("WARNING: found empty severity %s", severity));
             } else {
                 // increment count
-                severityMap.put(severity, severityMap.getOrDefault(severity, 0) + 1);
+                severityMap.put(getSeverity_en(severity), severityMap.getOrDefault(getSeverity_en(severity), 0) + 1);
             }
         }
 
@@ -170,5 +170,30 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
             save();
             return super.configure(req,formData);
         }
+    }
+    
+    private String getSeverity_en(String severityCode) {
+    	String severity_en = "";
+    	int severityLevel = 0;
+		try {
+			severityLevel = Integer.parseInt(severityCode);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+    	switch(severityLevel) {
+    	case 1:
+    		severity_en = KlocworkConstants.KLOCWORK_ISSUE_CRITICAL;
+    		break;
+    	case 2:
+    		severity_en = KlocworkConstants.KLOCWORK_ISSUE_ERROR;
+    		break;
+    	case 3:
+    		severity_en = KlocworkConstants.KLOCWORK_ISSUE_WARNING;
+    		break;
+    	case 4:
+    		severity_en = KlocworkConstants.KLOCWORK_ISSUE_REVIEW;
+    		break;
+    	}
+    	return severity_en;
     }
 }

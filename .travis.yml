@@ -9,3 +9,4 @@ notifications:
       - jacob.larfors@emenda.com
     on_success: never
     on_failure: always
+dist: trusty
