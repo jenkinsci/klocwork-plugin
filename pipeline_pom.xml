@@ -12,7 +12,6 @@
         Source: https://wiki.jenkins-ci.org/display/JENKINS/Choosing+Jenkins+version+to+build+against
         -->
         <jenkins.version>2.171</jenkins.version>
-        <findbugs.failOnError>false</findbugs.failOnError>
         <java.level>8</java.level>
     </properties>
 
@@ -89,6 +88,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>3.1.10</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.3</version>
