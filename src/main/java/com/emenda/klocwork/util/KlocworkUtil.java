@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -388,8 +389,8 @@ public class KlocworkUtil {
         return returnCode;
     }
 
-    public static String createKlocworkAPIRequest(String action,
-        String query, EnvVars envVars) throws AbortException {
+    public static String createKlocworkAPIRequestOld(String action,
+                                                     String query, EnvVars envVars) throws AbortException {
 
         String request = "action=" + action + "&project=" + envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
         if (!StringUtils.isEmpty(query)) {
@@ -409,6 +410,27 @@ public class KlocworkUtil {
 
         return request;
     }
+
+    public static String createKlocworkAPIRequest(String action, HashMap<String, String> args) throws AbortException {
+        String request = "&action="+action;
+        if (!args.isEmpty()) {
+            try {
+                for(String key : args.keySet()){
+                    if(action.equals("search") && key.equals("query")){
+                        request += "&"+key+"="+URLEncoder.encode(KlocworkUtil.getQueryDefaultGroupingOff(args.get(key))+args.get(key), "UTF-8");
+                    }
+                    else {
+                        request += "&" + key + "=" + URLEncoder.encode(args.get(key), "UTF-8");
+                    }
+                }
+            } catch (UnsupportedEncodingException ex) {
+                throw new AbortException(ex.getMessage());
+            }
+        }
+        return request;
+    }
+
+
 
     public static JSONArray getJSONRespose(String request,
         EnvVars envVars, Launcher launcher) throws AbortException {

@@ -5,7 +5,6 @@ import com.emenda.klocwork.config.KlocworkGatewayConfig;
 import com.emenda.klocwork.config.KlocworkGatewayServerConfig;
 import com.emenda.klocwork.reporting.KlocworkDashboard;
 import com.emenda.klocwork.reporting.KlocworkProjectRedirectLink;
-import com.emenda.klocwork.services.KlocworkApiConnection;
 import com.emenda.klocwork.definitions.KlocworkIssue;
 import com.emenda.klocwork.util.KlocworkUtil;
 import com.emenda.klocwork.util.KlocworkXMLReportParser;
@@ -20,7 +19,6 @@ import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import com.emenda.klocwork.util.KlocworkXMLReportParserIssueList;
-import hudson.*;
 import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
@@ -29,14 +27,11 @@ import hudson.tasks.Publisher;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
 import java.lang.InterruptedException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -105,7 +100,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
             // check env vars are set, otherwise this throws AbortException
             KlocworkUtil.validateServerConfigs(envVars);
             for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
-                String request = KlocworkUtil.createKlocworkAPIRequest(
+                String request = KlocworkUtil.createKlocworkAPIRequestOld(
                     "search", pfConfig.getQuery(), envVars);
                 logger.logMessage("Condition Name : " + pfConfig.getConditionName());
                 logger.logMessage("Using query: " + request);

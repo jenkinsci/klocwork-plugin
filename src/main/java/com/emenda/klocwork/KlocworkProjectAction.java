@@ -27,7 +27,12 @@ public class KlocworkProjectAction implements Action {
     public String getUrlName() {
         KlocworkBuildAction buildAction = getLatestBuildAction();
         if (buildAction != null) {
-            return KlocworkUtil.getIssueListUrl(buildAction.getKlocworkURL(), buildAction.getKlocworkProject());
+            if(buildAction.getProjectId() == null || buildAction.getProjectId().equals("")){
+                return KlocworkUtil.getIssueListUrl(buildAction.getKlocworkURL(), buildAction.getKlocworkProject());
+            }
+            else{
+                return KlocworkUtil.getIssueListUrl(buildAction.getKlocworkURL(), buildAction.getProjectId());
+            }
         }
         return "";
     }
