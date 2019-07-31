@@ -8,23 +8,15 @@ import jenkins.tasks.SimpleBuildStep;
 
 import hudson.AbortException;
 import hudson.Launcher;
-import hudson.Launcher.ProcStarter;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
-import hudson.Proc;
-import hudson.util.ArgumentListBuilder;
-import hudson.util.FormValidation;
-import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.*;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import net.sf.json.JSONArray;
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,12 +25,8 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.lang.InterruptedException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildStep {
@@ -124,7 +112,7 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
 
     private void createBuildAction(KlocworkLogger logger, Run<?, ?> build, EnvVars envVars,
     Launcher launcher) throws AbortException {
-        String request = KlocworkUtil.createKlocworkAPIRequest("search", reportConfig.getQuery(), envVars);
+        String request = KlocworkUtil.createKlocworkAPIRequestOld("search", reportConfig.getQuery(), envVars);
         logger.logMessage("Using query: " + request);
         JSONArray response = KlocworkUtil.getJSONRespose(request, envVars, launcher);
         logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
@@ -140,7 +128,19 @@ public class KlocworkServerLoadBuilder extends Builder implements SimpleBuildSte
             }
         }
 
-        build.addAction(new KlocworkBuildAction(build, severityMap, envVars, serverConfig.getBuildName(), reportConfig));
+        //get project ID for server url
+        request = KlocworkUtil.createKlocworkAPIRequest("projects", new HashMap<>());
+        logger.logMessage("Using query: " + request);
+        response = KlocworkUtil.getJSONRespose(request, envVars, launcher);
+        String projectId = "";
+        for (int i = 0; i < response.size(); i++) {
+            String projectName = response.getJSONObject(i).getString("name");
+            if (!StringUtils.isEmpty(projectName) && projectName.equals(envVars.get(KlocworkConstants.KLOCWORK_PROJECT))){
+                projectId = response.getJSONObject(i).getString("id");
+                break;
+            }
+        }
+        build.addAction(new KlocworkBuildAction(build, severityMap, envVars, serverConfig.getBuildName(), reportConfig, projectId));
     }
 
     @Override
