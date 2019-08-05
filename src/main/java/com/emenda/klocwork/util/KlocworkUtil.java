@@ -457,4 +457,57 @@ public class KlocworkUtil {
         return "";
     }
 
+    public static ArgumentListBuilder getCreateOrDuplcateCmd(String url, String project, String duplicate, FilePath workspace) {
+        ArgumentListBuilder kwadminCmd =
+                new ArgumentListBuilder("kwadmin");
+        kwadminCmd.add("--url", url);
+        if(StringUtils.isEmpty(duplicate)){
+            kwadminCmd.add("create-project");
+        }
+        else{
+            kwadminCmd.add("duplicate-project");
+            kwadminCmd.add(duplicate);
+        }
+        kwadminCmd.add(project);
+        return kwadminCmd;
+    }
+
+    public static ArgumentListBuilder getProjectListCmd(String url, FilePath workspace) {
+        ArgumentListBuilder kwadminCmd =
+                new ArgumentListBuilder("kwadmin");
+        kwadminCmd.add("--url", url);
+        kwadminCmd.add("list-projects");
+        return kwadminCmd;
+    }
+
+    public static boolean projectExists(ByteArrayOutputStream kwadminProjectListOutput, Launcher launcher, String project) throws AbortException {
+        InputStream inputStream = null;
+        BufferedReader bufferedReader = null;
+        try {
+            inputStream = new ByteArrayInputStream(kwadminProjectListOutput.toByteArray());
+            if (launcher.isUnix()) {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            }
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.trim().equals(project)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            throw new AbortException(e.getMessage());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (Exception ex) {
+                throw new AbortException(ex.getMessage());
+            }
+        }
+        return false;
+    }
+
 }

@@ -12,6 +12,7 @@ import hudson.model.Descriptor;
 import hudson.util.ArgumentListBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,18 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     private final String importConfig;
     private final String additionalOpts;
     private final boolean disableKwdeploy;
+    private boolean enabledCreateProject;
+    private String duplicateFrom;
+
+    @DataBoundSetter
+    public void setDuplicateFrom(String duplicateFrom) {
+        this.duplicateFrom = duplicateFrom;
+    }
+
+    public String getDuplicateFrom() {
+        return duplicateFrom;
+    }
+
 
     @DataBoundConstructor
     public KlocworkServerAnalysisConfig(String buildSpec, String tablesDir,
@@ -37,6 +50,11 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
         this.importConfig = importConfig;
         this.additionalOpts = additionalOpts;
         this.disableKwdeploy = disableKwdeploy;
+    }
+
+    @DataBoundSetter
+    public void setEnabledCreateProject(boolean enabledCreateProject) {
+        this.enabledCreateProject = enabledCreateProject;
     }
 
     public ArgumentListBuilder getVersionCmd() {
@@ -110,6 +128,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     public String getImportConfig() { return importConfig; }
     public String getAdditionalOpts() { return additionalOpts; }
     public boolean getDisableKwdeploy() { return disableKwdeploy; }
+    public boolean isEnabledCreateProject() { return enabledCreateProject; }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkServerAnalysisConfig> {
