@@ -11,9 +11,12 @@ import hudson.tasks.Builder;
 import hudson.util.ArgumentListBuilder;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.groovy.util.StringUtil;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class KlocworkServerAnalysisBuilder extends Builder implements SimpleBuildStep {
@@ -56,6 +59,27 @@ public class KlocworkServerAnalysisBuilder extends Builder implements SimpleBuil
         KlocworkUtil.executeCommand(launcher, listener,
                 workspace, envVars,
                 serverConfig.getVersionCmd());
+
+        if(serverConfig.isEnabledCreateProject()){
+            logger.logMessage("Checking if project: "+envVars.get(KlocworkConstants.KLOCWORK_PROJECT)+" exists");
+            ByteArrayOutputStream kwadminProjectListOutput = KlocworkUtil.executeCommandParseOutput(launcher,
+                    workspace, envVars, KlocworkUtil.getProjectListCmd(envVars.get(KlocworkConstants.KLOCWORK_URL), workspace));
+            if(kwadminProjectListOutput != null){
+                if(KlocworkUtil.projectExists(kwadminProjectListOutput, launcher, envVars.get(KlocworkConstants.KLOCWORK_PROJECT))){
+                    logger.logMessage("\tproject exists, continuing");
+                }
+                else{
+                    logger.logMessage("\tproject does not exist");
+                    KlocworkUtil.executeCommandParseOutput(launcher,
+                            workspace, envVars,
+                            KlocworkUtil.getCreateOrDuplcateCmd(
+                                    envVars.get(KlocworkConstants.KLOCWORK_URL),
+                                    envVars.get(KlocworkConstants.KLOCWORK_PROJECT),
+                                    serverConfig.getDuplicateFrom(),
+                                    workspace));
+                }
+            }
+        }
 
         if(!serverConfig.getDisableKwdeploy()) {
             KlocworkUtil.executeCommand(launcher, listener,
