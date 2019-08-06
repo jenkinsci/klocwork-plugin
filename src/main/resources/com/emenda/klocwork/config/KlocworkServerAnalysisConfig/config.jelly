@@ -29,6 +29,15 @@
         <f:entry title="${%Additional Options}" field="additionalOpts">
           <f:textbox/>
         </f:entry>
+
+        <f:optionalBlock name="enabledCreateProject" title="${%Create Project If It Doesn't Exist}" checked="${instance.enabledCreateProject}" field="enabledCreateProject" inline="true" >
+            <f:advanced title="${%Optionals}">
+                <f:entry title="${%Duplicate From Existing Project}" field="duplicateFrom">
+                    <f:textbox default=""/>
+                </f:entry>
+            </f:advanced>
+        </f:optionalBlock>
+
     </f:advanced>
 
 </j:jelly>
