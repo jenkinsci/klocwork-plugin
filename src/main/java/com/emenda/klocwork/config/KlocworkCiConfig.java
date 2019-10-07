@@ -2,7 +2,6 @@
 package com.emenda.klocwork.config;
 
 import com.emenda.klocwork.KlocworkConstants;
-import com.emenda.klocwork.util.KlocworkBuildSpecParser;
 import com.emenda.klocwork.util.KlocworkUtil;
 import hudson.*;
 import hudson.init.InitMilestone;
@@ -17,7 +16,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 
 public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> {
 
@@ -113,7 +111,9 @@ public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> 
         }
 
         // add list of changed files to end of kwcheck run command
-        kwcheckRunCmd.addTokenized(diffList);
+        if(!StringUtils.isEmpty(diffList)) {
+            kwcheckRunCmd.add("@"+diffList);
+        }
 
         return kwcheckRunCmd;
     }
@@ -140,7 +140,9 @@ public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> 
         }
 
         // add list of changed files to end of kwcheck run command
-        kwcheckRunCmd.addTokenized(diffList);
+        if(!StringUtils.isEmpty(diffList)) {
+            kwcheckRunCmd.add("@" + diffList);
+        }
 
         return kwcheckRunCmd;
     }
@@ -215,22 +217,8 @@ public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> 
         }
     }
 
-    public String getCiToolDiffList(EnvVars envVars, FilePath workspace, Launcher launcher) throws AbortException {
-        try {
-            List<String> fileList = launcher.getChannel().call(
-                new KlocworkBuildSpecParser(workspace.getRemote(),
-                    envVars.expand(getDiffFileList(envVars)),
-                    envVars.expand(KlocworkUtil.getBuildSpecPath(buildSpec, workspace))));
-            return String.join(" ", fileList);
-        } catch (IOException | InterruptedException ex) {
-            throw new AbortException(ex.getMessage());
-        }
-
-    }
-
     public String getDiffFileList(EnvVars envVars) {
-        String diffFileList = envVars.expand(diffAnalysisConfig.getDiffFileList());
-        return diffFileList;
+        return envVars.expand(diffAnalysisConfig.getDiffFileList());
     }
 
     public boolean isGitDiffType() {
