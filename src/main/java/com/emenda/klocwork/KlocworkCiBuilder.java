@@ -85,9 +85,12 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                         workspace, envVars,
                         ciConfig.getCiToolSetCmd(envVars, workspace));
             }
-            String diffList = "";
+            String diffListFile = "";
             // should we perform incremental analysis?
             if (ciConfig.getIncrementalAnalysis()) {
+                diffListFile = ciConfig.getDiffFileList(envVars);
+            }
+            if (!StringUtils.isEmpty(diffListFile)) {
                 logger.logMessage("Performing incremental analysis using " +
                 "change list specified in " + ciConfig.getDiffFileList(envVars));
                 // check which type of incremental analysis (e.g. git/manual)
@@ -97,36 +100,18 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
                     KlocworkUtil.executeCommand(launcher, listener,
                             workspace, envVars,
                             ciConfig.getGitDiffCmd(envVars));
-                } else {
-                    // manual diff just requires reading from diff file, same as git
-                    // so do nothing
                 }
+            }
 
-                // check diff file list and get list of files to analyse, if none,
-                // diffList will be empty
-                diffList = ciConfig.getCiToolDiffList(envVars, workspace, launcher);
-                // if there are files to analyse, run kwcheck run
-                if (!StringUtils.isEmpty(diffList)) {
-                    KlocworkUtil.executeCommand(launcher, listener,
-                            workspace, envVars,
-                            ciConfig.getCiToolRunCmd(envVars, workspace, diffList));
-                }
-                else{
-                    // we do not need to do anything!
-                    logger.logMessage("Incremental analysis did not detect any " +
-                            "changed files in the build specification. Skipping the analysis");
-                }
-            }
-            else{
-                KlocworkUtil.executeCommand(launcher, listener,
-                        workspace, envVars,
-                        ciConfig.getCiToolRunCmd(envVars, workspace, diffList));
-            }
+            // Run kwciagent
+            KlocworkUtil.executeCommand(launcher, listener,
+                    workspace, envVars,
+                    ciConfig.getCiToolRunCmd(envVars, workspace, diffListFile));
 
             // Output any local issues
             ByteArrayOutputStream kwcheckListOutputStream = KlocworkUtil.executeCommandParseOutput(launcher,
                     workspace, envVars,
-                    ciConfig.getCiToolListCmd(envVars, workspace, diffList));
+                    ciConfig.getCiToolListCmd(envVars, workspace, diffListFile));
             if(kwcheckListOutputStream != null){
                 FilePath xmlReport;
                 String path = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(ciConfig.getReportFile()));
