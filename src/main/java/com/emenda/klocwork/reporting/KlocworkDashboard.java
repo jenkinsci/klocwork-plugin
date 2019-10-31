@@ -6,8 +6,11 @@ import hudson.model.Action;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class KlocworkDashboard implements Action {
+
+    private static final Logger debugLogger = Logger.getLogger(KlocworkDashboard.class.getName());
 
     public final String url;
     public final String text;
@@ -18,6 +21,7 @@ public class KlocworkDashboard implements Action {
     public final boolean shouldDashboardServer;
 
     public KlocworkDashboard(ArrayList<KlocworkIssue> localIssues, ArrayList<KlocworkIssue> serverIssues, boolean shouldDashboardLocal, boolean shouldDashboardServer) {
+        debugLogger.fine("[" + this.getClass().getName() + "] - Constructing the dashboard");
         this.shouldDashboardLocal = shouldDashboardLocal;
         this.shouldDashboardServer = shouldDashboardServer;
         this.url = "KlocworkDashboard";

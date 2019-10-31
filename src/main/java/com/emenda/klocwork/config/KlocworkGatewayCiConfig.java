@@ -68,6 +68,12 @@ public class KlocworkGatewayCiConfig extends AbstractDescribableImpl<KlocworkGat
         this.enableHTMLReporting = enableHTMLReporting;
     }
 
+    public String toString(){
+        return "[ name:"+this.name+", threshold:"+this.threshold+", reportFile:"+this.reportFile
+                +", stopBuild:"+this.stopBuild+", enabledSeverities:"+this.enabledSeverites
+                +", enabledStatuses:"+this.enabledStatuses+", enableHTMLReporting:"+this.enableHTMLReporting+" ]";
+    }
+
     @DataBoundSetter
     public void setThreshold(String threshold) {
         this.threshold = threshold;
