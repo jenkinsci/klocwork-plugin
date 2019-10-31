@@ -35,9 +35,12 @@ import java.lang.InterruptedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildStep {
+
+    private static final Logger debugLogger = Logger.getLogger(KlocworkGatewayPublisher.class.getName());
 
     private final KlocworkGatewayConfig gatewayConfig;
 
@@ -95,11 +98,14 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         boolean shouldDashboardServer = false;
         ArrayList<KlocworkIssue> localIssues = new ArrayList<>();
         ArrayList<KlocworkIssue> serverIssues = new ArrayList<>();
+        debugLogger.fine("[" + this.getClass().getName() + "] - Performing Quality Gate");
         if (gatewayConfig.getEnableServerGateway()) {
+            debugLogger.fine("[" + this.getClass().getName() + "] - Entered server gateway");
             logger.logMessage("Performing Klocwork Server Gateway");
             // check env vars are set, otherwise this throws AbortException
             KlocworkUtil.validateServerConfigs(envVars);
             for (KlocworkGatewayServerConfig pfConfig : gatewayConfig.getGatewayServerConfigs()) {
+                debugLogger.fine("[" + this.getClass().getName() + "] - " + pfConfig.toString());
                 String request = KlocworkUtil.createKlocworkAPIRequestOld(
                     "search", pfConfig.getQuery(), envVars);
                 logger.logMessage("Condition Name : " + pfConfig.getConditionName());
@@ -108,18 +114,28 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                 JSONArray response = KlocworkUtil.getJSONRespose(request, envVars, launcher);
 
                 logger.logMessage("Number of issues returned : " + Integer.toString(response.size()));
+                debugLogger.fine("[" + this.getClass().getName() + "] - returns "+Integer.toString(response.size())+" issues");
                 logger.logMessage("Configured Threshold : " + pfConfig.getThreshold());
                 if (response.size() >= Integer.parseInt(pfConfig.getThreshold())) {
+                    debugLogger.fine("[" + this.getClass().getName() + "] - quality gate failed");
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(pfConfig.getResultValue());
                     if(pfConfig.getStopBuild()){
                         stopBuild = true;
                     }
                 }
+                else{
+                    debugLogger.fine("[" + this.getClass().getName() + "] - quality gate passed");
+                }
+                if(pfConfig.isEnableHTMLReporting()) {
+                    if (!shouldDashboardServer) {
+                        debugLogger.fine("[" + this.getClass().getName() + "] - setting shouldDashboardServer to true");
+                        shouldDashboardServer = true;
+                    }
+                }
                 for (int i = 0; i < response.size(); i++) {
                     JSONObject jObj = response.getJSONObject(i);
                     if(pfConfig.isEnableHTMLReporting()) {
-                        shouldDashboardServer = true;
                         if (!isIssueInList(jObj.getString("id"), serverIssues)) {
                             String line = "";
                             if (jObj.containsKey("line")) {
@@ -132,6 +148,7 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                         }
                     }
                     else {
+                        debugLogger.fine("[" + this.getClass().getName() + "] - not setting shouldDashboardServer");
                         logger.logMessage(jObj.toString());
                     }
                 }
@@ -140,7 +157,9 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
         if (gatewayConfig.getEnableCiGateway()) {
 			logger.logMessage("Performing Klocwork Ci Gateway");
 			if (gatewayConfig.getGatewayCiConfigs() != null) {
+                debugLogger.fine("[" + this.getClass().getName() + "] - Entered ci gateway");
                 for (KlocworkGatewayCiConfig ciConfig : gatewayConfig.getGatewayCiConfigs()) {
+                    debugLogger.fine("[" + this.getClass().getName() + "] - " + ciConfig.toString());
                     ArrayList<KlocworkIssue> qgate_issues = new ArrayList<>();
                     logger.logMessage("Checking ci gateway: " + ciConfig.getName());
                     String xmlReport = envVars.expand(KlocworkUtil.getDefaultKwcheckReportFile(
@@ -164,9 +183,11 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                         }
                         logger.logMessage("Total Ci Issues : " +
                                 Integer.toString(qualityGateIssues));
+                        debugLogger.fine("[" + this.getClass().getName() + "] - returns "+Integer.toString(qualityGateIssues)+" issues");
                         logger.logMessage("Configured Threshold : " +
                                 ciConfig.getThreshold());
                         if (qualityGateIssues >= Integer.parseInt(ciConfig.getThreshold())) {
+                            debugLogger.fine("[" + this.getClass().getName() + "] - quality gate failed");
                             logger.logMessage("Threshold exceeded. Marking build as failed.");
                             if(ciConfig.getFailUnstable()){
                               build.setResult(Result.UNSTABLE);
@@ -177,22 +198,32 @@ public class KlocworkGatewayPublisher extends Publisher implements SimpleBuildSt
                                 stopBuild = true;
                             }
                         }
+                        else{
+                            debugLogger.fine("[" + this.getClass().getName() + "] - quality gate passed");
+                        }
                     } catch (InterruptedException | IOException ex) {
+                        debugLogger.fine("[" + this.getClass().getName() + "] - exception thrown: "+ ex.getMessage());
                         throw new AbortException(ex.getMessage());
                     }
                 }
             }
             else{
+                debugLogger.fine("[" + this.getClass().getName() + "] - Quality gate enabled, but could not find configuration");
 			    logger.logMessage("WARNING: Quality gate enabled, but could not find configuration");
                 build.setResult(Result.UNSTABLE);
             }
         }
 
         if(shouldDashboardLocal || shouldDashboardServer){
+            debugLogger.fine("[" + this.getClass().getName() + "] - Entered addAction [ shouldDashboardLocal:"+shouldDashboardLocal+", shouldDashboardServer:"+shouldDashboardServer+" ]");
             build.addAction(new KlocworkDashboard(localIssues, serverIssues, shouldDashboardLocal, shouldDashboardServer));
+        }
+        else{
+            debugLogger.fine("[" + this.getClass().getName() + "] - Not entered addAction [ shouldDashboardLocal:"+shouldDashboardLocal+", shouldDashboardServer:"+shouldDashboardServer+" ]");
         }
 
         if(stopBuild){
+            debugLogger.fine("[" + this.getClass().getName() + "] - stopped build");
             throw new AbortException("Stopping build due to configuration");
         }
     }
