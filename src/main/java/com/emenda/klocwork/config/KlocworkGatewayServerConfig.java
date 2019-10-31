@@ -37,6 +37,12 @@ public class KlocworkGatewayServerConfig extends AbstractDescribableImpl<Klocwor
         this.enableHTMLReporting = enableHTMLReporting;
     }
 
+    public String toString(){
+        return "[ jobResult:"+this.jobResult+", query:"+this.query+", threshold:"+this.threshold
+                +", conditionName:"+this.conditionName+", stopBuild:"+this.stopBuild
+                +", enableHTMLReporting:"+this.enableHTMLReporting+" ]";
+    }
+
     public String getJobResult() {
         return jobResult;
     }
