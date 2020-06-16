@@ -1,0 +1,159 @@
+/*
+ * *****************************************************************************
+ * Copyright (c) 2020 Rogue Wave Software, Inc., a Perforce company
+ * Author : Klocwork
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * *****************************************************************************
+ */
+
+package com.klocwork.kwjenkinsplugin;
+
+import com.klocwork.kwjenkinsplugin.config.KlocworkReportConfig;
+import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
+
+import hudson.EnvVars;
+import hudson.model.Action;
+import hudson.model.Run;
+import jenkins.tasks.SimpleBuildStep;
+
+import java.io.UnsupportedEncodingException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.List;
+
+public class KlocworkBuildAction implements Action, SimpleBuildStep.LastBuildAction {
+
+    private final Run<?, ?> run;
+    private final int criticalCount;
+    private final int errorCount;
+    private final int warningCount;
+    private final int reviewCount;
+    private final String buildName;
+    private final String klocworkURL;
+    private final String klocworkProject;
+    private final KlocworkReportConfig reportConfig;
+    private final String projectId;
+
+    public KlocworkBuildAction(Run<?, ?> run, Map<String, Integer> severityMap, EnvVars envVars, String buildName,
+            KlocworkReportConfig reportConfig) {
+        this.run = run;
+        this.criticalCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_CRITICAL, 0);
+        this.errorCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_ERROR, 0);
+        this.warningCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_WARNING, 0);
+        this.reviewCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_REVIEW, 0);
+        this.buildName = KlocworkUtil.getDefaultBuildName(buildName, envVars);
+        this.klocworkURL = KlocworkUtil.getNormalizedKlocworkUrl(envVars);
+        this.klocworkProject = envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
+        this.reportConfig = reportConfig;
+        this.projectId = "";
+    }
+
+    public KlocworkBuildAction(Run<?, ?> run, Map<String, Integer> severityMap, EnvVars envVars, String buildName,
+                               KlocworkReportConfig reportConfig, String projectID) {
+        this.run = run;
+        this.criticalCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_CRITICAL, 0);
+        this.errorCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_ERROR, 0);
+        this.warningCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_WARNING, 0);
+        this.reviewCount = severityMap.getOrDefault(KlocworkConstants.KLOCWORK_ISSUE_REVIEW, 0);
+        this.buildName = KlocworkUtil.getDefaultBuildName(buildName, envVars);
+        this.klocworkURL = KlocworkUtil.getNormalizedKlocworkUrl(envVars);
+        this.klocworkProject = envVars.get(KlocworkConstants.KLOCWORK_PROJECT);
+        this.reportConfig = reportConfig;
+        this.projectId = projectID;
+    }
+
+    public Run<?, ?> getRun() {
+        return run;
+    }
+
+    public String getIconFileName() {
+        return KlocworkConstants.ICON_URL;
+    }
+
+    public String getDisplayName() {
+        return KlocworkConstants.DISPLAY_NAME;
+    }
+
+    public String getUrlName() {
+        try {
+            if(projectId == null || projectId.equals("")){
+                return KlocworkUtil.getBuildIssueListUrl(klocworkURL, klocworkProject, buildName);
+            }
+            else {
+                return KlocworkUtil.getBuildIssueListUrl(klocworkURL, projectId, buildName);
+            }
+        } catch (UnsupportedEncodingException ex) {
+            return null;
+        }
+    }
+
+    public int getCriticalCount() {
+        return criticalCount;
+    }
+
+    public int getErrorCount() {
+        return errorCount;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public int getWarningCount() {
+        return warningCount;
+    }
+
+    public String getBuildName() {
+        return buildName;
+    }
+
+    public String getKlocworkURL() {
+        return klocworkURL;
+    }
+
+    public String getKlocworkProject() {
+        return klocworkProject;
+    }
+
+    public boolean isDisplayChart() {
+        return reportConfig.isDisplayChart();
+    }
+
+    public String getChartWidth() {
+        return reportConfig.getChartWidth();
+    }
+
+    public String getChartHeight() {
+        return reportConfig.getChartHeight();
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    @Override
+    public Collection<? extends Action> getProjectActions() {
+        List<KlocworkProjectAction> projectActions = new ArrayList<>();
+        projectActions.add(new KlocworkProjectAction(run.getParent()));
+        return projectActions;
+    }
+}

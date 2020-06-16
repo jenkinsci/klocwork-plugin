@@ -1,0 +1,17 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Build Name}" field="buildName">
+      <f:textbox id="klocworkServerLoadConfig_buildName"/>
+    </f:entry>
+
+    <f:advanced>
+        <f:entry title="${%Tables Directory}" field="tablesDir">
+          <f:textbox default="kwtables" id="klocworkServerLoadConfig_tablesDir"/>
+        </f:entry>
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+          <f:textbox id="klocworkServerLoadConfig_additionalOpts"/>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>

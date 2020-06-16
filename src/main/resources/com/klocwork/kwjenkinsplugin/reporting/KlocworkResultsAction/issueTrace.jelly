@@ -1,0 +1,22 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <ul>
+    <j:forEach items="${trace}" var="traceItem">
+            <li>
+                <samp>
+                    <b>${traceItem.entity}</b> in ${traceItem.file}
+                </samp>
+                <ul>
+                    <j:forEach items="${traceItem.lines}" var="line">
+                        <li class="issue-trace-line">
+                            <samp class="issue-trace-line">
+                                Line ${line.line} : ${line.text}
+                            </samp>
+                        </li>
+                    </j:forEach>
+                </ul>
+            </li>
+    </j:forEach>
+    </ul>
+</j:jelly>

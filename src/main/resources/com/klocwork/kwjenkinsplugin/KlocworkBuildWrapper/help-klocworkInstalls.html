@@ -1,0 +1,31 @@
+<div>
+  <h2>Klocwork installations</h2>
+  <p>
+      Note this is a simple piece of functionality intended for a
+      "basic" Jenkins setup. If you use other plugins, such as the
+      <a href="https://wiki.jenkins-ci.org/display/JENKINS/Custom+Tools+Plugin">CustomToolsPlugin</a>
+      to handle installations, and the PATH for other tools, we recommend
+      you skip this and set up the Klocwork PATH as you would your other tools.
+  </p>
+  <p>
+      If you do not use something like the CustomToolsPlugin and do not have the
+      Klocwork PATH configured already...proceed.
+  </p>
+  <h3>What does this do?</h3>
+  <p>
+      This adds the provided PATH to the PATH variable for a job.
+      Create an installation with a name and reference it on the job under the
+      Build Environment settings. If using both the Klocwork Server and CI tools, be careful
+      of Unix versus Windows, and use the correct PATH separator (";" instead of ":").
+  </p>
+  <p>
+      For example, if you create an installation called WindowsBuildSlaves, with
+      the paths C:\Klocwork\Server\bin;C:\Klocwork\kwciagent\bin
+      these will be added to the existing %PATH% variable.
+  </p>
+  <p>
+      The plugin will call /bin/sh or cmd.exe and provide the Klocwork
+      executables without a path, so you must ensure that Klocwork is set up
+      in your path.
+  </p>
+</div>

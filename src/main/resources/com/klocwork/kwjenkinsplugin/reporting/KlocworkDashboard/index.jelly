@@ -1,0 +1,412 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+
+  <j:set var="instance" value="${it}" />
+
+  <j:set var="descriptor" value="${it.descriptor}" />
+
+  <l:layout title="${title}">
+
+    <st:include page="header" optional="true"/>
+
+    <l:main-panel>
+
+        <style type="text/css">
+            #localIssuesInput {
+                background-image: url('/plugin/kwjenkinsplugin/icons/klocwork-24.gif');  /* Add a search icon to input */
+                background-position: 10px 12px; /* Position the search icon */
+                background-repeat: no-repeat; /* Do not repeat the icon image */
+                width: 100%; /* Full-width */
+                font-size: 16px; /* Increase font-size */
+                padding: 12px 20px 12px 40px; /* Add some padding */
+                border: 1px solid #ddd; /* Add a grey border */
+                margin-bottom: 12px; /* Add some space below the input */
+            }
+            #serverIssuesInput {
+                background-image: url('/plugin/kwjenkinsplugin/icons/klocwork-24.gif');  /* Add a search icon to input */
+                background-position: 10px 12px; /* Position the search icon */
+                background-repeat: no-repeat; /* Do not repeat the icon image */
+                width: 100%; /* Full-width */
+                font-size: 16px; /* Increase font-size */
+                padding: 12px 20px 12px 40px; /* Add some padding */
+                border: 1px solid #ddd; /* Add a grey border */
+                margin-bottom: 12px; /* Add some space below the input */
+            }
+            #localIssuesTable {
+                border-collapse: collapse; /* Collapse borders */
+                width: 100%; /* Full-width */
+                border: 1px solid #ddd; /* Add a grey border */
+                font-size: 18px; /* Increase font-size */
+            }
+
+            #serverIssuesTable {
+                border-collapse: collapse; /* Collapse borders */
+                width: 100%; /* Full-width */
+                border: 1px solid #ddd; /* Add a grey border */
+                font-size: 18px; /* Increase font-size */
+            }
+
+            #localIssuesTable th, #localIssuesTable td {
+                text-align: left; /* Left-align text */
+                padding: 12px; /* Add padding */
+            }
+
+            #localIssuesTable tr {
+                /* Add a bottom border to all table rows */
+                border-bottom: 1px solid #ddd;
+            }
+
+            #localIssuesTable tr.header, #localIssuesTable tr:hover {
+                /* Add a grey background color to the table header and on hover */
+                background-color: #f1f1f1;
+            }
+
+            #serverIssuesTable th, #serverIssuesTable td {
+                text-align: left; /* Left-align text */
+                padding: 12px; /* Add padding */
+            }
+
+            #serverIssuesTable tr {
+                /* Add a bottom border to all table rows */
+                border-bottom: 1px solid #ddd;
+            }
+
+            #serverIssuesTable tr.header, #serverIssuesTable tr:hover {
+                /* Add a grey background color to the table header and on hover */
+                background-color: #f1f1f1;
+            }
+        </style>
+
+        <j:if test="${instance.shouldDashboardLocal}">
+            <h1>${%Klocwork Differential Analysis Issues}</h1>
+            <input type="text" id="localIssuesInput" onkeyup="tableFilter('localIssuesInput','localIssuesTable')" placeholder="${%Search}..."/>
+            <table id="localIssuesTable">
+                <tr class="header">
+                    <th><b>${%Id}</b></th>
+                    <th><b>${%Code}</b></th>
+                    <th><b>${%Message}</b></th>
+                    <th><b>${%Severity}</b></th>
+                    <th><b>${%Status}</b></th>
+                    <th><b>${%File}</b></th>
+                    <th><b>${%Line}</b></th>
+                </tr>
+                <j:forEach var="li" items="${instance.localIssues}">
+                    <j:if test="true">
+                        <tr>
+                            <td><b>${li.id}</b></td>
+                            <td><b>${li.code}</b></td>
+                            <td><b>${li.message}</b></td>
+                            <td><b>${li.severity}</b></td>
+                            <td><b>${li.status}</b></td>
+                            <td><b>${li.file}</b></td>
+                            <td><b>${li.line}</b></td>
+                        </tr>
+                    </j:if>
+                </j:forEach>
+                <tr class="header">
+                    <th colspan="7"><b>${%Total:} ${instance.localIssuesSize}</b></th>
+                </tr>
+            </table>
+        </j:if>
+
+        <j:if test="${instance.shouldDashboardServer}">
+            <h1>${%Klocwork Integration Analysis Issues}</h1>
+            <input type="text" id="serverIssuesInput" onkeyup="tableFilter('serverIssuesInput','serverIssuesTable')" placeholder="${%Search...}"/>
+            <table id="serverIssuesTable">
+                <tr class="header">
+                    <th><b>${%Id}</b></th>
+                    <th><b>${%Code}</b></th>
+                    <th><b>${%Message}</b></th>
+                    <th><b>${%Severity}</b></th>
+                    <th><b>${%Status}</b></th>
+                    <th><b>${%File}</b></th>
+                    <th><b>${%Line}</b></th>
+                </tr>
+                <j:forEach var="li" items="${instance.serverIssues}">
+                    <j:if test="true">
+                        <tr>
+                            <td><b>${li.id}</b></td>
+                            <td><b>${li.code}</b></td>
+                            <td><b>${li.message}</b></td>
+                            <td><b>${li.severity}</b></td>
+                            <td><b>${li.status}</b></td>
+                            <td><b>${li.file}</b></td>
+                            <td><b>${li.line}</b></td>
+                        </tr>
+                    </j:if>
+                </j:forEach>
+                <tr class="header">
+                    <th colspan="7"><b>${%Total:} ${instance.serverIssuesSize}</b></th>
+                </tr>
+            </table>
+        </j:if>
+
+        <script>
+            if (${instance.shouldDashboardLocal}){
+                document.getElementById("localIssuesInput").value = '${%status:analyze,fix}';
+            }
+            if (${instance.shouldDashboardServer}){
+                document.getElementById("serverIssuesInput").value = '${%status:analyze,fix}';
+            }
+
+            function tableFilter(input_name, table_name) {
+                var input, filter, table, tr, td, i, j, x;
+                var total = 0;
+                input = document.getElementById(input_name);
+                filter = input.value.toUpperCase();
+                table = document.getElementById(table_name);
+                tr = table.getElementsByTagName("tr");
+                var regexGetFields = /\w+:/g;
+                var regexSplitOnSpaces = /[^\s"']+|"([^"]*)"|'([^']*)'/g;
+                var regexSplitOnCommas = /[^,\s"']+|"([^"]*)"|'([^']*)'/g;
+                var fields = filter.match(regexGetFields);
+                if (!fields){
+                    for (i = 0; i &lt; tr.length; i++) {
+                        var foundMatch = 'none';
+                        if(tr[i].getElementsByTagName("th").length > 0){
+                            foundMatch = 'header';
+                        }
+                        else{
+                            for (j = 0; j &lt; tr[i].getElementsByTagName("td").length; j++) {
+                                td = tr[i].getElementsByTagName("td")[j];
+                                if (td) {
+                                    if (td.innerHTML.toUpperCase().includes(filter)) {
+                                        foundMatch = 'found';
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if(foundMatch == 'found' || foundMatch == 'header'){
+                            if(foundMatch == 'found'){
+                                total++;
+                            }
+                            tr[i].style.display = "";
+                        }
+                        else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+                else{
+                    for (i = 0; i &lt; tr.length; i++) {
+                        var foundMatch = 'none';
+                        if(tr[i].getElementsByTagName("th").length > 0){
+                            foundMatch = 'header';
+                        }
+                        else{
+                            var split_filter = filter.match(regexSplitOnSpaces);
+                            for (x = 0; x &lt; split_filter.length; x++){
+                                if(split_filter[x].toUpperCase().startsWith('ID:')){
+                                    td = tr[i].getElementsByTagName("td")[0];
+                                    if(td){
+                                        var search = split_filter[x].replace("ID:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('CODE:')){
+                                    td = tr[i].getElementsByTagName("td")[1];
+                                    if(td){
+                                        var search = split_filter[x].replace("CODE:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('MESSAGE:')){
+                                    td = tr[i].getElementsByTagName("td")[2];
+                                    if(td){
+                                        var search = split_filter[x].replace("MESSAGE:","")
+                                        if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                            foundMatch = 'found';
+                                        }
+                                        else{
+                                            foundMatch = 'nomatch';
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('SEVERITY:')){
+                                    td = tr[i].getElementsByTagName("td")[3];
+                                    if(td){
+                                        var search = split_filter[x].replace("SEVERITY:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('STATUS:')){
+                                    td = tr[i].getElementsByTagName("td")[4];
+                                    if(td){
+                                        var search = split_filter[x].replace("STATUS:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('FILE:')){
+                                    td = tr[i].getElementsByTagName("td")[5];
+                                    if(td){
+                                        var search = split_filter[x].replace("FILE:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(split_filter[x].toUpperCase().startsWith('LINE:')){
+                                    td = tr[i].getElementsByTagName("td")[6];
+                                    if(td){
+                                        var search = split_filter[x].replace("LINE:","")
+                                        if(search.includes('+')){
+                                            search = search.replace("+","");
+                                        }
+                                        if(search.includes(',')){
+                                            var search_list = search.match(regexSplitOnCommas);
+                                            for (var sl = 0; sl &lt; search_list.length; sl++){
+                                                if (td.innerHTML.toUpperCase().includes(search_list[sl]) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                    foundMatch = 'found';
+                                                    break;
+                                                }
+                                            }
+                                            if(foundMatch == 'none'){
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                        else{
+                                            if (td.innerHTML.toUpperCase().includes(search) &amp;&amp; (foundMatch == 'none' || foundMatch == 'found')) {
+                                                foundMatch = 'found';
+                                            }
+                                            else{
+                                                foundMatch = 'nomatch';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if(foundMatch == 'found' || foundMatch == 'header'){
+                            if(foundMatch == 'found'){
+                                total++;
+                            }
+                            tr[i].style.display = "";
+                        }
+                        else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+                tr[tr.length - 1].getElementsByTagName("th")[0].innerHTML = '${%Total:} '+total;
+            }
+            if (${instance.shouldDashboardLocal}){
+                tableFilter('localIssuesInput','localIssuesTable');
+            }
+            if (${instance.shouldDashboardServer}){
+                tableFilter('serverIssuesInput','serverIssuesTable');
+            }
+        </script>
+
+    </l:main-panel>
+  </l:layout>
+</j:jelly>

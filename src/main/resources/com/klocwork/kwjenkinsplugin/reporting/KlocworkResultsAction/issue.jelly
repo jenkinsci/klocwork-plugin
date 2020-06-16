@@ -1,0 +1,112 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <j:forEach items="${issuesData}" var="issueGroup">
+        <div class="issue-file-block">
+            <a class="issue-file block link-style-none collapsible ${initialCollapse}"
+               onclick="Klocwork.toggle(this, 'issueDetails${groupCount}')">
+                <span>${issueGroup.key}</span>
+            </a>
+
+            <div id="issueDetails${groupCount}" class="${initialCollapse}" style="${initialStyle}">
+                <j:forEach items="${issueGroup.value}" var="issue">
+                    <j:set var="severity" value="info"/>
+                    <j:if test="${issue.severityCode &lt;= 3}">
+                        <j:choose>
+                            <j:when test="${issue.severityCode} == 3">
+                                <j:set var="severity" value="warning"/>
+                            </j:when>
+                            <j:otherwise>
+                                <j:set var="severity" value="danger"/>
+                            </j:otherwise>
+                        </j:choose>
+                    </j:if>
+                    <j:choose>
+                        <j:when test="${isNewIssue}">
+                            <j:set var="idPrefix" value=""/>
+                            <j:set var="issueId" value="${issue.id}"/>
+                        </j:when>
+                        <j:otherwise>
+                            <j:set var="idPrefix" value="fixed"/>
+                            <j:set var="issueId" value="${groupCount}"/>
+                        </j:otherwise>
+                    </j:choose>
+
+                    <ul class="list-style-none">
+                        <li>
+                            <div id="${idPrefix}issueLink${issueId}">
+                                <j:set var="traceClass" value="no-trace"/>
+                                <j:set var="hasTrace" value="${size(issue.trace) > 0}"/>
+
+                                <j:if test="${hasTrace}">
+                                    <j:set var="traceClass" value="collapsible"/>
+                                </j:if>
+                                <a id="${idPrefix}issueLinkElement${issueId}"
+                                   class="link-style-none ${traceClass} block collapsed"
+                                   onclick="Klocwork.toggle(this, 'fullIssueDetails${issueId}')">
+                                    <span class="label label-${severity}">${issue.code}</span>
+                                    <span class="label label-status-${issue.status.toLowerCase()}"> ${issue.status}</span>
+                                    <span id="issueLine${issueId}">
+                                        <j:if test="${issue.line != 0}">
+                                            &amp;nbsp;Line ${issue.line}:
+                                        </j:if>
+                                    </span>
+                                    ${issue.message}
+                                    <j:if test="${isNewIssue}">
+                                        <button id="showIssueCitation${issueId}" class="button-edit button-blank" onclick="event.stopPropagation();Klocwork.showCitation(${issueId})">Edit</button>
+                                    </j:if>
+                                </a>
+                                <j:if test="${isNewIssue}">
+                                    <!-- Issue Citation -->
+                                    <div id="issueCitationModal${issueId}" style="display:none" class="modal">
+                                        <div id="issueCitation${issueId}" class="modal-content issue-cite-block">
+                                            <div class="issue-cite-title">
+                                                <h4><span class="label label-${severity}">${issue.code}</span> ${issue.file}: ${issue.message}</h4>
+                                            </div>
+                                            <div class="issue-cite-select">
+                                                <div class="issue-cite-label">New status:</div>
+                                                <div class="issue-cite-control">
+                                                    <select id="issueStatus${issueId}">
+                                                        <j:forEach items="${it.klocworkStatusValues}" var="statusType">
+                                                            <option value="${statusType.value}">${statusType.key}</option>
+                                                        </j:forEach>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="issue-cite-comment">
+                                                <div class="issue-cite-label">Comment:</div>
+                                                <div class="issue-cite-control"><textarea maxlength="150" rows="5" cols="50" id="issueComment${issueId}"/></div>
+                                            </div>
+                                            <div class="kwerror">
+                                                <span id="citeError${issueId}"/>
+                                            </div>
+                                            <div class="issue-cite-save">
+                                                <button class="issue-cite-save-control" id="issueCiteSave${issueId}" onclick="Klocwork.saveCitation(${issueId})">Save</button>
+                                                <button class="issue-cite-save-control" id="issueCiteCancel${issueId}" onclick="Klocwork.cancelCitation(${issueId})">Cancel</button>
+                                            </div>
+                                            <div id="load-indicator" class="loading-overlay">Saving...</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Issue Details -->
+                                    <div id="fullIssueDetails${issueId}" class="collapsed" style="display:none">
+
+                                        <j:if test="${hasTrace}">
+                                            <div id="issueTrace${issueId}" class="issue-trace-block">
+                                                <ul class="list-style-none">
+                                                    <j:set var="trace" value="${issue.trace}"/>
+                                                    <st:include page="issueTrace.jelly"/>
+                                                </ul>
+                                            </div>
+                                        </j:if>
+                                    </div>
+                                </j:if>
+                            </div>
+                        </li>
+                    </ul>
+                </j:forEach>
+            </div>
+        </div>
+        <j:set var="groupCount" value="${groupCount + 1}" scope="parent"/>
+    </j:forEach>
+</j:jelly>

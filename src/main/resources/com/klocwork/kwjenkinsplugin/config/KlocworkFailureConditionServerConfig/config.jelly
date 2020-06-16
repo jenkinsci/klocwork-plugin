@@ -1,0 +1,56 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+<f:entry title="">
+    <table>
+        <tr>
+            <td>
+                <!-- set default jobResult to failure -->
+                <j:set var="jobResultValue" value="${instance.jobResult==null ? 'failure' : instance.jobResult}" />
+                <f:label>${%Mark Build As}</f:label><br/>
+
+                <f:radio name="jobResult" checked="${jobResultValue=='failure'}" value="failure" id="klocworkFailureConditionServerConfig_failure"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/red.gif" alt="100%" title="${%Failed}" />
+                    ${%Failed}
+                </label>
+                <f:radio name="jobResult" checked="${jobResultValue=='unstable'}" value="unstable" id="klocworkFailureConditionServerConfig_unstable"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/yellow.gif" alt="100%" title="${%Unstable}" />
+                    ${%Unstable}
+                </label>
+                <f:radio name="jobResult" checked="${jobResultValue=='pass'}" value="pass" id="klocworkFailureConditionServerConfig_pass"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/green.gif" alt="100%" title="${%Passed}" />
+                    ${%Passed}
+                </label>
+            </td>
+            <td>
+                <f:label for="query">${%Search Query}</f:label>
+                <f:textbox field="query" default="${%state:+New status:Analyze severity:1,2}" id="klocworkFailureConditionServerConfig_query"/>
+            </td>
+            <td style="width:10%">
+                <label>${%Threshold:}</label>
+                <f:textbox field="threshold" default="1" id="klocworkFailureConditionServerConfig_threshold"/>
+            </td>
+        </tr>
+    </table>
+<f:entry title="${%Report Results}" field="enableHTMLReporting">
+  <f:checkbox default="false" id="klocworkFailureConditionServerConfig_enableHTMLReporting"/>
+</f:entry>
+<f:entry title="${%Stop Build If Failed/Unstable:}" field="stopBuild">
+    <f:checkbox default="false" id="klocworkFailureConditionServerConfig_stopBuild"/>
+</f:entry>
+</f:entry>
+<f:entry title="${%Condition Name}" field="conditionName">
+    <f:textbox id="klocworkFailureConditionServerConfig_conditionName"/>
+</f:entry>
+
+<f:entry title="">
+    <div align="right">
+        <f:repeatableDeleteButton value="${%Delete}" id="klocworkFailureConditionServerConfig_delete"/>
+    </div>
+</f:entry>
+
+
+</j:jelly>

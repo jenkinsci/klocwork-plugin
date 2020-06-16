@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
+    <j:if test="${action.isVisible()}">
+
+        <script type="text/javascript" src="${rootURL}/plugin/kwjenkinsplugin/js/dist/Chart.min-2.7.2.js"></script>
+
+        <!-- z-index makes sure the trend chart is on top of the stage view -->
+        <div align="right" style="position:relative; z-index:1">
+            <canvas id="klocworkTrendChart" width="${action.chartWidth}" height="${action.chartHeight}"></canvas>
+        </div>
+
+        <script type="text/javascript" src="${rootURL}/plugin/kwjenkinsplugin/js/KlocworkTrendChart.js"></script>
+        <script>
+            window.onload = function () {
+                renderChart(${action.chartData})
+            }
+        </script>
+    </j:if>
+</j:jelly>

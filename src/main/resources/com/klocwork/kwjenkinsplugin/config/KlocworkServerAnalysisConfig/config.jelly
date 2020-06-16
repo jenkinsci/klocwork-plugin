@@ -1,0 +1,42 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
+        <f:textbox default="kwinject.out" id="klocworkServerAnalysisConfig_buildSpec"/>
+    </f:entry>
+    <f:entry title="${%Incremental Analysis}" field="incrementalAnalysis">
+      <f:checkbox default="true" id="klocworkServerAnalysisConfig_incrementalAnalysis"/>
+    </f:entry>
+
+    <f:advanced>
+        <f:entry title="${%Tables Directory}" field="tablesDir">
+          <f:textbox default="kwtables" id="klocworkServerAnalysisConfig_tablesDir"/>
+        </f:entry>
+
+        <f:entry title="${%Ignore Compile Errors}" field="ignoreCompileErrors">
+          <f:checkbox default="true" id="klocworkServerAnalysisConfig_ignoreCompileErrors"/>
+        </f:entry>
+
+        <f:entry title="${%Disable kwdeploy Before Analysis}" field="disableKwdeploy">
+          <f:checkbox default="false" id="klocworkServerAnalysisConfig_disableKwdeploy"/>
+        </f:entry>
+
+        <f:entry title="${%Import Config}" field="importConfig">
+          <f:textbox id="klocworkServerAnalysisConfig_importConfig"/>
+        </f:entry>
+
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+          <f:textbox id="klocworkServerAnalysisConfig_additionalOpts"/>
+        </f:entry>
+
+        <f:optionalBlock name="enabledCreateProject" title="${%Create Project If It Doesn't Exist}" checked="${instance.enabledCreateProject}" field="enabledCreateProject" inline="true" id="klocworkServerAnalysisConfig_enableCreateProject">
+            <f:advanced title="${%Optionals}">
+                <f:entry title="${%Duplicate From Existing Project}" field="duplicateFrom">
+                    <f:textbox default="" id="klocworkServerAnalysisConfig_duplicateForm"/>
+                </f:entry>
+            </f:advanced>
+        </f:optionalBlock>
+
+    </f:advanced>
+
+</j:jelly>

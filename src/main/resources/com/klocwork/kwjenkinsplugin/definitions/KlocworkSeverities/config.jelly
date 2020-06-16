@@ -1,0 +1,30 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:entry title="">
+        <table cellpadding="10">
+            <tr>
+                <td><b>${%severity}</b></td>
+                <td>
+                    <f:label for="critical">${%critical:}</f:label>
+                    <f:checkbox default="true" field="critical" id="klocworkSeverities_critical"/>
+                </td>
+                <td>
+                    <f:label for="error">${%error:}</f:label>
+                    <f:checkbox default="true" field="error" id="klocworkSeverities_error"/>
+                </td>
+                <td>
+                    <f:label for="warning">${%warning:}</f:label>
+                    <f:checkbox default="true" field="warning" id="klocworkSeverities_warning"/>
+                </td>
+                <td>
+                    <f:label for="review">${%review:}</f:label>
+                    <f:checkbox default="true" field="review" id="klocworkSeverities_review"/>
+                </td>
+                <td>
+                    <f:label for="fiveToTen">${%5-10:}</f:label>
+                    <f:checkbox default="true" field="fiveToTen" id="klocworkSeverities_fiveToTen"/>
+                </td>
+            </tr>
+        </table>
+    </f:entry>
+</j:jelly>

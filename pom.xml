@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.3</version>
+        <version>3.55</version>
     </parent>
 
     <properties>
@@ -11,73 +11,43 @@
         If your are using the Plugin Parent POM version 2.3 or later, just set the jenkins.version property to the version you need to depend on
         Source: https://wiki.jenkins-ci.org/display/JENKINS/Choosing+Jenkins+version+to+build+against
         -->
-        <jenkins.version>1.614</jenkins.version>
-        <hpi-plugin.version>1.115</hpi-plugin.version>
-        <jenkins-test-harness.version>${jenkins.version}</jenkins-test-harness.version>
+        <jenkins.version>1.658</jenkins.version>
+        <hpi.compatibleSinceVersion>2020.2</hpi.compatibleSinceVersion>
         <java.level>8</java.level>
     </properties>
 
     <artifactId>klocwork</artifactId>
-    <version>2.5.4-SNAPSHOT</version>
-    <name>Klocwork Community Plug-in</name>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/Klocwork+Community+Plugin</url>
+    <version>2020.2-SNAPSHOT</version>
+    <name>Klocwork Analysis Plug-in</name>
+    <url>https://github.com/jenkinsci/klocwork-plugin</url>
     <packaging>hpi</packaging>
+    <description>Plugin to run Klocwork CI in a Jenkins build.</description>
 
     <licenses>
         <license>
-            <name>MIT license</name>
+            <name>The MIT License</name>
             <comments>All source code is under the MIT license.</comments>
+            <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
-
     <developers>
         <developer>
-            <id>michaelbaron</id>
-            <name>Michael Baron</name>
-            <email>michael.baron@emenda.com</email>
-        </developer>
-        <developer>
-            <id>jlarfors</id>
-            <name>Jacob Larfors</name>
-            <email>jacob.larfors@emenda.com</email>
-        </developer>
-        <developer>
-            <id>andreaslarfors</id>
-            <name>Andreas Larfors</name>
-            <email>andreas.larfors@emenda.com</email>
+            <id>klocwork</id>
+            <name>Klocwork by Perforce</name>
+            <email>kwjenkins@perforce.com</email>
         </developer>
     </developers>
-
-    <distributionManagement>
-        <repository>
-            <id>maven.jenkins-ci.org</id>
-            <name>jenkinsci-releases</name>
-            <url>https://repo.jenkins-ci.org/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>maven.jenkins-ci.org</id>
-            <name>jenkinsci-snapshots</name>
-            <url>https://repo.jenkins-ci.org/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <scm>
         <connection>scm:git:ssh://github.com:jenkinsci/klocwork-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/klocwork-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/klocwork-plugin.git</url>
-        <tag>klocwork-2.4.7</tag>
     </scm>
 
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
             <url>https://repo.jenkins-ci.org/public/</url>
-        </repository>
-        <repository>
-            <id>Emenda</id>
-            <name>java-libs</name>
-            <url>https://gitlab.com/emenda/java-libs/raw/master</url>
-            <layout>default</layout>
         </repository>
     </repositories>
 
@@ -135,9 +105,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
-                <configuration>
-                    <argLine>${argLine} -Xmx1024m -XX:MaxPermSize=512m</argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jenkins-ci.tools</groupId>
@@ -166,25 +133,12 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.2</version>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.0.0</version>
                 <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.joda.time</pattern>
-                            <shadedPattern>org.emendashaded.joda.time</shadedPattern>
-                        </relocation>
-                    </relocations>
+                    <onlyAnalyze>none</onlyAnalyze>
                 </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -198,9 +152,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.emenda</groupId>
-            <artifactId>kwjlib</artifactId>
-            <version>3.4</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
@@ -217,18 +171,21 @@
             <artifactId>joda-time</artifactId>
             <version>2.9.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.5</version>
+            <version>3.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>job-dsl</artifactId>
             <version>1.58</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci</groupId>
+            <artifactId>symbol-annotation</artifactId>
+            <version>1.7</version>
         </dependency>
 
         <!-- Pipeline dependencies -->
@@ -255,6 +212,11 @@
             <artifactId>scm-api</artifactId>
             <version>2.1.1</version>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 </project>

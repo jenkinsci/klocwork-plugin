@@ -1,0 +1,45 @@
+<div>
+    <b>Integration analysis (Full)</b>
+</div>
+<br />
+<div>
+    Use the following steps to perform a Klocwork integration analysis and load the results to the Klocwork Server:
+</div>
+<br />
+<div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Step 1 (CI/Full) - Capture Build Information</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs a Klocwork build specification generation tool to capture compilation information about the project</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Step 2 (Full) - Run Analysis</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs the Klocwork Server analysis engine against the data captured within the build specification</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Step 3 (Full) - Load Analysis Results</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs the Klocwork Server load tool, which imports analysis data into the Klocwork Server database</td>
+    </tr>
+    </table>
+</div>
+<br />
+<div>
+    <b>Differential Analysis (CI)</b>
+</div>
+<br />
+<div>
+    Use the following steps to perform a differential analysis, which does not publish the results to the Klocwork Server and only reports the new issues detected since the previous integration analysis. Differential analysis can be used as a quality measure to reduce new issues being added to the Klocwork Server, and can also be configured to only analyze the changed files from the checkin, making the process much quicker:
+</div>
+<br />
+<div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Step 1 (CI/Full) - Capture Build Information</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs a Klocwork build specification generation tool to capture compilation information about the project</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - Step 2 (CI) - Run Differential Analysis</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">runs an analysis only on the changed files by using the Klocwork command line user tool</td>
+    </tr>
+    </table>
+</div>

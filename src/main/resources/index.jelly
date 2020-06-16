@@ -1,7 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-  This plugin allows for automated Klocwork analyses.
-  <a href="http://emenda.com/products/klocwork/" target="_blank">Learn more</a> about Klocwork.
-  <a href="http://emenda.com/jenkins-klocwork-docs" target="_blank">Official documentation</a>.
-  Maintained by <a href="http://emenda.com" target="_blank">Emenda</a> for the community.
+  This plugin allows for automated Klocwork analysis as part of your ci process.
 </div>

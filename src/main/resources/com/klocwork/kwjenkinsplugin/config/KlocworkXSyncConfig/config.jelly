@@ -1,0 +1,59 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Perform Dry Run}" field="dryRun">
+        <f:checkbox default="true" id="klocworkXSyncConfig_dryRun"/>
+    </f:entry>
+    <f:entry title="${%Project Filter}" field="projectRegexp">
+        <f:textbox id="klocworkXSyncConfig_projectRegexp"/>
+    </f:entry>
+    <f:entry title="${%Last Sync}" field="lastSync">
+        <f:textbox default="03-00-0000 00:00:00" id="klocworkXSyncConfig_lastSync"/>
+    </f:entry>
+    <f:advanced>
+        <f:entry title="${%Sync Statuses}" field="syncStatusesField">
+            <table>
+                <tr>
+                    <td>
+                        <f:checkbox default="true" field="statusAnalyze" id="klocworkXSyncConfig_statusAnalyze"/>
+                        <label>${%Analyze}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="true" field="statusIgnore" id="klocworkXSyncConfig_statusIgnore"/>
+                        <label>${%Ignore}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="true" field="statusNotAProblem" id="klocworkXSyncConfig_statusNotAProblem"/>
+                        <label>${%Not a Problem}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="true" field="statusFix" id="klocworkXSyncConfig_statusFix"/>
+                        <label>${%Fix}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <f:checkbox default="true" field="statusFixInNextRelease" id="klocworkXSyncConfig_statusFixInNextRelease"/>
+                        <label>${%Fix in Next Release}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="false" field="statusFixInLaterRelease" id="klocworkXSyncConfig_statusFixInLaterRelease"/>
+                        <label>${%Fix in Later Release}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="true" field="statusDefer" id="klocworkXSyncConfig_statusDefer"/>
+                        <label>${%Defer}</label>
+                    </td>
+                    <td>
+                        <f:checkbox default="true" field="statusFilter" id="klocworkXSyncConfig_statusFilter"/>
+                        <label>${%Filter}</label>
+                    </td>
+                </tr>
+            </table>
+        </f:entry>
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+          <f:textbox id="klocworkXSyncConfig_additionalOpts"/>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>

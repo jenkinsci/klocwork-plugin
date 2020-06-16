@@ -1,0 +1,34 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+
+    <f:entry title="${%Klocwork Build Specification}" field="buildSpec">
+        <f:textbox default="kwinject.out" id="klocworkCiConfig_buildSpec"/>
+    </f:entry>
+
+    <f:optionalBlock field="incrementalAnalysis" title="${%Analyze Changed Files Only}" checked="${instance.incrementalAnalysis}" inline="true"  id="klocworkCiConfig_incrementalAnalysis">
+        <f:property field="differentialAnalysisConfig"/>
+    </f:optionalBlock>
+
+    <f:advanced>
+        <f:entry title="${%Local Project Directory}" field="projectDirConfig">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:60%">
+                        <f:textbox field="projectDir" id="klocworkCiConfig_projectDirConfig"/>
+                    </td>
+                    <td style="width:40%">
+                        <f:checkbox field="cleanupProject" checked="${instance.cleanupProject=='true'}" value="cleanupProject" id="klocworkCiConfig_cleanupProject"/>
+                        <f:label for="cleanupProject">${%Cleanup Existing Project}</f:label>
+                    </td>
+                </tr>
+            </table>
+        </f:entry>
+        <f:entry title="${%XML Report File}" field="reportFile">
+            <f:textbox id="klocworkCiConfig_reportFile"/>
+        </f:entry>
+        <f:entry title="${%Additional Options}" field="additionalOpts">
+            <f:textbox id="klocworkCiConfig_additionalOpts"/>
+        </f:entry>
+    </f:advanced>
+</j:jelly>

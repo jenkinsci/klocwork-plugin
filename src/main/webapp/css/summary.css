@@ -1,0 +1,258 @@
+.issue-file-block {
+    padding-left: 2em;
+    padding-top: 0.5em;
+}
+.label {
+    display: inline;
+    padding: .2em .4em .2em;
+    margin-right: .5em;
+    font-size: 8pt;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    vertical-align: baseline;
+    border-radius: .25em;
+    box-sizing: border-box;
+}
+.label-info {
+    background-color: #5bc0de;
+}
+.label-warning {
+    background-color: #f0ad4e;
+}
+.label-danger {
+    background-color: #d9534f;
+}
+
+.label-status-analyze {
+    background-color: #d9534f;
+}
+
+.label-status-ignore {
+    background-color: #8ed9a6;
+}
+
+.label-status-not_a_problem {
+    background-color: #8ed9a6;
+}
+
+.label-status-fix {
+    background-color: #f0ad4e;
+}
+
+.label-status-fix_in_next_release {
+    background-color: #f0ad4e;
+}
+
+.label-status-defer {
+    background-color: #f0ad4e;
+}
+
+.label-status-filter {
+    background-color: #f0ad4e;
+}
+
+.button-edit {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 0px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 8pt;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    height:18px;
+}
+
+.button-blank {
+    background-color: white;
+    color: black;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+}
+
+.button-blank:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.issue {
+    padding: 0.5em;
+}
+.issue-trace-block {
+    float: left;
+    width: 100%;
+    padding-left: 2em;
+}
+.issue-trace-line {
+    padding: 0.25em;
+    list-style-type: none;
+
+}
+.issues-block {
+    margin: 0.5em;
+}
+ul.list-style-none {
+    list-style-type: none;
+    margin: 0;
+    padding-left: 1.5em;
+    padding-bottom: 0.5em;
+    padding-top: 0.75em;
+}
+a.link-style-none {
+    text-decoration: none;
+    color: black;
+    padding-left: 1.5em;
+}
+a:visited.link-style-none {
+}
+.collapsible {
+    background-repeat: no-repeat;
+    line-height: 1.5em;
+    background-position: left center;
+}
+.collapsible:hover {
+    background-color: #e0e4dc;
+}
+.collapsible.collapsed {
+    background-image: url('../images/menu_right_arrow.png');
+}
+.issue-file.expanded {
+    background-color: whitesmoke;
+}
+.block {
+    display: inline-block;
+    width: 100%;
+}
+.no-trace {
+    cursor: default;
+}
+.clickable:hover {
+    cursor: pointer;
+}
+.collapsible.collapsed:hover {
+    background-image: url('../images/menu_right_arrow_hover.png');
+}
+.collapsible.expanded {
+    background-image: url('../images/menu_down_arrow.png');
+}
+div.issue-cite-block {
+    width: 45em;
+    height: 16em;
+    padding: 0 1em;
+    display: table;
+}
+.issue-cite-title {
+    text-align: center;
+    display: table-row;
+}
+.issue-cite-label {
+    width: 25%;
+    vertical-align: top;
+    float: left;
+    display: table-cell;
+}
+.issue-cite-control {
+    width: auto;
+    float: left;
+    display: table-cell;
+}
+.issue-cite-select {
+    margin-bottom: 0.5em;
+    width: auto;
+    display: table-row;
+}
+.issue-cite-comment {
+    margin-top: 0;
+    width: auto;
+    display: table-row;
+}
+.kwerror {
+    padding-top: 1em;
+    color: red;
+    font-weight: bold;
+    display: table-cell;
+    float: left;
+}
+.issue-cite-save {
+    display: table-cell;
+    float: right;
+}
+.issue-cite-save-control {
+    margin: 0.25em;
+}
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.loading-overlay {
+    display: none;
+    margin: 5% 0% 0% 0%; /* 15% from the top and centered */
+    /*padding: 20px 0px 20px 0px;*/
+    /*border: 1px solid #888;*/
+    /*width: 700px; !* Could be more or less, depending on screen size *!*/
+    z-index: 2;
+    text-align: center;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.loading-overlay-off {
+    visibility: hidden; /* Hidden by default */
+    /*position: relative;*/
+    margin: 5% 0% 0% 0%; /* 15% from the top and centered */
+    /*padding: 20px 0px 20px 0px;*/
+    /*border: 1px solid #888;*/
+    /*width: 700px; !* Could be more or less, depending on screen size *!*/
+    z-index: 2;
+    text-align: center;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.loading-overlay-on {
+    visibility: visible; /* Hidden by default */
+    /*position: relative;*/
+    margin: 5% 0% 0% 0%; /* 15% from the top and centered */
+    /*padding: 20px 0px 20px 0px;*/
+    /*border: 1px solid #888;*/
+    /*width: 700px; !* Could be more or less, depending on screen size *!*/
+    z-index: 2;
+    text-align: center;
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 700px; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.kwclose {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.kwclose:hover {
+    cursor: pointer;
+}

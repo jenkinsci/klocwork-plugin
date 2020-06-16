@@ -1,0 +1,42 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:entry title="">
+        <table cellpadding="10">
+            <tr>
+                <td><b>${%status}</b></td>
+                <td>
+                    <f:label for="analyze">${%analyze:}</f:label>
+                    <f:checkbox default="true" field="analyze" id="klocworkStatuses_analyze"/>
+                </td>
+                <td>
+                    <f:label for="ignore">${%ignore:}</f:label>
+                    <f:checkbox default="false" field="ignore" id="klocworkStatuses_ignore"/>
+                </td>
+                <td>
+                    <f:label for="notAProblem">${%not a problem:}</f:label>
+                    <f:checkbox default="false" field="notAProblem" id="klocworkStatuses_notAProblem"/>
+                </td>
+                <td>
+                    <f:label for="fix">${%fix:}</f:label>
+                    <f:checkbox default="true" field="fix" id="klocworkStatuses_fix"/>
+                </td>
+                <td>
+                    <f:label for="fixInNextRelease">${%fix in next release:}</f:label>
+                    <f:checkbox default="false" field="fixInNextRelease" id="klocworkStatuses_fixInNextRelease"/>
+                </td>
+                <td>
+                    <f:label for="fixInLaterRelease">${%fix in later release:}</f:label>
+                    <f:checkbox default="false" field="fixInLaterRelease" id="klocworkStatuses_fixInLaterRelease"/>
+                </td>
+                <td>
+                    <f:label for="defer">${%defer:}</f:label>
+                    <f:checkbox default="false" field="defer" id="klocworkStatuses_defer"/>
+                </td>
+                <td>
+                    <f:label for="filter">${%filter:}</f:label>
+                    <f:checkbox default="false" field="filter" id="klocworkStatuses_filter"/>
+                </td>
+            </tr>
+        </table>
+    </f:entry>
+</j:jelly>

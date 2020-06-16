@@ -1,0 +1,27 @@
+<div><b>統合解析 (完全)</b></div><br /><div>Klocwork 統合解析を行って結果を Klocwork サーバーにロードするには、以下のステップを使用します:</div><br /><div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - ステップ 1 (CI/完全) - ビルド情報のキャプチャ</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork build specification (ビルドスペック) 生成ツールを実行し、プロジェクトについてのコンパイル情報をキャプチャします</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - ステップ 2 (完全) - 解析の実行</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">build specification (ビルドスペック) 内でキャプチャされたデータに対して Klocwork サーバー解析エンジンを実行します</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - ステップ 3 (完全) - 解析結果のロード</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">解析データを Klocwork サーバーデータベースにインポートする Klocwork サーバーロードツールを実行します</td>
+    </tr>
+    </table>
+</div><br /><div><b>差分解析 (CI)</b></div><br /><div>Klocwork サーバーに結果を公開せずに以前の統合解析以降に検出された新しい指摘のみを報告する差分解析を実行するには、以下のステップを使用します。差分解析は、Klocwork サーバーに追加される新しい指摘を減らすための品質の高い手段として使用できます。また、チェックインから変更されたファイルのみを解析するように設定することで、プロセスを大幅に高速化することもできます。</div><br /><div>
+    <table style="width:100%"/>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - ステップ 1 (CI/完全) - ビルド情報のキャプチャ</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork build specification (ビルドスペック) 生成ツールを実行し、プロジェクトについてのコンパイル情報をキャプチャします</td>
+    </tr>
+    <tr>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork - ステップ 2 (CI) - 差分解析の実行</td>
+        <td style="background-color: #dddddd;border: 1px solid #dddddd;">Klocwork コマンドラインユーザーツールを使用し、変更されたファイルに対してのみ解析を実行します</td>
+    </tr>
+    </table>
+</div>

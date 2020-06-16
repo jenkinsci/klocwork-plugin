@@ -1,0 +1,28 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+
+    <f:advanced title="${%Differential Analysis Options}">
+
+        <f:entry title="${%Differential Analysis File List}" field="diffFileList">
+          <f:textbox id="klocworkDifferentialAnalysisConfig_diffFileList"/>
+        </f:entry>
+
+        <!-- set default diffType to "manual" -->
+        <j:set var="diffTypeValue" value="${instance.diffType==null ? 'git' : instance.diffType}" />
+
+        <f:entry title="" description="">
+            <table width="100%">
+                <f:radioBlock checked="${diffTypeValue=='git'}" name="diffType" title="${%Using Git}" value="git" inline="true" id="klocworkDifferentialAnalysisConfig_diffType">
+                    <f:entry title="${%Previous Commit}">
+                      <f:textbox field="gitPreviousCommit" default="${GIT_PREVIOUS_COMMIT}" id="klocworkDifferentialAnalysisConfig_gitPreviousCommit"/>
+                    </f:entry>
+                </f:radioBlock>
+                <f:radioBlock checked="${diffTypeValue=='manual'}" name="diffType" title="${%Manual}" value="manual" inline="true" id="klocworkDifferentialAnalysisConfig_diffType">
+                    <f:entry description="${%This option will use the Differential Analysis File List. Please make sure this is populated every build with the change list you want to analyze}"/>
+                </f:radioBlock>
+            </table>
+        </f:entry>
+    </f:advanced>
+
+</j:jelly>

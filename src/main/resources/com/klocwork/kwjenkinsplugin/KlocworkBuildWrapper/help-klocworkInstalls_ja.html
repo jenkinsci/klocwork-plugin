@@ -1,0 +1,9 @@
+<div>
+  <h2>Klocwork インストール</h2>
+  <p>これは、「基本的な」Jenkins セットアップのためのシンプルな機能です。<a href="https://wiki.jenkins-ci.org/display/JENKINS/Custom+Tools+Plugin">CustomToolsPlugin</a> などの他のプラグインを使用してインストールを行う場合や、他のツールの PATH を使用する場合は、この機能をスキップし、他のツールと同様に Klocwork PATH を設定することをお勧めします。</p>
+  <p>CustomToolsPlugin などを使用しない場合で、Klocwork PATH をまだ設定してないときは、続行してください。</p>
+  <h3>この機能の目的</h3>
+  <p>この機能は、指定された PATH をジョブの PATH 変数に追加します。名前を付けてインストールを作成し、[ビルド環境] 設定のジョブでそのインストールを参照します。Klocwork サーバーと CI ツールの両方を使用する場合は、Unix と Windows の違いに注意し、正しい PATH 区切り子 (&quot;:&quot; ではなく &quot;;&quot;) を使用してください。</p>
+  <p>たとえば、パス C:\Klocwork\Server\bin;C:\Klocwork\kwciagent\bin を使用して WindowsBuildSlaves というインストールを作成する場合、これらは既存の %PATH% 変数に追加されます。</p>
+  <p>プラグインは /bin/sh または cmd.exe を呼び出し、パスなしで Klocwork 実行可能ファイルを指定するため、ユーザーは Klocwork が自分のパスで設定済みであることを確認する必要があります。</p>
+</div>

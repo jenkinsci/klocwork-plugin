@@ -1,0 +1,86 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <link type="text/css" href="${resURL}/plugin/kwjenkinsplugin/css/summary.css" rel="stylesheet"/>
+    <script type="text/javascript" src="${resURL}/plugin/kwjenkinsplugin/lib/scriptaculous/scriptaculous.js"/>
+    <script type="text/javascript" src="${resURL}/plugin/kwjenkinsplugin/js/klocwork.js"/>
+    <script>
+        var klocworkResultsAction = <st:bind value="${it}"/>
+    </script>
+
+    <tr>
+        <!-- Klocwork logo column -->
+        <td>
+            <img style="width: 48px;height:48px;" src="${resURL}/plugin/kwjenkinsplugin/images/logo.png"/>
+        </td>
+
+        <!-- Klocwork content column -->
+        <td style="width:100%; vertical-align: middle;">
+            <!-- Analysis results -->
+            <j:choose>
+                <j:when test="${it.results != null}">
+                    <j:set var="groupCount" value="0"/>
+                    <j:choose>
+                        <j:when test="${it.results.newIssues != 0}">
+                            <j:set var="issueWord" value="issue"/>
+                            <j:if test="${it.results.newIssues &gt; 1}">
+                                <j:set var="issueWord" value="issues"/>
+                            </j:if>
+                            <j:set var="initialCollapse" value="collapsed"/>
+                            <j:set var="initialStyle" value="display:none;"/>
+                            <j:if test="${expandIssues}">
+                                <j:set var="initialStyle" value=""/>
+                                <j:set var="initialCollapse" value="expanded"/>
+                            </j:if>
+                            <div class="issues-block">
+                                <a class="link-style-none collapsible block ${initialCollapse}" onclick="Klocwork.toggle(this, 'newIssues')">
+                                    New Issues (<img src="${rootURL}/images/16x16/red.png"/> ${it.results.newIssues} ${issueWord})
+                                </a>
+                                <div id="newIssues" class="${initialCollapse}" style="${initialStyle}">
+                                    <div>
+                                        <j:set var="issuesData" value="${it.results.newIssuesDataGroupedByFile}"/>
+                                        <j:set var="isNewIssue" value="true"/>
+                                        <st:include page="issue.jelly"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </j:when>
+                        <j:otherwise>
+                            <div>
+                                No new issues detected during analysis.
+                            </div>
+                        </j:otherwise>
+                    </j:choose>
+
+                    <j:choose>
+                        <j:when test="${it.results.fixedIssues != 0}">
+                            <j:if test="${it.results.fixedIssues &gt; 1}">
+                                <j:set var="issueWord" value="issues"/>
+                            </j:if>
+                            <j:set var="issueWord" value="issue"/>
+
+                            <div class="issues-block">
+                                <j:set var="initialCollapse" value="collapsed"/>
+                                <a class="link-style-none collapsible block ${initialCollapse}" onclick="Klocwork.toggle(this, 'fixedIssues')">
+                                    Fixed Issues (<img src="${rootURL}/images/16x16/blue.png"/> ${it.results.fixedIssues} ${issueWord})
+                                </a>
+
+                                <div id="fixedIssues" class="${initialCollapse}" style="display:none">
+                                    <j:set var="issuesData" value="${it.results.fixedIssuesDataGroupedByFile}"/>
+                                    <j:set var="isNewIssue" value="false"/>
+                                    <st:include page="issue.jelly"/>
+                                </div>
+                            </div>
+                        </j:when>
+                    </j:choose>
+
+                </j:when>
+                <j:otherwise>
+                    <div>
+                        No results available.
+                    </div>
+                </j:otherwise>
+            </j:choose>
+        </td>
+    </tr>
+</j:jelly>
