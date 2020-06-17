@@ -28,7 +28,7 @@ package com.klocwork.kwjenkinsplugin;
 
 public class KlocworkConstants {
 
-    public static final String ICON_URL = "/plugin/kwjenkinsplugin/icons/klocwork-24.gif";
+    public static final String ICON_URL = "/plugin/klocwork/icons/klocwork-24.gif";
     public static final String DISPLAY_NAME = Messages.KlocworkConstants_display_name();
 
     public static final String KLOCWORK_BUILD_WRAPPER_DISPLAY_NAME =

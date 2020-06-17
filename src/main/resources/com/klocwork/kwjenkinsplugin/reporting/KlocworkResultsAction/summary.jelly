@@ -1,9 +1,9 @@
 <?jelly escape-by-default='true'?>
 
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <link type="text/css" href="${resURL}/plugin/kwjenkinsplugin/css/summary.css" rel="stylesheet"/>
-    <script type="text/javascript" src="${resURL}/plugin/kwjenkinsplugin/lib/scriptaculous/scriptaculous.js"/>
-    <script type="text/javascript" src="${resURL}/plugin/kwjenkinsplugin/js/klocwork.js"/>
+    <link type="text/css" href="${resURL}/plugin/klocwork/css/summary.css" rel="stylesheet"/>
+    <script type="text/javascript" src="${resURL}/plugin/klocwork/lib/scriptaculous/scriptaculous.js"/>
+    <script type="text/javascript" src="${resURL}/plugin/klocwork/js/klocwork.js"/>
     <script>
         var klocworkResultsAction = <st:bind value="${it}"/>
     </script>
@@ -11,7 +11,7 @@
     <tr>
         <!-- Klocwork logo column -->
         <td>
-            <img style="width: 48px;height:48px;" src="${resURL}/plugin/kwjenkinsplugin/images/logo.png"/>
+            <img style="width: 48px;height:48px;" src="${resURL}/plugin/klocwork/images/logo.png"/>
         </td>
 
         <!-- Klocwork content column -->

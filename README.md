@@ -13,17 +13,15 @@ More information and up-to-date documentation can be found here: [Klocwork's Doc
 
 The plugin is maintained by Klocwork Team. For any questions visit [Technical support](https://www.roguewave.com/help-support/technical-support)
 
-###Latest features:
+### Latest features:
 
 * Issue citing for CI-Analysis jobs
-* New build step names. ( Make sure to update your pipeline scripts to match the changes. Use Pipeline Snippet Generator to retrieve updated names)
+* New build step names. (Make sure to update your pipeline scripts to match the changes. Use Pipeline Snippet Generator to retrieve updated names)
 * Pipeline support
 * Job-DSL support
 * Klocwork Cross-Project Synchronisation
 * Incremental Diff Analysis & Quality Gateway
 
-### Note on Depreciation in v2.0+
-Please note that in v2.0 we added new functionality to the plugin. Instead of updating (and possibly breaking) the old parts of the plugin we added completely new functionality. We will not remove any existing functionality but have marked it as Deprecated and will not actively add new features to it. Instead we recommend that you start using the new features, as detailed in the documentation. We hope that the new features are better and easier for you to use!
 
 ### Changelog
 

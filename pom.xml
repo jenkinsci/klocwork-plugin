@@ -17,7 +17,7 @@
     </properties>
 
     <artifactId>klocwork</artifactId>
-    <version>2020.3-SNAPSHOT</version>
+    <version>2020.2.1-SNAPSHOT</version>
     <name>Klocwork Analysis Plug-in</name>
     <url>https://github.com/jenkinsci/klocwork-plugin</url>
     <packaging>hpi</packaging>
@@ -111,9 +111,6 @@
                 <groupId>org.jenkins-ci.tools</groupId>
                 <artifactId>maven-hpi-plugin</artifactId>
                 <extensions>true</extensions>
-                <configuration>
-                    <compatibleSinceVersion>1.4.0</compatibleSinceVersion>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

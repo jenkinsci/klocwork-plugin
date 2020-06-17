@@ -14,7 +14,7 @@
 
         <style type="text/css">
             #localIssuesInput {
-                background-image: url('/plugin/kwjenkinsplugin/icons/klocwork-24.gif');  /* Add a search icon to input */
+                background-image: url('/plugin/klocwork/icons/klocwork-24.gif');  /* Add a search icon to input */
                 background-position: 10px 12px; /* Position the search icon */
                 background-repeat: no-repeat; /* Do not repeat the icon image */
                 width: 100%; /* Full-width */
@@ -24,7 +24,7 @@
                 margin-bottom: 12px; /* Add some space below the input */
             }
             #serverIssuesInput {
-                background-image: url('/plugin/kwjenkinsplugin/icons/klocwork-24.gif');  /* Add a search icon to input */
+                background-image: url('/plugin/klocwork/icons/klocwork-24.gif');  /* Add a search icon to input */
                 background-position: 10px 12px; /* Position the search icon */
                 background-repeat: no-repeat; /* Do not repeat the icon image */
                 width: 100%; /* Full-width */
