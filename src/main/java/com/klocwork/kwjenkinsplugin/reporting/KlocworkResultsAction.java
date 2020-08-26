@@ -34,11 +34,12 @@ import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.config.KlocworkFailureConditionCiConfig;
 import com.klocwork.kwjenkinsplugin.config.KlocworkFailureConditionConfig;
 import com.klocwork.kwjenkinsplugin.definitions.*;
-import com.klocwork.kwjenkinsplugin.dto.KlocworkJsonIssue;
 import com.klocwork.kwjenkinsplugin.dto.HtmlDetailedIssueData;
 import com.klocwork.kwjenkinsplugin.dto.HtmlReportIssues;
+import com.klocwork.kwjenkinsplugin.dto.KlocworkJsonIssue;
 import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
 import com.klocwork.kwjenkinsplugin.util.KlocworkUtil.StreamReferences;
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -49,6 +50,7 @@ import hudson.remoting.VirtualChannel;
 import hudson.util.ArgumentListBuilder;
 import jenkins.tasks.SimpleBuildStep.LastBuildAction;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import java.io.*;
@@ -57,9 +59,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static com.klocwork.kwjenkinsplugin.KlocworkConstants.KLOCWORK_URL;
 import static java.util.stream.Collectors.groupingBy;
 
 public class KlocworkResultsAction implements Action, LastBuildAction {
+    private static final String KLOCWORK_LTOKEN = "KLOCWORK_LTOKEN";
+    private static final String LTOKEN = "ltoken";
 
     private final Run<?, ?> build;
     private final String url;
@@ -130,11 +135,10 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         return url;
     }
 
-
     public HtmlReportIssues getResults() {
         final HtmlReportIssues report = new HtmlReportIssues();
 
-        if(htmlIssues == null || htmlIssues.isEmpty()) {
+        if (htmlIssues == null || htmlIssues.isEmpty()) {
             return report;
         }
 
@@ -143,12 +147,12 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
                 .stream()
                 .collect(groupingBy(HtmlDetailedIssueData::getState));
 
-        if(sortedIssues.get(State.NEW.toString()) != null) {
+        if (sortedIssues.get(State.NEW.toString()) != null) {
             report.setNewIssues(sortedIssues.get(State.NEW.toString()).size());
             report.setNewIssuesData(sortedIssues.get(State.NEW.toString()));
         }
 
-        if(sortedIssues.get(State.FIXED.text()) != null) {
+        if (sortedIssues.get(State.FIXED.text()) != null) {
             report.setFixedIssues(sortedIssues.get(State.FIXED.toString()).size());
             report.setFixedIssuesData(sortedIssues.get(State.FIXED.toString()));
         }
@@ -171,19 +175,23 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
     private void updateIssues() throws IOException {
         Set<KlocworkJsonIssue> allIssues = new LinkedHashSet<>();
 
-        if(failureConditionConfig == null) {
+        if (failureConditionConfig == null) {
             return;
         }
 
-        if(failureConditionConfig.getFailureConditionCiConfigs() != null) {
+        if (failureConditionConfig.getFailureConditionCiConfigs() != null) {
             for (KlocworkFailureConditionCiConfig failureConfig : failureConditionConfig.getFailureConditionCiConfigs()) {
 
                 final FilePath workspace = new FilePath(channel, remotePath);
-                final ArgumentListBuilder listCommand = getListCmd(failureConfig.getEnabledSeverites(), failureConfig.getEnabledStatuses(), workspace, "json");
+                final ArgumentListBuilder listCommand = getListCmd(failureConfig.getEnabledSeverites(),
+                                                                   failureConfig.getEnabledStatuses(),
+                                                                   workspace,
+                                                                   "json",
+                                                                   failureConfig.getDiffFileList());
                 final Map<StreamReferences, ByteArrayOutputStream> response = KlocworkUtil.executeCommandParseOutput(launcher, workspace, envVars, listCommand);
 
-                if(response.get(StreamReferences.ERR_STREAM).size() > 0) {
-                    throw new IOException(response.get(StreamReferences.ERR_STREAM).toString());
+                if (response.get(StreamReferences.ERR_STREAM).size() > 0) {
+                    LOGGER.log(Level.WARNING, response.get(StreamReferences.ERR_STREAM).toString());
                 }
 
                 final List<KlocworkJsonIssue> jsonIssues = parseIssues(response.get(StreamReferences.OUT_STREAM));
@@ -198,58 +206,49 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         InputStreamReader reader = new InputStreamReader(new ByteArrayInputStream(jsonStream.toByteArray()));
         JsonReader jsonReader = new JsonReader(reader);
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        List<KlocworkJsonIssue> result = gson.fromJson(jsonReader, new TypeToken<List<KlocworkJsonIssue>>() {
+        }.getType());
 
-        return gson.fromJson(jsonReader, new TypeToken<List<KlocworkJsonIssue>>(){}.getType());
+        return result != null ? result : new ArrayList<>();
     }
 
     @JavaScriptMethod
-    public JSONObject citeIssue(final int issueId, final int status, final String comment) {
+    public JSONObject citeIssue(final int issueId, final int status, final String comment, final String ltokenString) {
         LOGGER.log(Level.INFO, Messages.KlocworkResultAction_logger_cite_start(issueId));
-
         final JSONObject result = new JSONObject();
         result.put("result", false);
-
         try {
-
-            if(remotePath == null) {
+            if (remotePath == null) {
                 LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_logger_cite_fails(issueId, Messages.KlocworkResultAction_oldbuild_error()));
                 result.put("error", Messages.KlocworkResultAction_oldbuild_error());
                 return result;
             }
-
-            if(comment.length() > 150) {
+            if (comment.length() > 150) {
                 LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_logger_cite_fails(issueId, Messages.KlocworkResultAction_comment_error()));
                 result.put("error", Messages.KlocworkResultAction_comment_error());
                 return result;
             }
-
             final Map<StreamReferences, ByteArrayOutputStream> response;
             final FilePath workspace = new FilePath(channel, remotePath);
-
-            final ArgumentListBuilder setStatusCommand = getSetStatusCmd(issueId, Status.getValue(status), comment, workspace);
-            LOGGER.info("Running: " + setStatusCommand.toString());
-            response = KlocworkUtil.executeCommandParseOutput(launcher, workspace, envVars, setStatusCommand);
-
-            if(response.get(StreamReferences.ERR_STREAM).size() > 0) {
-                LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_logger_cite_fails(issueId, response.get(StreamReferences.ERR_STREAM)));
-                result.put("error", response.get(StreamReferences.ERR_STREAM).toString());
-                return result;
-
-            } else {
-
-                LOGGER.log(Level.INFO, Messages.KlocworkResultAction_logger_cite_success(issueId));
-                result.put("result", true);
+            final FilePath tmpLtokenFile = workspace.createTextTempFile(LTOKEN, "", ltokenString);
+            try {
+                envVars.put(KLOCWORK_LTOKEN, tmpLtokenFile.getRemote());
+                final ArgumentListBuilder setStatusCommand = getSetStatusCmd(issueId, Status.getValue(status), comment, workspace);
+                LOGGER.info("Running: " + setStatusCommand.toString());
+                response = KlocworkUtil.executeCommandParseOutput(launcher, workspace, envVars, setStatusCommand);
+                if (response.get(StreamReferences.ERR_STREAM).size() > 0) {
+                    LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_logger_cite_fails(issueId, response.get(StreamReferences.ERR_STREAM)));
+                    result.put("error", response.get(StreamReferences.ERR_STREAM).toString());
+                    return result;
+                } else {
+                    LOGGER.log(Level.INFO, Messages.KlocworkResultAction_logger_cite_success(issueId));
+                    result.put("result", true);
+                }
+            } finally {
+                deleteTokenFile(tmpLtokenFile);
             }
-
         } catch (Exception e) {
-            final String errorMessage;
-
-            if(e.getMessage() != null) {
-                errorMessage = e.getMessage();
-            } else {
-                errorMessage = Messages.KlocworkResultAction_unknown_error();
-            }
-
+            final String errorMessage = getErrorMessage(e);
             LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_logger_cite_fails(issueId, errorMessage));
             result.put("error", errorMessage);
             return result;
@@ -264,6 +263,81 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         return result;
     }
 
+    private static void deleteTokenFile(final FilePath tokenFile) {
+        try {
+            tokenFile.delete();
+        } catch (IOException | InterruptedException e) {
+            LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_non_deleted_token(tokenFile.getRemote()), e);
+        }
+    }
+
+    private static String getErrorMessage(Exception e) {
+        return e.getMessage() != null ? e.getMessage() : Messages.KlocworkResultAction_unknown_error();
+    }
+
+    @JavaScriptMethod
+    public JSONObject doAuth(final String username, final String password) {
+        final JSONObject result = new JSONObject();
+        result.put("result", false);
+        if (remotePath == null || launcher == null) {
+            LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_authentication_oldbuild_error());
+            result.put("error", Messages.KlocworkResultAction_authentication_oldbuild_error());
+            return result;
+        }
+        final FilePath workspace = new FilePath(channel, remotePath);
+        final FilePath userLtokenPath = new FilePath(workspace, username + LTOKEN);
+        final String userLtokenLocation = userLtokenPath.getRemote();
+        envVars.put(KLOCWORK_LTOKEN, userLtokenLocation);
+        try {
+            KlocworkAuthenticator.authenticate(launcher, workspace, username, password, envVars.get(KLOCWORK_URL), envVars);
+            final String[] ltokenArray = getTokenEntry(userLtokenLocation);
+            if (ltokenArray.length != 4) {
+                LOGGER.log(Level.WARNING, new StringBuilder()
+                        .append("Could not authenticate user ")
+                        .append(username)
+                        .append(". Token returned by Klocwork Server could not be read or is empty")
+                        .toString());
+                result.put("error", Messages.KlocworkResultAction_authentication_failed(username));
+            } else {
+                LOGGER.log(Level.INFO, Messages.KlocworkResultAction_authentication_success(username));
+                result.put("data", tokenInfoToJSON(ltokenArray).toString());
+                result.put("result", true);
+                deleteTokenFile(userLtokenPath);
+            }
+        } catch (ConsoleErrorException | AbortException e) {
+            final String errorMessage = Messages.KlocworkResultAction_authentication_failed_cause(username, getErrorMessage(e));
+            LOGGER.log(Level.WARNING, errorMessage, e);
+            result.put("error", errorMessage);
+        }
+        return result;
+    }
+
+    private static JSONObject tokenInfoToJSON(final String[] ltokenArray) {
+        return new JSONObject()
+                .accumulate("kwTokenServer", ltokenArray[0])
+                .accumulate("kwTokenPort", ltokenArray[1])
+                .accumulate("kwTokenUsername", ltokenArray[2])
+                .accumulate("kwTokenValue", ltokenArray[3]);
+    }
+
+    /**
+     * Reads an ltoken file and returns an array of the first entry in it
+     *
+     * @param ltokenLocation Location of the ltoken file
+     * @return An array of the first entry in the ltoken, or empty array if ltoken is empty or an error occurs
+     */
+    private static String[] getTokenEntry(final String ltokenLocation) {
+        try (final BufferedReader reader = new BufferedReader(new FileReader(new File(ltokenLocation)))) {
+            final String line;
+            if ((line = reader.readLine()) != null) {
+                return line.split(";");
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_unknown_error(), e);
+        }
+        return new String[0];
+    }
+
     public ArgumentListBuilder getSetStatusCmd(final int issueId, final Status status, final String comment, final FilePath workspace) {
         final String ciTool = "kwciagent";
 
@@ -273,7 +347,7 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         command.add(issueId);
         command.add("-s", status.getName());
 
-        if(!comment.isEmpty()) {
+        if (!comment.isEmpty()) {
             command.add("-c", comment);
         }
 
@@ -282,35 +356,39 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         return command;
     }
 
-    public ArgumentListBuilder getListCmd(final KlocworkSeverities severities, KlocworkStatuses statuses, final FilePath workspace, String outputFormat) {
+    public ArgumentListBuilder getListCmd(final KlocworkSeverities severities, KlocworkStatuses statuses, final FilePath workspace, String outputFormat, String diffFileList) {
         final String ciTool = "kwciagent";
 
         final ArgumentListBuilder command =
                 new ArgumentListBuilder(ciTool, "list");
 
         String statusString = statuses.getEnabled()
-                .keySet()
-                .stream()
-                .filter(status -> statuses.getEnabled().getOrDefault(status, false))
-                .collect(Collectors.joining(","));
+                                      .keySet()
+                                      .stream()
+                                      .filter(status -> statuses.getEnabled().getOrDefault(status, false))
+                                      .collect(Collectors.joining(","));
 
-        if(!statusString.isEmpty()) {
+        if (!statusString.isEmpty()) {
             command.add("--status", statusString);
         }
 
         String severityString = severities.getEnabled().keySet()
-                                               .stream()
-                                               .filter(severity -> severities.getEnabled().getOrDefault(severity, false))
-                                               .map(severity -> getSeveritiesString(severity))
-                                               .collect(Collectors.joining(","));
-        if(!severityString.isEmpty()) {
+                                          .stream()
+                                          .filter(severity -> severities.getEnabled().getOrDefault(severity, false))
+                                          .map(severity -> getSeveritiesString(severity))
+                                          .collect(Collectors.joining(","));
+        if (!severityString.isEmpty()) {
             command.add("--severity", severityString);
         }
 
         command.add("-pd", getKwlpDir(workspace, envVars).getRemote());
 
-        if(!outputFormat.isEmpty()) {
+        if (!outputFormat.isEmpty()) {
             command.add("-F", outputFormat);
+        }
+
+        if (!StringUtils.isEmpty(diffFileList)) {
+            command.add("@" + diffFileList);
         }
 
         return command;
@@ -319,12 +397,12 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
     private String getSeveritiesString(final String severityKey) {
         final String FIVE_TO_TEN_SEVERITY = "fiveToTen";
 
-         StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder();
 
-        if(severityKey.equalsIgnoreCase(FIVE_TO_TEN_SEVERITY)) {
-            for(int i = 5; i <= 10; i++) {
+        if (severityKey.equalsIgnoreCase(FIVE_TO_TEN_SEVERITY)) {
+            for (int i = 5; i <= 10; i++) {
                 result.append(i);
-                if(i < 10) {
+                if (i < 10) {
                     result.append(",");
                 }
             }

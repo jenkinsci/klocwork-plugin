@@ -172,7 +172,7 @@ public class KlocworkCiBuilder extends Builder implements SimpleBuildStep {
 
 
             if(xmlFormatIssuesStreams.get(KlocworkUtil.StreamReferences.ERR_STREAM).size() > 0) {
-                throw new AbortException(xmlFormatIssuesStreams.get(KlocworkUtil.StreamReferences.ERR_STREAM).toString());
+                logger.logMessage("'kwciagent list' returned following error message: " + xmlFormatIssuesStreams.get(KlocworkUtil.StreamReferences.ERR_STREAM).toString());
             }
 
             String xmlFilePath = envVars.expand(KlocworkUtil.getDefaultReportFileName(ciConfig.getReportFile()));

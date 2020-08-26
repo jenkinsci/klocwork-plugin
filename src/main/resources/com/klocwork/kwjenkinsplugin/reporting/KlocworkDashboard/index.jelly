@@ -80,7 +80,7 @@
 
         <j:if test="${instance.shouldDashboardLocal}">
             <h1>${%Klocwork Differential Analysis Issues}</h1>
-            <input type="text" id="localIssuesInput" onkeyup="tableFilter('localIssuesInput','localIssuesTable')" placeholder="${%Search}..."/>
+            <input type="text" id="localIssuesInput" onkeyup="tableFilter('localIssuesInput','localIssuesTable')" placeholder="${%Search...}"/>
             <table id="localIssuesTable">
                 <tr class="header">
                     <th><b>${%Id}</b></th>

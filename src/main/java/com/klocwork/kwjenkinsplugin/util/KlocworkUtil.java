@@ -28,24 +28,23 @@ package com.klocwork.kwjenkinsplugin.util;
 import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.config.KlocworkCiConfig;
 import com.klocwork.kwjenkinsplugin.services.KlocworkApiConnection;
-
-import net.sf.json.JSONArray;
-
-import org.apache.commons.lang3.StringUtils;
-
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
+import net.sf.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -208,6 +207,11 @@ public class KlocworkUtil {
 
     public static Map<StreamReferences, ByteArrayOutputStream> executeCommandParseOutput(final Launcher launcher, final FilePath buildDir, final EnvVars envVars, ArgumentListBuilder cmds)
             throws AbortException {
+        return executeCommandParseOutput(launcher, buildDir, envVars, cmds, null).getOutputStreams();
+    }
+
+    public static LauncherExecutionResults executeCommandParseOutput(final Launcher launcher, final FilePath buildDir, final EnvVars envVars, ArgumentListBuilder cmds, final InputStream inputStream)
+            throws AbortException {
         if (launcher.isUnix()) {
             cmds = new ArgumentListBuilder("/bin/sh", "-c", cmds.toString());
         } else {
@@ -220,11 +224,11 @@ public class KlocworkUtil {
             outputStreams.put(StreamReferences.OUT_STREAM, outputStream);
             final ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
             outputStreams.put(StreamReferences.ERR_STREAM, errorStream);
-            launcher.launch()
-                    .stdout(outputStream).stderr(errorStream).
+            final int exitCode = launcher.launch()
+                                         .stdout(outputStream).stderr(errorStream).stdin(inputStream).
                     pwd(buildDir).envs(envVars).cmds(cmds)
-                    .join();
-            return outputStreams;
+                                         .join();
+            return new LauncherExecutionResults(outputStreams, exitCode);
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
@@ -535,6 +539,24 @@ public class KlocworkUtil {
             }
         }
         return false;
+    }
+
+    public static class LauncherExecutionResults {
+        final Map<StreamReferences, ByteArrayOutputStream> outputStreams;
+        final int exitCode;
+
+        private LauncherExecutionResults(final Map<StreamReferences, ByteArrayOutputStream> outputStreams, final int exitCode) {
+            this.outputStreams = outputStreams;
+            this.exitCode = exitCode;
+        }
+
+        public Map<StreamReferences, ByteArrayOutputStream> getOutputStreams() {
+            return outputStreams;
+        }
+
+        public int getExitCode() {
+            return exitCode;
+        }
     }
 
 }

@@ -9,6 +9,17 @@
     </script>
 
     <tr>
+        <td colspan="2">
+            <div class="authentication-details" id="klocworkResultsAction_authenticationLogoutDiv" style="float: left; margin: 20px 0px 20px 0px">
+                ${%Logged in as user:}<st:nbsp/>
+                <div class="authentication-details-logout" id="klocworkResultsAction_authenticationLogoutText" style="float: right"/>
+                <div style="clear:both"/>
+                <button class="authentication-details-logout" id="klocworkResultsAction_authenticationLogoutButton" onclick="Klocwork.deleteAuthenticationCookies()">${%Logout}</button>
+            </div>
+        </td>
+    </tr>
+
+    <tr>
         <!-- Klocwork logo column -->
         <td>
             <img style="width: 48px;height:48px;" src="${resURL}/plugin/klocwork/images/logo.png"/>
@@ -83,4 +94,8 @@
             </j:choose>
         </td>
     </tr>
+
+    <script>
+        Klocwork.showOrHideLogout();
+    </script>
 </j:jelly>

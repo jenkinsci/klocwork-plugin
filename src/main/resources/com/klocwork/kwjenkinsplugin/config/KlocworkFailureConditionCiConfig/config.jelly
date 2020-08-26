@@ -17,6 +17,12 @@
         <f:textbox id="klocworkFailureConditionCiConfig_reportFile"/>
     </f:entry>
 
+    <f:optionalBlock field="withDiffList" title="${%Check Changed Files Only}" checked="${instance.withDiffList}" inline="true"  id="klocworkFailureConditionCiConfig_withDiffList">
+        <f:entry title="${%Diff File List}" field="diffFileList">
+            <f:textbox id="klocworkFailureConditionCiConfig_diffFileList"/>
+        </f:entry>
+    </f:optionalBlock>
+
       <f:entry title="${%Report Results}" field="enableHTMLReporting">
           <f:checkbox default="false" id="klocworkFailureConditionCiConfig_enableHTMLReporting"/>
       </f:entry>

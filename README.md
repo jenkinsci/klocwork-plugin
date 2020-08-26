@@ -25,6 +25,12 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2020.3
+* Feature: Added user authorization for issue citing
+* Feature: Added ability to show only changed file in Post Analysis - Build Failure Condition Step
+* Bug fix: Fixed Japanese translation encodings for some of the text fields
+* Bug fix: Fixed the job failing when changed files list contains non-existent file. Error message is logged instead.  
+
 #### Version 2020.2
 * Feature: Added issue citing through CI-analysis report
 * General Update: New build step names: 

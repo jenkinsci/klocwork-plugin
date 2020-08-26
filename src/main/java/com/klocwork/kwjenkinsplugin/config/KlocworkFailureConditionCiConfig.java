@@ -26,6 +26,7 @@
 
 package com.klocwork.kwjenkinsplugin.config;
 
+import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.definitions.KlocworkSeverities;
 import com.klocwork.kwjenkinsplugin.definitions.KlocworkStatuses;
 import hudson.Extension;
@@ -35,8 +36,14 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.model.Items;
 import hudson.model.Run;
+import hudson.util.FormValidation;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 
 public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<KlocworkFailureConditionCiConfig> {
@@ -44,6 +51,8 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
     private String name;
     private String threshold;
     private String reportFile;
+    private boolean withDiffList;
+    private String diffFileList;
     private boolean stopBuild;
     private KlocworkSeverities enabledSeverites;
     private KlocworkStatuses enabledStatuses;
@@ -65,9 +74,13 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
 
     @DataBoundConstructor
     public KlocworkFailureConditionCiConfig(String threshold,
-                                            String reportFile) {
+                                            String reportFile,
+                                            boolean withDiffList,
+                                            String diffFileList) {
         this.threshold = threshold;
         this.reportFile = reportFile;
+        this.withDiffList = withDiffList;
+        this.diffFileList = diffFileList;
         if(this.enabledSeverites == null){
             this.enabledSeverites = new KlocworkSeverities();
         }
@@ -80,6 +93,7 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
     public KlocworkFailureConditionCiConfig(String name,
                                             String threshold,
                                             String reportFile,
+                                            boolean withDiffList,
                                             boolean stopBuild,
                                             KlocworkSeverities enabledSeverites,
                                             KlocworkStatuses enabledStatuses,
@@ -87,6 +101,7 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
         this.name = name;
         this.threshold = threshold;
         this.reportFile = reportFile;
+        this.withDiffList = withDiffList;
         this.stopBuild = stopBuild;
         this.enabledSeverites = enabledSeverites;
         this.enabledStatuses = enabledStatuses;
@@ -160,6 +175,21 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
         return reportFile;
     }
 
+    public boolean isWithDiffList() {
+        return withDiffList;
+    }
+
+    public String getDiffFileList() {
+        if(!withDiffList) {
+            return null;
+        }
+
+        if (StringUtils.isEmpty(diffFileList)) {
+            return KlocworkConstants.DEFAULT_DIFF_FILE_LIST;
+        }
+        return diffFileList;
+    }
+
     public boolean getStopBuild() {
         return stopBuild;
     }
@@ -189,6 +219,16 @@ public class KlocworkFailureConditionCiConfig extends AbstractDescribableImpl<Kl
         public static void addAliases() {
             Items.XSTREAM2.addCompatibilityAlias("com.klocwork.kwjenkinsplugin.config.KlocworkFailureConditionDesktopConfig", KlocworkFailureConditionCiConfig.class);
             Run.XSTREAM2.addCompatibilityAlias("com.klocwork.kwjenkinsplugin.config.KlocworkFailureConditionDesktopConfig", KlocworkFailureConditionCiConfig.class);
+        }
+
+        public FormValidation doCheckDiffFileList(@QueryParameter String value)
+                throws IOException, ServletException {
+
+            if (StringUtils.isEmpty(value)) {
+                return FormValidation.ok(Messages.KlocworkDifferentialAnalysisConfig_default_value() + KlocworkConstants.DEFAULT_DIFF_FILE_LIST);
+            } else {
+                return FormValidation.ok();
+            }
         }
 
     }

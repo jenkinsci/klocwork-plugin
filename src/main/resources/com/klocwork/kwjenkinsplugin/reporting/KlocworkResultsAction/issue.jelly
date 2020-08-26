@@ -53,7 +53,7 @@
                                     </span>
                                     ${issue.message}
                                     <j:if test="${isNewIssue}">
-                                        <button id="showIssueCitation${issueId}" class="button-edit button-blank" onclick="event.stopPropagation();Klocwork.showCitation(${issueId})">Edit</button>
+                                        <button id="showIssueCitation${issueId}" class="button-edit button-blank" onclick="event.stopPropagation();Klocwork.showAuthenticationOrCitation(${issueId})">${%Edit}</button>
                                     </j:if>
                                 </a>
                                 <j:if test="${isNewIssue}">
@@ -64,7 +64,7 @@
                                                 <h4><span class="label label-${severity}">${issue.code}</span> ${issue.file}: ${issue.message}</h4>
                                             </div>
                                             <div class="issue-cite-select">
-                                                <div class="issue-cite-label">New status:</div>
+                                                <div class="issue-cite-label">${%New status:}</div>
                                                 <div class="issue-cite-control">
                                                     <select id="issueStatus${issueId}">
                                                         <j:forEach items="${it.klocworkStatusValues}" var="statusType">
@@ -74,17 +74,42 @@
                                                 </div>
                                             </div>
                                             <div class="issue-cite-comment">
-                                                <div class="issue-cite-label">Comment:</div>
+                                                <div class="issue-cite-label">${%Comment:}</div>
                                                 <div class="issue-cite-control"><textarea maxlength="150" rows="5" cols="50" id="issueComment${issueId}"/></div>
                                             </div>
                                             <div class="kwerror">
                                                 <span id="citeError${issueId}"/>
                                             </div>
                                             <div class="issue-cite-save">
-                                                <button class="issue-cite-save-control" id="issueCiteSave${issueId}" onclick="Klocwork.saveCitation(${issueId})">Save</button>
-                                                <button class="issue-cite-save-control" id="issueCiteCancel${issueId}" onclick="Klocwork.cancelCitation(${issueId})">Cancel</button>
+                                                <button class="issue-cite-save-control" id="issueCiteSave${issueId}" onclick="Klocwork.saveCitation(${issueId})">${%Save}</button>
+                                                <button class="issue-cite-save-control" id="issueCiteCancel${issueId}" onclick="Klocwork.cancelCitation(${issueId})">${%Cancel}</button>
                                             </div>
-                                            <div id="load-indicator" class="loading-overlay">Saving...</div>
+                                            <div id="load-indicator" class="loading-overlay">${%Saving...}</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Authentication -->
+                                    <div id="klocworkResultsAction_authenticationModal" style="display:none" class="modal">
+                                        <div id="klocworkResultsAction_authentication" class="modal-content authenticate-block">
+                                            <div class="authentication-title">
+                                                <h4> ${%Please log in with your Klocwork Portal credentials to cite issues} </h4>
+                                            </div>
+                                            <div class="authenticate-username">
+                                                <div class="authentication-username-label">${%Username:}</div>
+                                                <div class="authentication-username-control"><input id="klocworkResultsAction_authenticationUsername"/></div>
+                                            </div>
+                                            <div class="authenticate-password">
+                                                <div class="authentication-password-label">${%Password:}</div>
+                                                <div class="authentication-password-control"><input id="klocworkResultsAction_authenticationPassword" type="password"/></div>
+                                            </div>
+                                            <div class="kwerror">
+                                                <span id="klocworkResultsAction_authenticationError"/>
+                                            </div>
+                                            <div class="authentication-save">
+                                                <button class="authentication-save-control" id="klocworkResultsAction_authenticationSave" onclick="Klocwork.authenticate(${issueId})">${%Authenticate}</button>
+                                                <button class="authentication-save-control" id="klocworkResultsAction_authenticationCancel" onclick="Klocwork.cancelAuthentication()">${%Cancel}</button>
+                                            </div>
+                                            <div id="load-indicator" class="loading-overlay">${%Saving...}</div>
                                         </div>
                                     </div>
 
