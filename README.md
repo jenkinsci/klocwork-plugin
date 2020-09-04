@@ -7,11 +7,11 @@ The Klocwork Community Plugin for Jenkins enables automated Klocwork analyses wi
  * [Job-DSL](https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin)
  * [Pipelines](https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Plugin)
 
-More information and up-to-date documentation can be found here: [Klocwork's Documentation](https://docs.roguewave.com/en/klocwork/2020/jenkinsci)
+More information and up-to-date documentation can be found here: [Jenkins Plugin Documentation](https://docs.roguewave.com/en/klocwork/2020/jenkinsci), [Klocwork's Documentation](https://docs.roguewave.com/en/klocwork/current/)
 
 ### Technical support
 
-The plugin is maintained by Klocwork Team. For any questions visit [Technical support](https://www.roguewave.com/help-support/technical-support)
+The plugin is maintained by Klocwork Team. For any questions visit [Technical support](https://techsupport.roguewave.com/)
 
 ### Latest features:
 
