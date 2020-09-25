@@ -54,8 +54,9 @@ public class KlocworkXMLReportParser extends MasterToSlaveCallable<Integer,IOExc
     }
 
     public Integer call() throws IOException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
+            SAXParserFactory factory = KlocworkXMLUtil.getSecureXmlParserFactory();
+
 			//We must handle both relative and absolute paths
 			InputStream xmlInput = null;
 			if (Paths.get(xmlReport).isAbsolute()) {

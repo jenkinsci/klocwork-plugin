@@ -55,9 +55,10 @@ public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<Arra
     }
 
     public ArrayList<KlocworkIssue> call() throws IOException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
         try {
-			//We must handle both relative and absolute paths
+            SAXParserFactory factory = KlocworkXMLUtil.getSecureXmlParserFactory();
+
+            //We must handle both relative and absolute paths
 			InputStream xmlInput = null;
 			if (Paths.get(xmlReport).isAbsolute()) {
 				xmlInput = new FileInputStream(new File(xmlReport));

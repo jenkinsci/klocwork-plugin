@@ -25,6 +25,9 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2020.3.1
+* General Update: fixed potential XXE vulnerability in XML-parser
+
 #### Version 2020.3
 * Feature: Added user authorization for issue citing
 * Feature: Added ability to show only changed file in Post Analysis - Build Failure Condition Step
