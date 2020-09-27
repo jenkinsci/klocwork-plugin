@@ -58,6 +58,8 @@ import java.lang.InterruptedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import org.jenkinsci.plugins.workflow.actions.WarningAction;
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
 
 /**
  *
@@ -93,10 +95,10 @@ public class KlocworkFailureConditionPublisher extends Publisher implements Simp
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
-        perform(build, envVars, workspace, launcher, listener);
+        perform(build, null, envVars, workspace, launcher, listener);
     }
 
-    public void perform(Run<?, ?> build, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
+    public void perform(Run<?, ?> build, FlowNode flowNode, EnvVars envVars, FilePath workspace, Launcher launcher, TaskListener listener)
     throws AbortException {
         KlocworkLogger logger = new KlocworkLogger("KlocworkFailureConditionPublisher", listener.getLogger());
         boolean stopBuild = false;
@@ -129,6 +131,11 @@ public class KlocworkFailureConditionPublisher extends Publisher implements Simp
                     debugLogger.fine("[" + this.getClass().getName() + "] - Build Failure Condition triggered");
                     logger.logMessage("Threshold exceeded. Marking build as failed.");
                     build.setResult(pfConfig.getResultValue());
+
+                    if (flowNode != null)
+                    {
+                        flowNode.addAction(new WarningAction(pfConfig.getStageResultValue()).withMessage(pfConfig.getConditionName()));
+                    }
                     if(pfConfig.getStopBuild()){
                         stopBuild = true;
                     }

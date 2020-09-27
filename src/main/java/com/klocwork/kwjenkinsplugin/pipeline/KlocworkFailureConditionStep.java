@@ -44,6 +44,7 @@ import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
 
 
 public class KlocworkFailureConditionStep extends AbstractStepImpl {
@@ -72,6 +73,10 @@ public class KlocworkFailureConditionStep extends AbstractStepImpl {
 
         @StepContextParameter
         @SuppressWarnings("unused")
+        private transient FlowNode flowNode;
+
+        @StepContextParameter
+        @SuppressWarnings("unused")
         private transient FilePath workspace;
 
         @StepContextParameter
@@ -89,7 +94,7 @@ public class KlocworkFailureConditionStep extends AbstractStepImpl {
         protected Void run() throws Exception {
             KlocworkFailureConditionPublisher failureCondition = new KlocworkFailureConditionPublisher(
                 step.getFailureConditionConfig());
-            failureCondition.perform(build, env, workspace, launcher, listener);
+            failureCondition.perform(build, flowNode, env, workspace, launcher, listener);
             return null;
         }
     }

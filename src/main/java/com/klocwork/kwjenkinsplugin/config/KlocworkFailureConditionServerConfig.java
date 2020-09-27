@@ -37,6 +37,7 @@ import hudson.model.Result;
 public class KlocworkFailureConditionServerConfig extends AbstractDescribableImpl<KlocworkFailureConditionServerConfig> {
 
     private final String jobResult;
+    private final String stageResult;
     private final String query;
     private final String threshold;
     private final String conditionName;
@@ -50,9 +51,10 @@ public class KlocworkFailureConditionServerConfig extends AbstractDescribableImp
 
 
     @DataBoundConstructor
-    public KlocworkFailureConditionServerConfig(String jobResult, String query,
+    public KlocworkFailureConditionServerConfig(String jobResult, String stageResult, String query,
                                                 String threshold, String conditionName, boolean stopBuild, boolean enableHTMLReporting) {
 
+        this.stageResult = stageResult;
         this.jobResult = jobResult;
         this.query = query;
         this.threshold = threshold;
@@ -63,6 +65,7 @@ public class KlocworkFailureConditionServerConfig extends AbstractDescribableImp
 
     public String toString(){
         return new StringBuilder().append("[ jobResult:").append(this.jobResult)
+                                  .append(", stageResult:").append(this.stageResult)
                                   .append(", query:").append(this.query)
                                   .append(", threshold:").append(this.threshold)
                                   .append(", conditionName:").append(this.conditionName)
@@ -73,6 +76,10 @@ public class KlocworkFailureConditionServerConfig extends AbstractDescribableImp
 
     public String getJobResult() {
         return jobResult;
+    }
+
+    public String getStageResult() {
+        return this.stageResult;
     }
 
     public String getQuery() {
@@ -88,7 +95,11 @@ public class KlocworkFailureConditionServerConfig extends AbstractDescribableImp
     }
 
     public Result getResultValue() {
-        switch (jobResult) {
+        return getResultValue(jobResult);
+    }
+
+    private static Result getResultValue(String result) {
+        switch (result) {
             case "failure": {
                 return Result.FAILURE;
             }
@@ -105,10 +116,22 @@ public class KlocworkFailureConditionServerConfig extends AbstractDescribableImp
         }
     }
 
+    public Result getStageResultValue() {
+        if (this.stageResult != null)
+        {
+            return getResultValue(this.stageResult);
+        }
+        else
+        {
+            return getResultValue(this.jobResult);
+        }
+    }
+
     public boolean getStopBuild() { return stopBuild; }
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkFailureConditionServerConfig> {
+        @Override
         public String getDisplayName() { return null; }
 
     }

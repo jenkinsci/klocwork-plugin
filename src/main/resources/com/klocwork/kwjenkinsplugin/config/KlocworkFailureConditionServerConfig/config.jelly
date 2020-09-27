@@ -26,6 +26,27 @@
                 </label>
             </td>
             <td>
+                <!-- set default stageResult to failure -->
+                <j:set var="stageResultValue" value="${instance.stageResult==null ? 'failure' : instance.stageResult}" />
+                <f:label>${%Mark Stage As}</f:label><br/>
+
+                <f:radio name="stageResult" checked="${stageResultValue=='failure'}" value="failure" id="klocworkFailureConditionServerConfig_failure"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/red.gif" alt="100%" title="${%Failed}" />
+                    ${%Failed}
+                </label>
+                <f:radio name="stageResult" checked="${stageResultValue=='unstable'}" value="unstable" id="klocworkFailureConditionServerConfig_unstable"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/yellow.gif" alt="100%" title="${%Unstable}" />
+                    ${%Unstable}
+                </label>
+                <f:radio name="stageResult" checked="${stageResultValue=='pass'}" value="pass" id="klocworkFailureConditionServerConfig_pass"/>
+                <label>
+                    <img src="${rootURL}/images/16x16/green.gif" alt="100%" title="${%Passed}" />
+                    ${%Passed}
+                </label>
+            </td>
+            <td>
                 <f:label for="query">${%Search Query}</f:label>
                 <f:textbox field="query" default="${%state:+New status:Analyze severity:1,2}" id="klocworkFailureConditionServerConfig_query"/>
             </td>
