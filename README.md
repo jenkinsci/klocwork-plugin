@@ -25,6 +25,10 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2021.3
+* General Update: added missing relevant buildspec creation tools to the plugin
+* General Update: changed report chart to use interpolation plot instead of discrete trend
+
 #### Version 2020.3.1
 * General Update: fixed potential XXE vulnerability in XML-parser
 

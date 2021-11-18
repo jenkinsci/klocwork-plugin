@@ -63,8 +63,9 @@ import static com.klocwork.kwjenkinsplugin.KlocworkConstants.KLOCWORK_URL;
 import static java.util.stream.Collectors.groupingBy;
 
 public class KlocworkResultsAction implements Action, LastBuildAction {
-    private static final String KLOCWORK_LTOKEN = "KLOCWORK_LTOKEN";
-    private static final String LTOKEN = "ltoken";
+    private static final String KLOCWORK_LTOKEN = "KLOCWORK_LTOKEN"; //NON-NLS
+    private static final String LTOKEN = "ltoken"; //NON-NLS
+    private static final String KLOCWORK_USER_OVERRIDE = "KLOCWORK_USER_OVERRIDE"; //NON-NLS
 
     private final Run<?, ?> build;
     private final String url;
@@ -213,7 +214,7 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
     }
 
     @JavaScriptMethod
-    public JSONObject citeIssue(final int issueId, final int status, final String comment, final String ltokenString) {
+    public JSONObject citeIssue(final int issueId, final int status, final String comment, final String ltokenString, final String userName) {
         LOGGER.log(Level.INFO, Messages.KlocworkResultAction_logger_cite_start(issueId));
         final JSONObject result = new JSONObject();
         result.put("result", false);
@@ -233,6 +234,7 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
             final FilePath tmpLtokenFile = workspace.createTextTempFile(LTOKEN, "", ltokenString);
             try {
                 envVars.put(KLOCWORK_LTOKEN, tmpLtokenFile.getRemote());
+                envVars.put(KLOCWORK_USER_OVERRIDE, userName);
                 final ArgumentListBuilder setStatusCommand = getSetStatusCmd(issueId, Status.getValue(status), comment, workspace);
                 LOGGER.info("Running: " + setStatusCommand.toString());
                 response = KlocworkUtil.executeCommandParseOutput(launcher, workspace, envVars, setStatusCommand);

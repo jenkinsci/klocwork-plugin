@@ -1,6 +1,8 @@
 
 var renderChart = function(chartData) {
     var ctx = document.getElementById("klocworkTrendChart").getContext("2d");
+    chartData.datasets.forEach(element => element.lineTension = 0);
+
     var lineChart = new Chart(ctx, {
         type: 'line',
         data: chartData,

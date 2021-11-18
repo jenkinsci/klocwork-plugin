@@ -59,14 +59,13 @@ public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBui
 
     public ArgumentListBuilder getToolCmd(EnvVars envVars) {
         ArgumentListBuilder toolCmd =
-            new ArgumentListBuilder();
-        if(getTool().equals("kwtrace")){
+                new ArgumentListBuilder();
+        if (getTool().equals("kwtrace")) {
             toolCmd.add("kwinject", "-T");
             if (!StringUtils.isEmpty(getOutput())) {
                 toolCmd.add("--trace-out", getOutput());
             }
-        }
-        else{
+        } else {
             toolCmd.add(getTool());
             if (!StringUtils.isEmpty(getOutput())) {
                 toolCmd.add("--output", getOutput()); //Do not use -o: Not supported by kwmaven
@@ -103,7 +102,8 @@ public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBui
 
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkBuildSpecConfig> {
-        public String getDisplayName() { return null; }
+        public String getDisplayName() {
+            return null;
+        }
     }
-
 }

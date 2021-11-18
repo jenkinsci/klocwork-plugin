@@ -31,18 +31,27 @@ var Klocwork = {
         if (!control.hasClassName('collapsible'))
             return;
         if (elementToToggle.hasClassName('collapsed')) {
-            Effect.SlideDown(toToggle, {duration: DefaultOptions.duration, queue: 'end', limit: 1 });
-            elementToToggle.removeClassName('collapsed');
-            elementToToggle.addClassName('expanded');
-            control.addClassName('expanded');
-            control.removeClassName('collapsed');
+            this.showAuthenticationOrProceed(control, elementToToggle);
         } else {
-            Effect.SlideUp(toToggle, {duration: DefaultOptions.duration, queue: 'end', limit: 1 });
-            elementToToggle.removeClassName('expanded');
-            elementToToggle.addClassName('collapsed');
-            control.addClassName('collapsed');
-            control.removeClassName('expanded');
+            this.slideUp(control, elementToToggle);
         }
+    },
+
+    slideUp: function(control, toToggle) {
+        Effect.SlideUp(toToggle, {duration: DefaultOptions.duration, queue: 'end', limit: 1 });
+        toToggle.removeClassName('expanded');
+        toToggle.addClassName('collapsed');
+        control.addClassName('collapsed');
+        control.removeClassName('expanded');
+    },
+
+
+    slideDown: function(control, toToggle) {
+        Effect.SlideDown(toToggle, {duration: DefaultOptions.duration, queue: 'end', limit: 1 });
+        toToggle.removeClassName('collapsed');
+        toToggle.addClassName('expanded');
+        control.addClassName('expanded');
+        control.removeClassName('collapsed');
     },
 
     showFullIssue: function (issueIds, user, ltoken, issueLinkId, issueTraceId, issueLinkElementId) {
@@ -197,7 +206,7 @@ var Klocwork = {
         document.getElementById("load-indicator").className = "loading-overlay-on";
         var comment = document.getElementById("issueComment" + issueId).value;
         var newStatus = document.getElementById("issueStatus" + issueId).value;
-        klocworkResultsAction.citeIssue(issueId, newStatus, comment, this.ltokenString(), function(t) {
+        klocworkResultsAction.citeIssue(issueId, newStatus, comment, this.ltokenString(), this.getCookie(cookieUsername), function(t) {
             var responseJSON = t.responseJSON;
             if (!responseJSON.result) {
                 var citeError = document.getElementById("citeError" + issueId);
@@ -225,6 +234,15 @@ var Klocwork = {
 
     deleteCookie: function (name){
         document.cookie = name + "=;path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    },
+
+    showAuthenticationOrProceed: function (control, toToggle) {
+        if (this.cookiesValid()) {
+            this.slideDown(control, toToggle);
+        } else {
+            this.deleteAuthenticationCookies();
+            this.showAuthentication();
+        }
     },
 
     showAuthenticationOrCitation: function (issueId) {

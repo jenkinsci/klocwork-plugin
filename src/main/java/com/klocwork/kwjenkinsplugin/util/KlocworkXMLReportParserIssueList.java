@@ -59,24 +59,20 @@ public class KlocworkXMLReportParserIssueList extends MasterToSlaveCallable<Arra
             SAXParserFactory factory = KlocworkXMLUtil.getSecureXmlParserFactory();
 
             //We must handle both relative and absolute paths
-			InputStream xmlInput = null;
-			if (Paths.get(xmlReport).isAbsolute()) {
-				xmlInput = new FileInputStream(new File(xmlReport));
-			}
-			else {
-				xmlInput = new FileInputStream(new File(workspace, xmlReport));
-			}
+            File xmlReportFile = Paths.get(xmlReport).isAbsolute() ? new File(xmlReport) : new File(workspace, xmlReport);
 
-			InputSource inputSource = new InputSource(new InputStreamReader(xmlInput, "UTF-8"));
-			inputSource.setEncoding("UTF-8");
+            try (InputStream xmlInput = new FileInputStream(xmlReportFile)) {
+                InputSource inputSource = new InputSource(new InputStreamReader(xmlInput, "UTF-8"));
+                inputSource.setEncoding("UTF-8");
 
-			SAXParser saxParser = factory.newSAXParser();
-			KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(true, enabledSeverites, enabledStatuses);
-			saxParser.parse(inputSource, handler);
-			return handler.getIssuesList();
+                SAXParser saxParser = factory.newSAXParser();
+                KlocworkXMLReportHandler handler = new KlocworkXMLReportHandler(true, enabledSeverites, enabledStatuses);
+                saxParser.parse(inputSource, handler);
 
-       } catch (ParserConfigurationException | SAXException ex) {
-           throw new AbortException(ex.getMessage());
+                return handler.getIssuesList();
+            }
+        } catch (ParserConfigurationException | SAXException ex) {
+            throw new AbortException(ex.getMessage());
         }
     }
 }

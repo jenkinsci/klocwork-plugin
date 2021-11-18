@@ -87,32 +87,6 @@
                                             <div id="load-indicator" class="loading-overlay">${%Saving...}</div>
                                         </div>
                                     </div>
-
-                                    <!-- Authentication -->
-                                    <div id="klocworkResultsAction_authenticationModal" style="display:none" class="modal">
-                                        <div id="klocworkResultsAction_authentication" class="modal-content authenticate-block">
-                                            <div class="authentication-title">
-                                                <h4> ${%Please log in with your Klocwork Portal credentials to cite issues} </h4>
-                                            </div>
-                                            <div class="authenticate-username">
-                                                <div class="authentication-username-label">${%Username:}</div>
-                                                <div class="authentication-username-control"><input id="klocworkResultsAction_authenticationUsername"/></div>
-                                            </div>
-                                            <div class="authenticate-password">
-                                                <div class="authentication-password-label">${%Password:}</div>
-                                                <div class="authentication-password-control"><input id="klocworkResultsAction_authenticationPassword" type="password"/></div>
-                                            </div>
-                                            <div class="kwerror">
-                                                <span id="klocworkResultsAction_authenticationError"/>
-                                            </div>
-                                            <div class="authentication-save">
-                                                <button class="authentication-save-control" id="klocworkResultsAction_authenticationSave" onclick="Klocwork.authenticate(${issueId})">${%Authenticate}</button>
-                                                <button class="authentication-save-control" id="klocworkResultsAction_authenticationCancel" onclick="Klocwork.cancelAuthentication()">${%Cancel}</button>
-                                            </div>
-                                            <div id="load-indicator" class="loading-overlay">${%Saving...}</div>
-                                        </div>
-                                    </div>
-
                                     <!-- Issue Details -->
                                     <div id="fullIssueDetails${issueId}" class="collapsed" style="display:none">
 

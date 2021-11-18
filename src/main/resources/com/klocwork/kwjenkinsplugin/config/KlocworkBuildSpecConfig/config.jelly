@@ -11,6 +11,9 @@
           <select name="tool" id="klocworkBuildSpecConfig_tool">
               <f:option value="kwinject" selected="${instance.tool.equals('kwinject')? 'true' : null}">kwinject</f:option>
               <f:option value="kwmaven" selected="${instance.tool.equals('kwmaven')? 'true' : null}">kwmaven</f:option>
+              <f:option value="kwmavenw" selected="${instance.tool.equals('kwmavenw')? 'true' : null}">kwmavenw</f:option>
+              <f:option value="kwjsspec" selected="${instance.tool.equals('kwjsspec')? 'true' : null}">kwjsspec</f:option>
+              <f:option value="kwpyspec" selected="${instance.tool.equals('kwpyspec')? 'true' : null}">kwpyspec</f:option>
               <f:option value="kwant" selected="${instance.tool.equals('kwant')? 'true' : null}">kwant</f:option>
               <f:option value="kwvcprojparser" selected="${instance.tool.equals('kwvcprojparser')? 'true' : null}">kwVcprojParser</f:option>
               <f:option value="kwcsprojparser" selected="${instance.tool.equals('kwcsprojparser')? 'true' : null}">kwcsprojparser</f:option>
