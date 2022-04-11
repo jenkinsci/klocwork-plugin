@@ -39,7 +39,7 @@ public class KlocworkReportConfig extends AbstractDescribableImpl<KlocworkReport
     private static final String DEFAULT_CHART_HEIGHT = "450px";
     private static final String DEFAULT_CHART_WIDTH = "800px";
 
-    private boolean displayChart;
+    private final boolean displayChart;
     private String query;
     private String chartHeight;
     private String chartWidth;
@@ -54,11 +54,6 @@ public class KlocworkReportConfig extends AbstractDescribableImpl<KlocworkReport
 
     public boolean isDisplayChart() {
         return displayChart;
-    }
-
-    @DataBoundSetter
-    public void setDisplayChart(boolean displayChart) {
-        this.displayChart = displayChart;
     }
 
     public String getQuery() {

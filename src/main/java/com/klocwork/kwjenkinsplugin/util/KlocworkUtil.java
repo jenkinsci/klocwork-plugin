@@ -50,6 +50,11 @@ import java.util.regex.Pattern;
 
 public class KlocworkUtil {
 
+    public static FilePath getNormalizedPath(final FilePath workspace, final String dir) throws AbortException {
+        File workspaceDir = new File(workspace.getRemote(), dir);
+        return new FilePath(workspaceDir);
+    }
+
     public enum StreamReferences {
         ERR_STREAM,
         OUT_STREAM

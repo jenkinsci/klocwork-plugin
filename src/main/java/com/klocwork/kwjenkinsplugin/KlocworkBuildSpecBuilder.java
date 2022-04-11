@@ -35,6 +35,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -76,6 +77,11 @@ public class KlocworkBuildSpecBuilder extends Builder implements SimpleBuildStep
         // thrown if URL and server project are not provided as we cannot perform
         // a server analysis without these settings
         KlocworkUtil.validateServerConfigs(envVars);
+
+        final String workDir = buildSpecConfig.getWorkDir();
+        if (workDir!= null && !StringUtils.EMPTY.equals(workDir.trim())) {
+            workspace = KlocworkUtil.getNormalizedPath(workspace, workDir);
+        }
 
         KlocworkUtil.executeCommand(launcher, listener,
                 workspace, envVars,

@@ -33,6 +33,7 @@ import hudson.model.Descriptor;
 import hudson.util.ArgumentListBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 
 public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBuildSpecConfig> {
 
@@ -41,6 +42,12 @@ public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBui
     private final String output;
     private final String additionalOpts;
     private final boolean ignoreErrors;
+    private String workDir;
+
+    @DataBoundSetter
+    public void setWorkDir(String workDir) {
+        this.workDir = workDir;
+    }
 
     @DataBoundConstructor
     public KlocworkBuildSpecConfig(String buildCommand, String tool, String output, String additionalOpts, boolean ignoreErrors) {
@@ -98,6 +105,10 @@ public class KlocworkBuildSpecConfig extends AbstractDescribableImpl<KlocworkBui
 
     public String getBuildCommand() {
         return buildCommand;
+    }
+
+    public String getWorkDir() {
+        return workDir;
     }
 
     @Extension

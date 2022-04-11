@@ -25,6 +25,10 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2022.1
+* General Update: added optional 'Working Directory' text box in 'Klocwork Step 1 - Capture Build Information' step widget
+* Bug fix: corrected 'Load Analysis Results' step pipeline script generation to always include required values
+
 #### Version 2021.3
 * General Update: added missing relevant buildspec creation tools to the plugin
 * General Update: changed report chart to use interpolation plot instead of discrete trend

@@ -14,9 +14,8 @@
               <f:option value="kwmavenw" selected="${instance.tool.equals('kwmavenw')? 'true' : null}">kwmavenw</f:option>
               <f:option value="kwjsspec" selected="${instance.tool.equals('kwjsspec')? 'true' : null}">kwjsspec</f:option>
               <f:option value="kwpyspec" selected="${instance.tool.equals('kwpyspec')? 'true' : null}">kwpyspec</f:option>
+              <f:option value="kwktspec" selected="${instance.tool.equals('kwktspec')? 'true' : null}">kwktspec</f:option>
               <f:option value="kwant" selected="${instance.tool.equals('kwant')? 'true' : null}">kwant</f:option>
-              <f:option value="kwvcprojparser" selected="${instance.tool.equals('kwvcprojparser')? 'true' : null}">kwVcprojParser</f:option>
-              <f:option value="kwcsprojparser" selected="${instance.tool.equals('kwcsprojparser')? 'true' : null}">kwcsprojparser</f:option>
               <f:option value="kwtrace" selected="${instance.tool.equals('kwtrace')? 'true' : null}">${%create tracefile}</f:option>
               <f:option value="kwgradle" selected="${instance.tool.equals('kwgradle')? 'true' : null}">kwgradle</f:option>
               <f:option value="kwgradlew" selected="${instance.tool.equals('kwgradlew')? 'true' : null}">kwgradlew</f:option>
@@ -25,6 +24,10 @@
 
         <f:entry title="${%Ignore Errors}" field="ignoreErrors">
           <f:checkbox default="false" id="klocworkBuildSpecConfig_ignoreErrors"/>
+        </f:entry>
+
+        <f:entry title="${%Working Directory}" field="workDir">
+          <f:textbox default="" id="klocworkBuildSpecConfig_workDir"/>
         </f:entry>
 
         <f:entry title="${%Build Spec Output}" field="output">
