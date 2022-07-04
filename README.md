@@ -25,6 +25,9 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2022.2
+* General Update: added support for the License Provider option when using with latest Klocwork tools (2022.2 and up)
+
 #### Version 2022.1
 * General Update: added optional 'Working Directory' text box in 'Klocwork Step 1 - Capture Build Information' step widget
 * Bug fix: corrected 'Load Analysis Results' step pipeline script generation to always include required values

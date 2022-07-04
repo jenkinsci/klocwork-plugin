@@ -15,6 +15,9 @@
             <f:entry title="${%License Port}" field="licensePort">
                 <f:textbox default="27000" id="klocworkServerConfig_licensePort"/>
             </f:entry>
+            <f:entry field="licenseProvider" title="${%License Provider}">
+                <f:select />
+            </f:entry>
         </f:optionalBlock>
     </f:block>
     <f:entry title="">

@@ -30,6 +30,10 @@ import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.KlocworkFailureConditionPublisher;
 import com.google.inject.Inject;
 
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.FilePath;
+import hudson.Launcher;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
@@ -38,10 +42,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 import javax.annotation.Nonnull;
 
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 

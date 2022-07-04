@@ -26,6 +26,7 @@
 
 package com.klocwork.kwjenkinsplugin.config;
 
+import com.google.common.base.Strings;
 import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
 import hudson.*;
@@ -135,6 +136,12 @@ public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> 
             command.add("--license-port", licensePort);
         }
 
+        final String licenseProvider = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
+
+        if (!Strings.isNullOrEmpty(licenseProvider)) {
+            command.add("--license-provider", licenseProvider);
+        }
+
         command.add("-F", outputFormat);
 
         if (!StringUtils.isEmpty(additionalOpts)) {
@@ -160,6 +167,12 @@ public class KlocworkCiConfig extends AbstractDescribableImpl<KlocworkCiConfig> 
             if (!StringUtils.isEmpty(envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT))) {
                 command.add("--license-port", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
             }
+        }
+
+        final String licenseProvider = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
+
+        if (!Strings.isNullOrEmpty(licenseProvider)) {
+            command.add("--license-provider", licenseProvider);
         }
 
         command.add("-Y", "-L"); // Report nothing

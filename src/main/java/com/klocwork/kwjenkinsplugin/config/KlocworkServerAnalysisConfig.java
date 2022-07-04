@@ -53,6 +53,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     private final boolean disableKwdeploy;
     private boolean enabledCreateProject;
     private String duplicateFrom;
+    private static final String buildProjectTool = "kwbuildproject";
 
     @DataBoundSetter
     public void setDuplicateFrom(String duplicateFrom) {
@@ -83,7 +84,7 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     }
 
     public ArgumentListBuilder getVersionCmd() {
-        ArgumentListBuilder versionCmd = new ArgumentListBuilder("kwbuildproject");
+        ArgumentListBuilder versionCmd = new ArgumentListBuilder(getBuildProjectTool());
         versionCmd.add("--version");
         return versionCmd;
     }
@@ -127,6 +128,11 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
                 kwbuildprojectCmd.add("--license-port", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
             }
         }
+        String licenseProvider = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
+
+        if (!StringUtils.isEmpty(licenseProvider)) {
+            kwbuildprojectCmd.add("--license-provider", licenseProvider);
+        }
 
         if (incrementalAnalysis) {
             kwbuildprojectCmd.add("--incremental");
@@ -158,6 +164,10 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkServerAnalysisConfig> {
         public String getDisplayName() { return null; }
+    }
+
+    public static String getBuildProjectTool() {
+        return buildProjectTool;
     }
 
 }

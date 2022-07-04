@@ -25,30 +25,63 @@
 
 package com.klocwork.kwjenkinsplugin.util;
 
+import com.klocwork.kwjenkinsplugin.KlocworkCiBuilder;
 import com.klocwork.kwjenkinsplugin.KlocworkConstants;
+import com.klocwork.kwjenkinsplugin.KlocworkFailureConditionPublisher;
+import com.klocwork.kwjenkinsplugin.KlocworkServerAnalysisBuilder;
+import com.klocwork.kwjenkinsplugin.Messages;
 import com.klocwork.kwjenkinsplugin.config.KlocworkCiConfig;
+import com.klocwork.kwjenkinsplugin.config.KlocworkServerAnalysisConfig;
+import com.klocwork.kwjenkinsplugin.pipeline.KlocworkCiStep;
+import com.klocwork.kwjenkinsplugin.pipeline.KlocworkFailureConditionStep;
+import com.klocwork.kwjenkinsplugin.pipeline.KlocworkServerAnalysisStep;
 import com.klocwork.kwjenkinsplugin.services.KlocworkApiConnection;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Launcher;
+import hudson.model.FreeStyleProject;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ArgumentListBuilder;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class KlocworkUtil {
+
+    private static final Set<String> requireCiAgent = new HashSet<>(Arrays.asList(new String[]{
+            KlocworkCiBuilder.class.getName(),
+            KlocworkFailureConditionPublisher.class.getName(),
+            KlocworkCiStep.class.getName(),
+            KlocworkFailureConditionStep.class.getName()
+    }));
+
+    private static final Set<String> requireBuildProject = new HashSet<>(Arrays.asList(new String[]{
+            KlocworkServerAnalysisBuilder.class.getName(),
+            KlocworkServerAnalysisStep.class.getName()
+    }));
 
     public static FilePath getNormalizedPath(final FilePath workspace, final String dir) throws AbortException {
         File workspaceDir = new File(workspace.getRemote(), dir);
@@ -105,21 +138,6 @@ public class KlocworkUtil {
             throw new AbortException(ex.getMessage());
         }
     }
-
-    // public static String exceptionToString(Exception e) {
-    //     StringWriter sw = new StringWriter();
-    //     PrintWriter pw = new PrintWriter(sw);
-    //     e.printStackTrace(pw);
-    //     return sw.toString();
-    // }
-
-    // public static String getAndExpandEnvVar(EnvVars envVars, String var) {
-    //     String value = envVars.get(var, "");
-    //     if (StringUtils.isEmpty(value)) {
-    //         return ""; // TODO - handle empty vs null
-    //     }
-    //     return envVars.expand(value);
-    // }
 
     public static String getKlocworkProjectUrl(final EnvVars envVars) throws AbortException {
         try {
@@ -237,6 +255,57 @@ public class KlocworkUtil {
         } catch (IOException | InterruptedException ex) {
             throw new AbortException(ex.getMessage());
         }
+    }
+
+    public static void checkIfLicenseProviderSupported(final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener, Run<?, ?> build) throws AbortException {
+        if (willRunCiAgent(build) && !toolSupportsLicenseProvider(KlocworkCiConfig.getCiTool(), launcher, buildDir, envVars, listener)) {
+            throw new AbortException(Messages.KlocworkBuildWrapper_old_ciagent());
+        }
+
+        if (willRunBuildProject(build) && !toolSupportsLicenseProvider(KlocworkServerAnalysisConfig.getBuildProjectTool(), launcher, buildDir, envVars, listener)) {
+            throw new AbortException(Messages.KlocworkBuildWrapper_old_buildproject());
+        }
+    }
+
+    public static boolean toolSupportsLicenseProvider(final String tool, final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener) throws AbortException {
+        final ArgumentListBuilder cmdArgs = new ArgumentListBuilder(tool);
+        cmdArgs.add("--version");
+
+        final Map<StreamReferences, ByteArrayOutputStream> versionResults =
+                KlocworkUtil.executeCommandParseOutput(launcher, buildDir, envVars, cmdArgs);
+
+        if (versionResults.get(KlocworkUtil.StreamReferences.ERR_STREAM).size() > 0) {
+            listener.getLogger().println("Unable to define '" + tool + "' version. Cause: " + versionResults.get(KlocworkUtil.StreamReferences.ERR_STREAM).toString());
+            // return supported=true. this way the actual problem with ci-agent, if exists, will be caught during later stages
+            return true;
+        }
+
+        String versionData = versionResults.get(StreamReferences.OUT_STREAM).toString();
+        KlocworkVersion toolVersion = KlocworkVersion.create(versionData);
+
+        return !toolVersion.lessThan(KlocworkVersion.LICENSE_PROVIDER_INTRODUCED);
+    }
+
+    private static boolean willRunBuildProject(Run<?, ?> build) {
+        return hasBuildSteps(build, requireBuildProject);
+    }
+
+    private static boolean willRunCiAgent(Run<?, ?> build) {
+        return hasBuildSteps(build, requireCiAgent);
+    }
+
+    private static boolean hasBuildSteps(Run<?, ?> build, Set<String> steps) {
+        if (build.getParent() instanceof FreeStyleProject) {
+            return ((FreeStyleProject)build.getParent())
+                    .getBuilders()
+                    .stream()
+                    .anyMatch(b ->
+                            steps.contains(b.getDescriptor().getId()));
+        }
+
+        //there is no way to know what steps will be in the job if its WorkflowJob (pipeline script)?
+        // so assume they are not run and do the checks at Steps themselves
+        return false;
     }
 
     public static int generateKwListOutput(final FilePath xmlReport, final ByteArrayOutputStream outputStream, final TaskListener listener, final String ciTool, final Launcher launcher){

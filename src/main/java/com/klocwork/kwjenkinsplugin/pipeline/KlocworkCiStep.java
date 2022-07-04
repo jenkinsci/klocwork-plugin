@@ -25,10 +25,14 @@
 
 package com.klocwork.kwjenkinsplugin.pipeline;
 
+import com.google.common.base.Strings;
 import com.klocwork.kwjenkinsplugin.KlocworkConstants;
+import com.klocwork.kwjenkinsplugin.Messages;
 import com.klocwork.kwjenkinsplugin.config.KlocworkCiConfig;
 import com.klocwork.kwjenkinsplugin.KlocworkCiBuilder;
 import com.google.inject.Inject;
+import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
+import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -99,6 +103,11 @@ public class KlocworkCiStep extends AbstractStepImpl {
 
         @Override
         protected Void run() throws Exception {
+            final String licenseProvider = env.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
+
+            if (!Strings.isNullOrEmpty(licenseProvider) && !KlocworkUtil.toolSupportsLicenseProvider(KlocworkCiConfig.getCiTool(), launcher, workspace, env, listener)) {
+                throw new AbortException(Messages.KlocworkBuildWrapper_old_ciagent());
+            }
 
             KlocworkCiBuilder builder = new KlocworkCiBuilder(step.getCiConfig());
             builder.perform(build, env, workspace, launcher, listener);
