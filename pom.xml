@@ -17,7 +17,7 @@
     </properties>
 
     <artifactId>klocwork</artifactId>
-    <version>2022.3-SNAPSHOT</version>
+    <version>2022.3</version>
     <name>Klocwork Analysis Plug-in</name>
     <url>https://github.com/jenkinsci/klocwork-plugin</url>
     <packaging>hpi</packaging>
@@ -42,7 +42,7 @@
         <connection>scm:git:ssh://github.com:jenkinsci/klocwork-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/klocwork-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/klocwork-plugin.git</url>
-      <tag>HEAD</tag>
+      <tag>klocwork-2022.3</tag>
   </scm>
 
     <repositories>
