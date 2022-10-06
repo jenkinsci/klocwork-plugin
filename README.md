@@ -25,6 +25,9 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2022.3
+* No changes
+
 #### Version 2022.2
 * General Update: added support for the License Provider option when using with latest Klocwork tools (2022.2 and up)
 
