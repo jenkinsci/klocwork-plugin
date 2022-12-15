@@ -25,6 +25,9 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2022.4
+* No changes
+
 #### Version 2022.3
 * No changes
 
