@@ -25,11 +25,9 @@
 
 package com.klocwork.kwjenkinsplugin;
 
-import com.google.common.base.Strings;
 import com.klocwork.kwjenkinsplugin.config.KlocworkInstallConfig;
 import com.klocwork.kwjenkinsplugin.config.KlocworkServerConfig;
 import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -89,41 +87,32 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
                 }
                 // if specific license details, else use the global ones
                 if (server.isSpecificLicense()) {
-                    logger.logMessage("Using specific License for given server: provider: " +
-                        server.getLicenseProvider() + ", " +
+                    logger.logMessage("Using specific License for given server " +
                         server.getLicensePort() + "@" + server.getLicenseHost());
                     context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
                                 server.getLicenseHost());
                     context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
                                 server.getLicensePort());
-                    context.env(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER,
-                            server.getLicenseProvider());
                 } else {
-                    logger.logMessage("Using Global License Settings: provider: " +
-                        getDescriptor().getGlobalLicenseProvider() + ", " +
+                    logger.logMessage("Using Global License Settings " +
                         getDescriptor().getGlobalLicensePort() + "@" +
                         getDescriptor().getGlobalLicenseHost());
                     context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
                                     getDescriptor().getGlobalLicenseHost());
                     context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
                                     getDescriptor().getGlobalLicensePort());
-                    context.env((KlocworkConstants.KLOCWORK_LICENSE_PROVIDER),
-                                    getDescriptor().getGlobalLicenseProvider());
                 }
             } else {
                 logger.logMessage("WARNING: No Klocwork server selected. " +
                     "Klocwork cannot perform server builds or synchronisations " +
                     "without a server.");
-                logger.logMessage("Using Global License Settings: provider: " +
-                    getDescriptor().getGlobalLicenseProvider() +
+                logger.logMessage("Using Global License Settings " +
                     getDescriptor().getGlobalLicensePort() + "@" +
                     getDescriptor().getGlobalLicenseHost());
                 context.env(KlocworkConstants.KLOCWORK_LICENSE_HOST,
                                 getDescriptor().getGlobalLicenseHost());
                 context.env(KlocworkConstants.KLOCWORK_LICENSE_PORT,
                                 getDescriptor().getGlobalLicensePort());
-                context.env((KlocworkConstants.KLOCWORK_LICENSE_PROVIDER),
-                                getDescriptor().getGlobalLicenseProvider());
             }
             if (StringUtils.isEmpty(serverProject)) {
                 logger.logMessage("WARNING: No Klocwork project provided. " +
@@ -141,12 +130,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
                 String path = initialEnvironment.get("PATH");
                 context.env("PATH", paths+path);
             }
-
-            final String licenseProvider = context.getEnv().get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
-            if (!Strings.isNullOrEmpty(licenseProvider)) {
-                KlocworkUtil.checkIfLicenseProviderSupported(launcher, workspace, new EnvVars(context.getEnv()), listener, build);
-            }
-
+            KlocworkUtil.checkIfRepriseLicenseProviderSupported(launcher, workspace, new EnvVars(context.getEnv()), listener, build);
             if (StringUtils.isEmpty(ltoken)) {
                 logger.logMessage("No ltoken file specified. KLOCWORK_LTOKEN will not be set.");
             } else {
@@ -177,7 +161,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
 
          private String globalLicenseHost;
          private String globalLicensePort;
-         private String globalLicenseProvider;
          private List<KlocworkServerConfig> serverConfigs = new ArrayList<KlocworkServerConfig>();
          private List<KlocworkInstallConfig> installConfigs = new ArrayList<KlocworkInstallConfig>();
 
@@ -199,7 +182,7 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
             serverConfigs.addAll(req.bindJSONToList(KlocworkServerConfig.class,
                     formData.get("serverConfigs")));
             installConfigs.clear();
-            installConfigs.addAll(req.bindJSONToList(KlocworkInstallConfig.class, 
+            installConfigs.addAll(req.bindJSONToList(KlocworkInstallConfig.class,
                     formData.get("installConfigs")));
             req.bindJSON(this, formData);
             save();
@@ -218,15 +201,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
         @DataBoundSetter
         public void setGlobalLicensePort(String globalLicensePort) {
             this.globalLicensePort = globalLicensePort;
-        }
-
-        public String getGlobalLicenseProvider() {
-            return globalLicenseProvider;
-        }
-
-        @DataBoundSetter
-        public void setGlobalLicenseProvider(String globalLicenseProvider) {
-            this.globalLicenseProvider = globalLicenseProvider;
         }
 
         public KlocworkServerConfig[] getServerConfigs() {
@@ -309,15 +283,6 @@ public class KlocworkBuildWrapper extends SimpleBuildWrapper {
                 items.add(config.getName());
             }
             return items;
-        }
-
-        public ListBoxModel doFillGlobalLicenseProviderItems() {
-            ListBoxModel providers = new ListBoxModel();
-            for (KlocworkConstants.LicenseProvider p : KlocworkConstants.LicenseProvider.values()) {
-                providers.add(p.getName(), p.getValue());
-            }
-
-            return providers;
         }
     }
 }

@@ -54,6 +54,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -292,7 +293,7 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
         envVars.put(KLOCWORK_LTOKEN, userLtokenLocation);
         try {
             KlocworkAuthenticator.authenticate(launcher, workspace, username, password, envVars.get(KLOCWORK_URL), envVars);
-            final String[] ltokenArray = getTokenEntry(userLtokenLocation);
+            final String[] ltokenArray = getTokenEntry(launcher, workspace, envVars, userLtokenLocation);
             if (ltokenArray.length != 4) {
                 LOGGER.log(Level.WARNING, new StringBuilder()
                         .append("Could not authenticate user ")
@@ -328,13 +329,34 @@ public class KlocworkResultsAction implements Action, LastBuildAction {
      * @param ltokenLocation Location of the ltoken file
      * @return An array of the first entry in the ltoken, or empty array if ltoken is empty or an error occurs
      */
-    private static String[] getTokenEntry(final String ltokenLocation) {
-        try (final BufferedReader reader = new BufferedReader(new FileReader(new File(ltokenLocation)))) {
-            final String line;
-            if ((line = reader.readLine()) != null) {
-                return line.split(";");
+    private static String[] getTokenEntry(final Launcher launcher, final FilePath workspace, final EnvVars envVars, String ltokenLocation) {
+        String tool;
+        if(launcher.isUnix()){
+            tool = "cat";
+        } else{
+            tool = "type";
+        }
+        final ArgumentListBuilder outputGrabCommand = new ArgumentListBuilder(tool, ltokenLocation);
+        try {
+            final Map<StreamReferences, ByteArrayOutputStream> results = KlocworkUtil.executeCommandParseOutput(launcher,
+                    workspace,
+                    envVars,
+                    outputGrabCommand);
+            InputStream inputStream = new ByteArrayInputStream(results.get(StreamReferences.OUT_STREAM).toByteArray());
+            BufferedReader bufferedReader = null;
+            if (launcher.isUnix()) {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             }
-        } catch (IOException e) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if(line.trim().split(";").length == 4){
+                    return line.trim().split(";");
+                }
+            }
+        }
+        catch (Exception e){
             LOGGER.log(Level.WARNING, Messages.KlocworkResultAction_unknown_error(), e);
         }
         return new String[0];

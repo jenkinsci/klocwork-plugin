@@ -257,17 +257,17 @@ public class KlocworkUtil {
         }
     }
 
-    public static void checkIfLicenseProviderSupported(final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener, Run<?, ?> build) throws AbortException {
-        if (willRunCiAgent(build) && !toolSupportsLicenseProvider(KlocworkCiConfig.getCiTool(), launcher, buildDir, envVars, listener)) {
+    public static void checkIfRepriseLicenseProviderSupported(final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener, Run<?, ?> build) throws AbortException {
+        if (willRunCiAgent(build) && !toolSupportsRepriseLicenseProvider(KlocworkCiConfig.getCiTool(), launcher, buildDir, envVars, listener)) {
             throw new AbortException(Messages.KlocworkBuildWrapper_old_ciagent());
         }
 
-        if (willRunBuildProject(build) && !toolSupportsLicenseProvider(KlocworkServerAnalysisConfig.getBuildProjectTool(), launcher, buildDir, envVars, listener)) {
+        if (willRunBuildProject(build) && !toolSupportsRepriseLicenseProvider(KlocworkServerAnalysisConfig.getBuildProjectTool(), launcher, buildDir, envVars, listener)) {
             throw new AbortException(Messages.KlocworkBuildWrapper_old_buildproject());
         }
     }
 
-    public static boolean toolSupportsLicenseProvider(final String tool, final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener) throws AbortException {
+    public static boolean toolSupportsRepriseLicenseProvider(final String tool, final Launcher launcher, final FilePath buildDir, final EnvVars envVars, TaskListener listener) throws AbortException {
         final ArgumentListBuilder cmdArgs = new ArgumentListBuilder(tool);
         cmdArgs.add("--version");
 
@@ -283,7 +283,7 @@ public class KlocworkUtil {
         String versionData = versionResults.get(StreamReferences.OUT_STREAM).toString();
         KlocworkVersion toolVersion = KlocworkVersion.create(versionData);
 
-        return !toolVersion.lessThan(KlocworkVersion.LICENSE_PROVIDER_INTRODUCED);
+        return !toolVersion.lessThan(KlocworkVersion.REPRISE_LICENSE_PROVIDER_INTRODUCED);
     }
 
     private static boolean willRunBuildProject(Run<?, ?> build) {

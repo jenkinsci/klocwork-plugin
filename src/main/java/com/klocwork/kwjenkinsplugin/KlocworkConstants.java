@@ -62,7 +62,6 @@ public class KlocworkConstants {
     public static final String KLOCWORK_URL = Messages.KlocworkConstants_klocwork_url();
     public static final String KLOCWORK_LICENSE_HOST = Messages.KlocworkConstants_klocwork_license_host();
     public static final String KLOCWORK_LICENSE_PORT = Messages.KlocworkConstants_klocwork_license_port();
-    public static final String KLOCWORK_LICENSE_PROVIDER = Messages.KlocworkConstants_klocwork_license_provider();
     public static final String KLOCWORK_PROJECT = Messages.KlocworkConstants_klocwork_project();
     public static final String KLOCWORK_LTOKEN = Messages.KlocworkConstants_klocwork_ltoken();
 
@@ -82,26 +81,4 @@ public class KlocworkConstants {
     public static final int REGEXP_GROUP_HOUR = 4;
     public static final int REGEXP_GROUP_MINUTE = 5;
     public static final int REGEXP_GROUP_SECOND = 6;
-
-    public enum LicenseProvider {
-        DEFAULT("None", ""),
-        FLEX("FlexNet Publisher (FLEXlm)", "flex"),
-        RLM("Reprise (RLM)", "reprise");
-
-        public final String name;
-        public final String value;
-
-        LicenseProvider(String name, String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
 }

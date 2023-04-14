@@ -25,18 +25,14 @@
 
 package com.klocwork.kwjenkinsplugin.pipeline;
 
-import com.google.common.base.Strings;
-import com.klocwork.kwjenkinsplugin.Messages;
-import com.klocwork.kwjenkinsplugin.config.KlocworkServerAnalysisConfig;
+import com.google.inject.Inject;
 import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import com.klocwork.kwjenkinsplugin.KlocworkServerAnalysisBuilder;
-import com.google.inject.Inject;
+import com.klocwork.kwjenkinsplugin.Messages;
+import com.klocwork.kwjenkinsplugin.config.KlocworkCiConfig;
+import com.klocwork.kwjenkinsplugin.config.KlocworkServerAnalysisConfig;
 import com.klocwork.kwjenkinsplugin.util.KlocworkUtil;
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.FilePath;
-import hudson.Launcher;
+import hudson.*;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
@@ -57,12 +53,9 @@ public class KlocworkServerAnalysisStep extends AbstractStepImpl {
         this.serverConfig = serverConfig;
     }
 
-    // @DataBoundSetter
-    // public void setServerConfig(KlocworkServerAnalysisConfig serverConfig) {
-    //     this.serverConfig = serverConfig;
-    // }
-
-    public KlocworkServerAnalysisConfig getServerConfig() { return serverConfig; }
+    public KlocworkServerAnalysisConfig getServerConfig() {
+        return serverConfig;
+    }
 
 
     private static class KlocworkServerAnalysisStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
@@ -93,14 +86,10 @@ public class KlocworkServerAnalysisStep extends AbstractStepImpl {
 
         @Override
         protected Void run() throws Exception {
-            final String licenseProvider = env.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
-
-            if (!Strings.isNullOrEmpty(licenseProvider) && !KlocworkUtil.toolSupportsLicenseProvider(KlocworkServerAnalysisConfig.getBuildProjectTool(), launcher, workspace, env, listener)) {
-                throw new AbortException(Messages.KlocworkBuildWrapper_old_buildproject());
+            if (!KlocworkUtil.toolSupportsRepriseLicenseProvider(KlocworkCiConfig.getCiTool(), launcher, workspace, env, listener)) {
+                throw new AbortException(Messages.KlocworkBuildWrapper_old_ciagent());
             }
-
             KlocworkServerAnalysisBuilder builder = new KlocworkServerAnalysisBuilder(step.getServerConfig());
-            // builder.setServerConfig();
             builder.perform(build, env, workspace, launcher, listener);
             return null;
         }

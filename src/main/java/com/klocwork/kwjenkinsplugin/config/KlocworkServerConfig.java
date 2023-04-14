@@ -26,12 +26,10 @@
 
 package com.klocwork.kwjenkinsplugin.config;
 
-import com.klocwork.kwjenkinsplugin.KlocworkConstants;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
-import hudson.util.ListBoxModel;
 import org.apache.commons.lang3.StringUtils;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -50,19 +48,17 @@ public class KlocworkServerConfig extends AbstractDescribableImpl<KlocworkServer
     private final boolean specificLicense;
     private final String licenseHost;
     private final String licensePort;
-    private final String licenseProvider;
 
     @DataBoundConstructor
     public KlocworkServerConfig(String name, String url,
-                           boolean specificLicense,
-                           String licenseHost, String licensePort, String licenseProvider) {
+                                boolean specificLicense,
+                                String licenseHost, String licensePort) {
 
         this.name = name;
         this.url = url;
         this.specificLicense = specificLicense;
         this.licenseHost = licenseHost;
         this.licensePort = licensePort;
-        this.licenseProvider = licenseProvider;
     }
 
     public String getName() {
@@ -85,17 +81,15 @@ public class KlocworkServerConfig extends AbstractDescribableImpl<KlocworkServer
         return licensePort;
     }
 
-    public String getLicenseProvider() {
-        return licenseProvider;
-    }
-
     @Symbol("serverConfigs")
     @Extension
     public static class DescriptorImpl extends Descriptor<KlocworkServerConfig> {
-        public String getDisplayName() { return null; }
+        public String getDisplayName() {
+            return null;
+        }
 
         public FormValidation doCheckUrl(@QueryParameter String value)
-            throws IOException, ServletException {
+                throws IOException, ServletException {
 
             try {
                 URL klocworkUrl = new URL(value);
@@ -113,21 +107,13 @@ public class KlocworkServerConfig extends AbstractDescribableImpl<KlocworkServer
         }
 
         public FormValidation doCheckLicensePort(@QueryParameter String value)
-            throws IOException, ServletException {
+                throws IOException, ServletException {
 
             if (StringUtils.isNumeric(value)) {
                 return FormValidation.ok();
             } else {
                 return FormValidation.error(Messages.KlocworkServerConfig_port_must_be_a_number());
             }
-        }
-
-        public ListBoxModel doFillLicenseProviderItems() {
-            ListBoxModel providers = new ListBoxModel();
-            for (KlocworkConstants.LicenseProvider p : KlocworkConstants.LicenseProvider.values()) {
-                providers.add(p.getName(), p.getValue());
-            }
-            return providers;
         }
     }
 

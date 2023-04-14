@@ -51,7 +51,7 @@ public class KlocworkVersion {
         cache.put(UNKNOWN.toString(), UNKNOWN);
     }
 
-    public static final KlocworkVersion LICENSE_PROVIDER_INTRODUCED    = create("2022.2");
+    public static final KlocworkVersion REPRISE_LICENSE_PROVIDER_INTRODUCED = create("2022.2");
 
     private int[] version = new int[3];
 

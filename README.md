@@ -25,6 +25,10 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2023.1
+* General Update: Added ability to choose RLM as a license service provider
+* Bug fix: fixed authentication problem when citing loaded defects through analysis results tool
+
 #### Version 2022.4
 * No changes
 

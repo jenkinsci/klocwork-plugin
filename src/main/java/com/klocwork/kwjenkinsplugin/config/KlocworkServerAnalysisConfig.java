@@ -128,11 +128,6 @@ public class KlocworkServerAnalysisConfig extends AbstractDescribableImpl<Klocwo
                 kwbuildprojectCmd.add("--license-port", envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PORT));
             }
         }
-        String licenseProvider = envVars.get(KlocworkConstants.KLOCWORK_LICENSE_PROVIDER);
-
-        if (!StringUtils.isEmpty(licenseProvider)) {
-            kwbuildprojectCmd.add("--license-provider", licenseProvider);
-        }
 
         if (incrementalAnalysis) {
             kwbuildprojectCmd.add("--incremental");

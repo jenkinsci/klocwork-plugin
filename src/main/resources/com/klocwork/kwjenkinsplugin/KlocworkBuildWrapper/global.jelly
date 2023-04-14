@@ -14,10 +14,6 @@
             <f:textbox default="27000" id="klocworkBuildWrapper_globalLicensePort"/>
         </f:entry>
 
-        <f:entry field="globalLicenseProvider" title="${%Global License Provider}">
-            <f:select />
-        </f:entry>
-
         <f:advanced>
             <f:entry title="${%Klocwork Installations}" description="" field="klocworkInstalls">
                 <f:repeatableProperty field="installConfigs" header="${%Klocwork Installation}" add="${%Add Klocwork Installation}"/>
