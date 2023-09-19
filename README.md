@@ -25,6 +25,9 @@ The plugin is maintained by Klocwork Team. For any questions visit [Technical su
 
 ### Changelog
 
+#### Version 2023.3
+* Fixed localization strings
+
 #### Version 2023.2
 * No changes
 
