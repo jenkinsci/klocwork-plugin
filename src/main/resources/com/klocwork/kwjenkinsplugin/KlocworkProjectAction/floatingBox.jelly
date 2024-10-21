@@ -14,9 +14,9 @@
 
         <script type="text/javascript" src="${rootURL}/plugin/klocwork/js/KlocworkTrendChart.js"></script>
         <script>
-            window.onload = function () {
+            Behaviour.addLoadEvent(function () {
                 renderChart(${action.chartData})
-            }
+            });
         </script>
     </j:if>
 </j:jelly>
